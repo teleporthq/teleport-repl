@@ -1,0 +1,44 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "jsx": "preserve",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./app/types"
+    ],
+    "paths": {
+      "@app/*": ["./*"]
+    },
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom"
+    ],
+
+    "alwaysStrict": true,
+    "listEmittedFiles": false,
+    "strict": true,
+    "outDir": "dist"
+  },
+  "exclude": [
+    "node_modules",
+    "out",
+    ".next",
+    "lib",
+    "static"
+  ]
+}
