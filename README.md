@@ -7,7 +7,18 @@ components (for now, in the future maybe entire projects).
 
 ## Setup
 
-Usual `npm i`. 
+```
+npm i && 
+cd ./live-previwers/react && npm i
+```
+
+## Running
+
+Run main playground which showed the json, code and live preview screens:
+`npm run dev`
+
+Run react previewer project:
+`npm run start-react-previewer`
 
 TODO:
 - Add ports/env vars descriptions etc

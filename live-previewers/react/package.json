@@ -1,0 +1,21 @@
+{
+  "name": "react-component-previewuer",
+  "version": "0.0.1",
+  "description": "A project that can preview react code components by rewriting its code",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server 3031",
+    "build": "next build",
+    "start": "next start"
+  },
+  "author": "teleportHQ",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "next": "7.0.2",
+    "react": "16.6.1",
+    "react-dom": "16.6.1",
+    "react-jss": "^8.6.1"
+  }
+}

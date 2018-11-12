@@ -9,12 +9,18 @@
     "build": "next build",
     "start": "next start",
     "precommit": "pretty-quick --staged && npm run lint",
-    "lint": "tslint -p ./"
+    "lint": "tslint -p ./",
+    "start-react-previewer": "cd ./live-previewers/react && npm run-script dev"
   },
   "author": "teleportHQ",
   "license": "ISC",
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@teleporthq/teleport-elements-core": "0.0.8",
+    "@teleporthq/teleport-generator-html": "0.0.6",
+    "@teleporthq/teleport-generator-react": "^0.2.4",
+    "@teleporthq/teleport-generator-vue": "^0.1.1",
+    "@teleporthq/teleport-lib-js": "^0.1.10",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-typescript": "^1.1.1",
     "copy-webpack-plugin": "^4.6.0",
@@ -28,6 +34,7 @@
   "devDependencies": {
     "@types/jest": "23.3.0",
     "@types/lodash.throttle": "^4.1.4",
+    "@types/next": "^7.0.4",
     "@types/react": "16.7.1",
     "@types/styled-jsx": "2.2.7",
     "husky": "0.14.3",
