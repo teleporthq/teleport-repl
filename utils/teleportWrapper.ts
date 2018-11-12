@@ -1,7 +1,6 @@
 import Teleport from '@teleporthq/teleport-lib-js'
 import TeleportGeneratorReact from '@teleporthq/teleport-generator-react'
 import TeleportGeneratorVue from '@teleporthq/teleport-generator-vue'
-import TeleportGeneratorHtml from '@teleporthq/teleport-generator-html'
 
 import TeleportElementsCore from '@teleporthq/teleport-elements-core'
 
@@ -13,33 +12,38 @@ const npmMappings = [
   TeleportElementsCore.mappingVue,
 ]
 
-const loadWrapper = (): Promise<{ generateComponent: (input: any, target: string) => any }> => {
-  return new Promise((resolve, reject) => {
+interface LoadWrapperPromise {
+  generateComponent: (input: any, target: string) => any
+}
+
+const loadWrapper = (): Promise<LoadWrapperPromise> => {
+  return new Promise((resolve) => {
     const teleport = new Teleport()
 
     const teleportWrapper = {
       generateComponent(input: any, target = 'react') {
-        const generator = teleport.target(target || 'react')
-        if (generator) {
-          return generator.generator.generateComponent(input, {})
+        const generatorName = (target || 'react') + '-generator'
+        const generator = teleport.generator(generatorName)
+
+        if (!generator) {
+          // tslint:disable-next-line:no-console
+          console.log(`${target} generator is not loaded. Please check teleportWrapper.ts`)
+          return
+        }
+
+        try {
+          return generator.generateComponent(input, {})
+        } catch (error) {
+          // tslint:disable-next-line:no-console
+          console.error('Generator Error: ', error)
         }
       },
-
-      // generateProject(input: any, target = 'next') {
-      //   const generatorOptions = {
-      //     componentsPath: './src/components',
-      //     pagesPath: './src/pages',
-      //     assetsPath: './public/assets',
-      //     assetsUrl: '/assets',
-      //     generateAllFiles: true,
-      //   }
-
-      //   return teleport.target(target).generator.generateProject(input, generatorOptions)
-      // },
     }
 
     setTimeout(async () => {
-      await teleport.use([...npmMappings, new TeleportGeneratorReact(), new TeleportGeneratorVue(), new TeleportGeneratorHtml()])
+      await teleport.use([...npmMappings])
+      await teleport.useGenerator(new TeleportGeneratorReact())
+      await teleport.useGenerator(new TeleportGeneratorVue())
       resolve(teleportWrapper)
     })
   })

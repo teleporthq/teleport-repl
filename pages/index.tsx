@@ -38,26 +38,26 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
   }
 
   public handleJSONUpdate = (updateEvent: MonacoUpdateEventPackage) => {
-    // tslint:disable-next-line:no-console
-    console.log('do stuff with JSON code here', updateEvent.value)
-
     if (!updateEvent.value) {
       return false
     }
 
-    let jsonValue:any = null;
+    let jsonValue: any = null
     try {
-      jsonValue = JSON.parse(updateEvent.value);
-    } catch(err) {
-      return;
-    } 
+      jsonValue = JSON.parse(updateEvent.value)
+    } catch (err) {
+      return
+    }
 
     loadWrapper().then((wrapper) => {
       const result = wrapper.generateComponent(jsonValue, this.state.targetLibrary)
-
       const fileName = result.getFileNames()[0]
 
       const generatedCode = result.getContent(fileName)
+
+      if (!generatedCode) {
+        return
+      }
 
       this.setState(
         {
@@ -107,7 +107,26 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
 
           <div className="json-input-container">
             <PannelTitle>Input json here</PannelTitle>
-            <MonacoEditor name="json-editor" onMessage={this.handleJSONUpdate} />
+            <MonacoEditor
+              name="json-editor"
+              value={`{
+  "name": "TestComponent",
+  "content": {
+    "type": "View",
+    "source": "teleport-elements-core",
+    "name" : "View", 
+    "style" : {
+        "width" : "100%", 
+        "height" : "100%", 
+        "flexDirection" : "row", 
+        "backgroundColor" : "#822CEC",
+        "color": "#FFF"
+    },
+    "children": "Hello Teleport World!"
+  }
+}`}
+              onMessage={this.handleJSONUpdate}
+            />
           </div>
 
           <div className="results-container">
