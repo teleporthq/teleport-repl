@@ -88,3 +88,7 @@ typings/
 # dotenv environment variables file
 .env
 /lib/teleport-*
+
+
+# ignore project specific temporary files used for code evaluation and preview
+.dynamic

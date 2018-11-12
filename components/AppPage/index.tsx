@@ -11,6 +11,9 @@ const AppPage: React.SFC = (props) => {
           overflow: hidden;
           margin: 0;
           padding: 0;
+          font-family: 'Open Sans', sans-serif;
+          background-color: #1e1e1e;
+          color: #f3f3f3;
         }
 
         #__next {
