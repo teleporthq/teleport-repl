@@ -10,7 +10,8 @@
     "start": "next start",
     "precommit": "pretty-quick --staged && npm run lint",
     "lint": "tslint -p ./",
-    "start-react-previewer": "cd ./live-previewers/react && npm run-script dev"
+    "start-react-previewer": "cd ./live-previewers/react && npm run-script dev",
+    "start-vue-previewer": "cd ./live-previewers/vue && npm run-script dev"
   },
   "author": "teleportHQ",
   "license": "ISC",

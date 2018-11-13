@@ -39,6 +39,7 @@
     "out",
     ".next",
     "lib",
-    "static"
+    "static",
+    ".dynamic"
   ]
 }

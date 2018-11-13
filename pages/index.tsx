@@ -25,16 +25,18 @@ const postData = (url: string = ``, data: string = ``) => {
 interface PlaygroundPageState {
   generatedCode: string
   targetLibrary: string
+  inputJson: string
 }
 
 export default class PlaygroundPage extends React.Component<{}, PlaygroundPageState> {
   public state: PlaygroundPageState = {
     generatedCode: '',
-    targetLibrary: 'react',
+    inputJson: '',
+    targetLibrary: 'vue',
   }
 
   public handleGeneratorTypeChange = (ev: { target: { value: string } }) => {
-    this.setState({ targetLibrary: ev.target.value })
+    this.setState({ targetLibrary: ev.target.value }, this.handleInputChange)
   }
 
   public handleJSONUpdate = (updateEvent: MonacoUpdateEventPackage) => {
@@ -42,15 +44,20 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       return false
     }
 
+    this.setState({ inputJson: updateEvent.value }, this.handleInputChange)
+  }
+
+  public handleInputChange = () => {
+    const { targetLibrary, inputJson } = this.state
     let jsonValue: any = null
     try {
-      jsonValue = JSON.parse(updateEvent.value)
+      jsonValue = JSON.parse(inputJson)
     } catch (err) {
       return
     }
 
     loadWrapper().then((wrapper) => {
-      const result = wrapper.generateComponent(jsonValue, this.state.targetLibrary)
+      const result = wrapper.generateComponent(jsonValue, targetLibrary)
       const fileName = result.getFileNames()[0]
 
       const generatedCode = result.getContent(fileName)
@@ -64,7 +71,8 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
           generatedCode,
         },
         () => {
-          postData('http://localhost:3031/preview', generatedCode)
+          const url = this.state.targetLibrary === 'react' ? 'http://localhost:3031/preview' : 'http://localhost:3032/preview'
+          postData(url, generatedCode)
         }
       )
     })
