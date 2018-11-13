@@ -2,7 +2,6 @@ import Teleport from '@teleporthq/teleport-lib-js'
 import TeleportGeneratorReact from '@teleporthq/teleport-generator-react'
 import TeleportGeneratorVue from '@teleporthq/teleport-generator-vue'
 import TeleportGeneratorHtml from '@teleporthq/teleport-generator-html'
-
 import TeleportElementsCore from '@teleporthq/teleport-elements-core'
 
 const npmMappings = [

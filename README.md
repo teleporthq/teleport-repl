@@ -8,9 +8,9 @@ components (for now, in the future maybe entire projects).
 ## Setup
 
 ```
-npm i && 
-cd ./live-previwers/react && npm i
-cd ./live-previwers/vue && npm i
+npm i && \
+cd ./live-previewers/react && npm i && \
+cd ../vue && npm i
 ```
 
 ## Running
