@@ -32,7 +32,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
   public state: PlaygroundPageState = {
     generatedCode: '',
     inputJson: '',
-    targetLibrary: 'vue',
+    targetLibrary: 'react',
   }
 
   public handleGeneratorTypeChange = (ev: { target: { value: string } }) => {
@@ -71,11 +71,14 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
           generatedCode,
         },
         () => {
-          const url = this.state.targetLibrary === 'react' ? 'http://localhost:3031/preview' : 'http://localhost:3032/preview'
-          postData(url, generatedCode)
+          postData(this.getPreviewerUrl() + '/preview', generatedCode)
         }
       )
     })
+  }
+
+  public getPreviewerUrl() {
+    return this.state.targetLibrary === 'react' ? 'http://localhost:3031' : 'http://localhost:3032'
   }
 
   public render() {
@@ -146,7 +149,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             </div>
             <PannelTitle>Running app with generated code</PannelTitle>
             <div className="live-view-container">
-              <PreviewFrame />
+              <PreviewFrame url={this.getPreviewerUrl()} />
             </div>
             <div className="code-view-container">
               <PannelTitle>Generated code</PannelTitle>

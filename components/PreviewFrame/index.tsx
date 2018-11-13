@@ -2,9 +2,9 @@ import React, { Fragment } from 'react'
 
 // Fragment vs <> => no error in style jsx vs some error saying that
 // jsx=true is not a boolean value. Strange.
-const PreviewFrame = () => (
+const PreviewFrame = (props: any) => (
   <Fragment>
-    <iframe src="http://localhost:3032" />
+    <iframe src={props.url} />
     <style jsx>{`
       iframe {
         width: 100%;

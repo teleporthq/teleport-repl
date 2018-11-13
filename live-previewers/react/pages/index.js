@@ -5,6 +5,7 @@ export default class PreviewPage extends React.Component {
   render () {
     return (
       <>
+        <p>Welcome to React!</p>
         <PreviewedComponent/>
       </>
     )
