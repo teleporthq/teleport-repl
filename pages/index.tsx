@@ -9,6 +9,7 @@ import { PreviewFrame } from '../components/PreviewFrame'
 import loadWrapper from '../utils/teleportWrapper'
 
 import { generateComponent as generateReactComponent } from '../utils/experimental-generators/react'
+import { generateComponent as generateVueComponent } from '../utils/experimental-generators/vue'
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
@@ -60,20 +61,36 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       return
     }
 
-    if ( targetLibrary === 'react-ast' ) {
-      try {
-        const code = generateReactComponent(jsonValue);
-        this.setState({
-          generatedCode: code,
-        }, 
-        () => {
-          postData(this.getPreviewerUrl() + '/preview', code)
-        })
-      } catch (err) {
-        console.error('generateReactComponent', err)
-      }
-      return;
+    switch (targetLibrary) {
+      case 'react-ast':
+        try {
+          const code = generateReactComponent(jsonValue);
+          this.setState({
+            generatedCode: code,
+          }, 
+          () => {
+            postData(this.getPreviewerUrl() + '/preview', code)
+          })
+        } catch (err) {
+          console.error('generateReactComponent', err)
+        }
+        return;
+
+      case 'vue-ast':
+        try {
+          const code = generateVueComponent(jsonValue);
+          this.setState({
+            generatedCode: code,
+          }, 
+          () => {
+            postData(this.getPreviewerUrl() + '/preview', code)
+          })
+        } catch (err) {
+          console.error('generateVueComponent', err)
+        }
+        return;
     }
+
 
     loadWrapper().then((wrapper) => {
       const result = wrapper.generateComponent(jsonValue, targetLibrary)
@@ -102,7 +119,8 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       case 'react-ast':
         return  'http://localhost:3031'
       case 'vue':
-        return 'http://localhost:3033'
+      case 'vue-ast':
+        return 'http://localhost:3032'
       default: 
         console.error('no matching previwer found for', this.state.targetLibrary)
         return 'http://localhost:9999'
