@@ -54,15 +54,24 @@ const makePureComponent = (params: {name:string, jsxTagTree: any}) => {
   return component;
 }
 
+const makeDefaultExportByName = (name:string) => {
+  return t.exportDefaultDeclaration(
+    t.identifier(name)
+  )
+}
+
 const generateComponent = (jsDoc: any) => {
   const parentTag = generateTreeStructure(jsDoc.content);
-
+  const componentName = 'MySpecialComponent'
   const componentDeclaration = makePureComponent({
-    name: 'MySpecialComponent', 
+    name: componentName, 
     jsxTagTree: parentTag.node
   })
 
-  const ast2 = t.file( t.program([componentDeclaration]), null, [] )
+  const ast2 = t.file( t.program([
+    componentDeclaration, 
+    makeDefaultExportByName(componentName)
+  ]), null, [] )
 
   const oneLinerCode = generator(ast2).code;
 

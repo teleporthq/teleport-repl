@@ -65,6 +65,9 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
         const code = generateReactComponent(jsonValue);
         this.setState({
           generatedCode: code,
+        }, 
+        () => {
+          postData(this.getPreviewerUrl() + '/preview', code)
         })
       } catch (err) {
         console.error('generateReactComponent', err)
@@ -94,7 +97,16 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
   }
 
   public getPreviewerUrl() {
-    return this.state.targetLibrary === 'react' ? 'http://localhost:3031' : 'http://localhost:3032'
+    switch (this.state.targetLibrary) {
+      case 'react':
+      case 'react-ast':
+        return  'http://localhost:3031'
+      case 'vue':
+        return 'http://localhost:3033'
+      default: 
+        console.error('no matching previwer found for', this.state.targetLibrary)
+        return 'http://localhost:9999'
+    }
   }
 
   public render() {
