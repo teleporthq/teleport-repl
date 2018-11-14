@@ -8,6 +8,8 @@ import { PreviewFrame } from '../components/PreviewFrame'
 
 import loadWrapper from '../utils/teleportWrapper'
 
+import { generateComponent as generateReactComponent } from '../utils/experimental-generators/react'
+
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
   // Default options are marked with *
@@ -20,7 +22,9 @@ const postData = (url: string = ``, data: string = ``) => {
     mode: 'cors', // no-cors, cors, *same-origin
     redirect: 'follow', // manual, *follow, error
     referrer: 'no-referrer', // no-referrer, *client
-  }).then((response) => response.json()) // parses response to JSON
+  })
+  .then((response) => response.json())
+  .catch((err) => console.error(err)) // parses response to JSON
 }
 interface PlaygroundPageState {
   generatedCode: string
@@ -54,6 +58,18 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       jsonValue = JSON.parse(inputJson)
     } catch (err) {
       return
+    }
+
+    if ( targetLibrary === 'react-ast' ) {
+      try {
+        const code = generateReactComponent(jsonValue);
+        this.setState({
+          generatedCode: code,
+        })
+      } catch (err) {
+        console.error('generateReactComponent', err)
+      }
+      return;
     }
 
     loadWrapper().then((wrapper) => {

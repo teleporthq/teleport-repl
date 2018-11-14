@@ -9,8 +9,9 @@ const GeneratorTargetsChooser: React.SFC<GeneratorTargetsChooserProps> = props =
   return (
     <select onChange={props.onChoose} value={props.value}>
       <option value='react'>React</option>
+      <option value='react-ast'>ReactAST</option>
       <option value='vue'>Vue</option>
-      <option value='angular'>Angular</option>
+      {/* <option value='angular'>Angular</option> */}
       <option value='html'>Html</option>
     </select>
   )
