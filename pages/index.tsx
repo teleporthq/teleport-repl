@@ -14,18 +14,21 @@ import { generateComponent as generateVueComponent } from '../utils/experimental
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
   // Default options are marked with *
-  return fetch(url, {
-    body: data, // body data type must match "Content-Type" header
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, cors, *same-origin
-    redirect: 'follow', // manual, *follow, error
-    referrer: 'no-referrer', // no-referrer, *client
-  })
-  .then((response) => response.json())
-  .catch((err) => console.error(err)) // parses response to JSON
+  return (
+    fetch(url, {
+      body: data, // body data type must match "Content-Type" header
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, cors, *same-origin
+      redirect: 'follow', // manual, *follow, error
+      referrer: 'no-referrer', // no-referrer, *client
+    })
+      .then((response) => response.json())
+      // tslint:disable-next-line:no-console
+      .catch((err) => console.error(err))
+  ) // parses response to JSON
 }
 interface PlaygroundPageState {
   generatedCode: string
@@ -64,33 +67,38 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     switch (targetLibrary) {
       case 'react-ast':
         try {
-          const code = generateReactComponent(jsonValue);
-          this.setState({
-            generatedCode: code,
-          }, 
-          () => {
-            postData(this.getPreviewerUrl() + '/preview', code)
-          })
+          const code = generateReactComponent(jsonValue)
+          this.setState(
+            {
+              generatedCode: code,
+            },
+            () => {
+              postData(this.getPreviewerUrl() + '/preview', code)
+            }
+          )
         } catch (err) {
+          // tslint:disable-next-line:no-console
           console.error('generateReactComponent', err)
         }
-        return;
+        return
 
       case 'vue-ast':
         try {
-          const code = generateVueComponent(jsonValue);
-          this.setState({
-            generatedCode: code,
-          }, 
-          () => {
-            postData(this.getPreviewerUrl() + '/preview', code)
-          })
+          const code = generateVueComponent(jsonValue)
+          this.setState(
+            {
+              generatedCode: code,
+            },
+            () => {
+              postData(this.getPreviewerUrl() + '/preview', code)
+            }
+          )
         } catch (err) {
+          // tslint:disable-next-line:no-console
           console.error('generateVueComponent', err)
         }
-        return;
+        return
     }
-
 
     loadWrapper().then((wrapper) => {
       const result = wrapper.generateComponent(jsonValue, targetLibrary)
@@ -117,11 +125,12 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     switch (this.state.targetLibrary) {
       case 'react':
       case 'react-ast':
-        return  'http://localhost:3031'
+        return 'http://localhost:3031'
       case 'vue':
       case 'vue-ast':
         return 'http://localhost:3032'
-      default: 
+      default:
+        // tslint:disable-next-line:no-console
         console.error('no matching previwer found for', this.state.targetLibrary)
         return 'http://localhost:9999'
     }
