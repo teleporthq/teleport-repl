@@ -95,7 +95,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
 
       case 'vue-ast':
         try {
-          const code = generateVueComponent(jsonValue)
+          const code = await generateVueComponent(jsonValue)
           this.setState(
             {
               generatedCode: code,
@@ -169,7 +169,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             }
 
             .code-view-container {
-              flex: 1;
+              flex: 2;
             }
 
             .json-input-container {
@@ -221,7 +221,10 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
 
           <div className="results-container">
             <div className="generators-target-type">
-              <GeneratorTargetsChooser onChoose={this.handleGeneratorTypeChange} value={this.state.targetLibrary} />
+              <GeneratorTargetsChooser
+                onChoose={this.handleGeneratorTypeChange}
+                value={this.state.targetLibrary}
+              />
               <button>Refresh All</button>
               <button>Refresh Code</button>
               <button>Refresh Project</button>
@@ -232,7 +235,12 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             </div>
             <div className="code-view-container">
               <PannelTitle>Generated code</PannelTitle>
-              <MonacoEditor name="code-preview" language="javascript" value={this.state.generatedCode} readOnly />
+              <MonacoEditor
+                name="code-preview"
+                language="javascript"
+                value={this.state.generatedCode}
+                readOnly
+              />
             </div>
           </div>
         </div>
