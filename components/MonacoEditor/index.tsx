@@ -62,6 +62,10 @@ export class MonacoEditor extends React.Component<MonacoEditorProps, MonacoEdito
     this.sendMessage({ type: 'setReadOnly', value: readOnly })
   }
 
+  setValue = (value: string) => {
+    this.sendMessage({ type: 'setValue', value })
+  }
+
   sendMessage = (message: any) => {
     // console.log('send message', message, window.location.href)
     this.iframe.contentWindow.postMessage(message, window.location.href)
@@ -73,7 +77,11 @@ export class MonacoEditor extends React.Component<MonacoEditorProps, MonacoEdito
 
   render() {
     return (
-      <iframe ref={(iframe: HTMLIFrameElement) => (this.iframe = iframe)} scrolling="no" src="/static/editor/index.html">
+      <iframe
+        ref={(iframe: HTMLIFrameElement) => (this.iframe = iframe)}
+        scrolling="no"
+        src="/static/editor/index.html"
+      >
         <style jsx>{`
           iframe {
             height: 100%;

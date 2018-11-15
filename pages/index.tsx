@@ -5,6 +5,7 @@ import { MonacoEditor, MonacoUpdateEventPackage } from '../components/MonacoEdit
 import { GeneratorTargetsChooser } from '../components/GeneratorTargetsChooser'
 import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
+import { JsonInputChooser } from '../components/JsonInputChooser'
 
 import loadWrapper from '../utils/teleportWrapper'
 import uildValidator from '../utils/uildValidator'
@@ -12,7 +13,8 @@ import uildValidator from '../utils/uildValidator'
 import { generateComponent as generateReactComponent } from '../utils/experimental-generators/react'
 import { generateComponent as generateVueComponent } from '../utils/experimental-generators/vue'
 
-// import '../utils/experimental-generators/pipeline/react-usage'
+import { loadJSONAsync, exmaplesList } from '../inputs'
+import test1 from '../inputs/test'
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
@@ -37,6 +39,7 @@ interface PlaygroundPageState {
   generatedCode: string
   targetLibrary: string
   inputJson: string
+  sourceJSON: string
 }
 
 export default class PlaygroundPage extends React.Component<{}, PlaygroundPageState> {
@@ -44,7 +47,10 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     generatedCode: '',
     inputJson: '',
     targetLibrary: 'react-ast',
+    sourceJSON: exmaplesList[0],
   }
+
+  public codeEditorRef = React.createRef<MonacoEditor>()
 
   public handleGeneratorTypeChange = (ev: { target: { value: string } }) => {
     this.setState({ targetLibrary: ev.target.value }, this.handleInputChange)
@@ -132,6 +138,19 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     })
   }
 
+  public handleJSONChoose = (ev: { target: { value: string } }) => {
+    const newValue = ev.target.value
+    loadJSONAsync(newValue)
+      .then((value) => {
+        if (this.codeEditorRef && this.codeEditorRef.current) {
+          this.codeEditorRef.current.setValue(JSON.stringify(value, null, 2))
+          this.setState({ sourceJSON: newValue })
+        }
+      })
+      // tslint:disable-next-line:no-console
+      .catch((err) => console.error(err))
+  }
+
   public getPreviewerUrl() {
     switch (this.state.targetLibrary) {
       case 'react':
@@ -183,38 +202,18 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
           `}</style>
 
           <div className="json-input-container">
-            <PannelTitle>Input json here</PannelTitle>
+            <PannelTitle>
+              Input json:
+              <JsonInputChooser
+                options={exmaplesList}
+                value={this.state.sourceJSON}
+                onChoose={this.handleJSONChoose}
+              />
+            </PannelTitle>
             <MonacoEditor
+              ref={this.codeEditorRef}
               name="json-editor"
-              value={`{
-"version": "v1",
-"name": "TestComponent",
-"content": {
-  "type": "View",
-  "source": "teleport-elements-core",
-  "name" : "View", 
-  "style" : {
-      "width" : "100%", 
-      "height" : "100%", 
-      "flexDirection" : "row", 
-      "backgroundColor" : "magenta"
-  },
-  "children": [
-    {
-      "type" : "Text", 
-      "source" : "teleport-elements-core",
-      "name" : "Text", 
-      "children": "Hello world!",
-      "style" : {
-          "width" : "100%", 
-          "height" : "100%", 
-          "flexDirection" : "row", 
-          "backgroundColor" : "pink"
-      }
-    }
-  ]
-}
-}`}
+              value={JSON.stringify(test1, null, 2)}
               onMessage={this.handleJSONUpdate}
             />
           </div>
