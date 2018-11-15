@@ -1,8 +1,20 @@
 import ComponentAsemblyLine from './index'
 
-import { reactJSXPlugin, reactInlineStyleComponentPlugin, reactPureComponentPlugin, reactBasicLinker, prettierPostPlugin } from './plugins/react'
+import {
+  reactJSXPlugin,
+  reactInlineStyleComponentPlugin,
+  reactPureComponentPlugin,
+  reactBasicLinker,
+  prettierPostPlugin,
+} from './plugins/react'
 
-const asemblyLine = new ComponentAsemblyLine([reactJSXPlugin, reactInlineStyleComponentPlugin, reactPureComponentPlugin, reactBasicLinker, prettierPostPlugin])
+const asemblyLine = new ComponentAsemblyLine([
+  reactJSXPlugin,
+  reactInlineStyleComponentPlugin,
+  reactPureComponentPlugin,
+  reactBasicLinker,
+  prettierPostPlugin,
+])
 
 asemblyLine.run({
   name: 'TestComponent',
