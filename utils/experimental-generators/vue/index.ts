@@ -2,8 +2,6 @@ import * as t from '@babel/types'
 import generator from '@babel/generator'
 import * as prettier from 'prettier/standalone'
 
-import cheerio from 'cheerio'
-
 // STILL NEEDED BECAUSE SOME JSX TAG SYNTAX BREAKS WITH OUR AST...
 import parserPlugin from 'prettier/parser-babylon'
 import parserPluginHtml from 'prettier/parser-html'

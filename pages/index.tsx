@@ -11,6 +11,8 @@ import loadWrapper from '../utils/teleportWrapper'
 import { generateComponent as generateReactComponent } from '../utils/experimental-generators/react'
 import { generateComponent as generateVueComponent } from '../utils/experimental-generators/vue'
 
+// import '../utils/experimental-generators/pipeline/react-usage'
+
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
   // Default options are marked with *
@@ -40,7 +42,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
   public state: PlaygroundPageState = {
     generatedCode: '',
     inputJson: '',
-    targetLibrary: 'react',
+    targetLibrary: 'react-ast',
   }
 
   public handleGeneratorTypeChange = (ev: { target: { value: string } }) => {
@@ -55,7 +57,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     this.setState({ inputJson: updateEvent.value }, this.handleInputChange)
   }
 
-  public handleInputChange = () => {
+  public handleInputChange = async () => {
     const { targetLibrary, inputJson } = this.state
     let jsonValue: any = null
     try {
@@ -67,10 +69,10 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     switch (targetLibrary) {
       case 'react-ast':
         try {
-          const code = generateReactComponent(jsonValue)
+          const code = await generateReactComponent(jsonValue)
           this.setState(
             {
-              generatedCode: code,
+              generatedCode: code.toString(),
             },
             () => {
               postData(this.getPreviewerUrl() + '/preview', code)
@@ -176,20 +178,32 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             <MonacoEditor
               name="json-editor"
               value={`{
-  "name": "TestComponent",
-  "content": {
-    "type": "View",
-    "source": "teleport-elements-core",
-    "name" : "View", 
-    "style" : {
-        "width" : "100%", 
-        "height" : "100%", 
-        "flexDirection" : "row", 
-        "backgroundColor" : "#822CEC",
-        "color": "#FFF"
-    },
-    "children": "Hello Teleport World!"
-  }
+"name": "TestComponent",
+"content": {
+  "type": "View",
+  "source": "teleport-elements-core",
+  "name" : "View", 
+  "style" : {
+      "width" : "100%", 
+      "height" : "100%", 
+      "flexDirection" : "row", 
+      "backgroundColor" : "magenta"
+  },
+  "children": [
+    {
+      "type" : "Text", 
+      "source" : "teleport-elements-core",
+      "name" : "Text", 
+      "children": "Hello world!",
+      "style" : {
+          "width" : "100%", 
+          "height" : "100%", 
+          "flexDirection" : "row", 
+          "backgroundColor" : "pink"
+      }
+    }
+  ]
+}
 }`}
               onMessage={this.handleJSONUpdate}
             />
