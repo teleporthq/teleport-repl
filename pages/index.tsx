@@ -7,6 +7,7 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 
 import loadWrapper from '../utils/teleportWrapper'
+import uildValidator from '../utils/uildValidator'
 
 import { generateComponent as generateReactComponent } from '../utils/experimental-generators/react'
 import { generateComponent as generateVueComponent } from '../utils/experimental-generators/vue'
@@ -60,9 +61,17 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
   public handleInputChange = async () => {
     const { targetLibrary, inputJson } = this.state
     let jsonValue: any = null
+
     try {
       jsonValue = JSON.parse(inputJson)
     } catch (err) {
+      return
+    }
+
+    const validationResult = uildValidator(jsonValue)
+    if (validationResult !== true) {
+      // tslint:disable-next-line:no-console
+      console.error(validationResult)
       return
     }
 
@@ -75,7 +84,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
               generatedCode: code.toString(),
             },
             () => {
-              postData(this.getPreviewerUrl() + '/preview', code)
+              postData(this.getPreviewerUrl() + '/preview', code.toString())
             }
           )
         } catch (err) {
@@ -178,6 +187,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             <MonacoEditor
               name="json-editor"
               value={`{
+"version": "v1",
 "name": "TestComponent",
 "content": {
   "type": "View",
