@@ -24,6 +24,7 @@
     "@teleporthq/teleport-lib-js": "^0.1.10",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-typescript": "^1.1.1",
+    "ajv": "^6.5.5",
     "copy-webpack-plugin": "^4.6.0",
     "lodash.throttle": "^4.1.1",
     "monaco-editor": "^0.14.3",

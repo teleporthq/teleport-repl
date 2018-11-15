@@ -7,6 +7,7 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 
 import loadWrapper from '../utils/teleportWrapper'
+import uildValidator from '../utils/uildValidator'
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
@@ -53,6 +54,13 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     try {
       jsonValue = JSON.parse(inputJson)
     } catch (err) {
+      return
+    }
+
+    const validationResult = uildValidator(jsonValue)
+    if (validationResult !== true) {
+      // tslint:disable-next-line:no-console
+      console.error(validationResult)
       return
     }
 
@@ -122,6 +130,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
               name="json-editor"
               value={`{
   "name": "TestComponent",
+  "version": "v1",
   "content": {
     "type": "View",
     "source": "teleport-elements-core",
