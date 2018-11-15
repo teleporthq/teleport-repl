@@ -10,7 +10,7 @@ interface MonacoEditorProps {
   readOnly?: boolean
   language?: string
   value?: string
-  onMessage?: (params:MonacoUpdateEventPackage) => any
+  onMessage?: (params: MonacoUpdateEventPackage) => any
 }
 
 interface MonacoEditorState {
@@ -18,14 +18,14 @@ interface MonacoEditorState {
 }
 
 export interface MonacoUpdateEventPackage {
-  event: any,
+  event: any
   value: string
 }
 
 export class MonacoEditor extends React.Component<MonacoEditorProps, MonacoEditorState> {
   public static defaultProps = {
     language: 'json',
-    onMessage: (args:MonacoUpdateEventPackage) => console['log']('default onMessage', args),
+    onMessage: (args: MonacoUpdateEventPackage) => args,
     readOnly: false,
     value: '',
   }

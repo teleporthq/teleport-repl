@@ -56,20 +56,168 @@ require(['vs/editor/editor.main'], function() {
     ]
   });
 
+  const modelUri = monaco.Uri.parse("http://teleport/uild.json"); // a made up unique URI for our model
+  const model = monaco.editor.createModel("{}", "json", modelUri);
+
+  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+    validate: true,
+    schemas: [{
+      uri: 'http://teleport/uild.json',
+      fileMatch: [modelUri.toString()],
+      schema: { // This will later be loaded from the remote schema
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "$id": "http://example.com/root.json",
+        "type": "object",
+        "title": "Component Root",
+        "required": [
+          "name",
+          "content",
+          "version"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "default": "ComponentName"
+          },
+          "content": {
+            "$ref": "#/definitions/content"
+          },
+          "version": {
+            "type": "string",
+            "default": "v1"
+          },
+          "meta": {
+            "type": "object"
+          }
+        },
+        "definitions": {
+          "content": {
+            "$id": "content",
+            "type": "object",
+            "required": [
+              "type",
+              "source"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "type": "string",
+                "examples": [
+                  "Text",
+                  "View"
+                ]
+              },
+              "source": {
+                "type": "string",
+                "examples": [
+                  "teleport-elements-core"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "examples": [
+                  "Text",
+                  "View"
+                ]
+              },
+              "style": {
+                "$ref": "#/definitions/style"
+              },
+              "attrs": {
+                "type": "object"
+              },
+              "children": {
+                "oneOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/content"
+                    },
+                    "default": []
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              }
+            }
+          },
+          "style": {
+            "$id": "style",
+            "type": "object",
+            "properties": {
+              "width": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "examples": [
+                  "100%"
+                ]
+              },
+              "height": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "examples": [
+                  "100%"
+                ]
+              },
+              "flexDirection": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "examples": [
+                  "row"
+                ]
+              },
+              "backgroundColor": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ],
+                "examples": [
+                  "magenta"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }]
+  });
+
   editor = monaco.editor.create(document.getElementById('editor'), {
     language: 'json',
     theme: 'vs-dark',
     minimap: {
       enabled: false
     },
+    model: model,
     automaticLayout: true
   })
 
   editor.getModel().updateOptions({ tabSize: 2 })
-
-  // monaco.languages.typescript.javascriptDefaults.addExtraLib(
-  //   [definitions.TeleportProject].join('\n')
-  // )
 
   editor.model.onDidChangeContent((event) => {
     // console.log('event', name)
