@@ -15,6 +15,7 @@ import { ComponentPlugin } from '../../types'
 const vueStandardLinker: ComponentPlugin = async (structure) => {
   const { chunks } = structure
 
+  // ??? huh
   const templateChunk = chunks.filter((chunk) => chunk.type === 'html')[0]
   const javascriptChunk = chunks.filter((chunk) => chunk.type === 'js')[0]
   const cssChunk = chunks.filter((chunk) => chunk.type === 'css')[0]

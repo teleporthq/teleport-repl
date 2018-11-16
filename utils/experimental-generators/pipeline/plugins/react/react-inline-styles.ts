@@ -5,14 +5,13 @@ import * as t from '@babel/types'
 import { addJSXTagStyles } from '../../../react/JSXTag/utils'
 
 /**
- * NOT IDEAL IMPLEMENTATION!!!!
- * We don't have a link between the UIDL and the JSX subtags created. We should.
- *
- * Walks the AST tree of the given JSX representation, and checks to see if the
- * content needs styles.
+ * Walks the content tree and modify the jsx ast representation by adding new
+ * style attributes on nodes that define styles for themselves in uidl.
  *
  * @param content - uidl
- * @param jsxASTNode - the JSX AST node, babel edition
+ * @param jsxASTNode - uidlMappings the mappings used to point from uidl to
+ * our content chunk so we can easily see which node from content is describe
+ * in which section in the AST representation
  */
 const enhanceJSXWithStyles = (content: any, uidlMappings: any) => {
   const { children, style, name } = content

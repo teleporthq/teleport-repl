@@ -10,7 +10,9 @@ const JsonInputChooser: React.SFC<GeneratorTargetsChooserProps> = (props) => {
   return (
     <select onChange={props.onChoose} value={props.value}>
       {props.options.map((option) => (
-        <option value={option}>{option}</option>
+        <option key={option} value={option}>
+          {option}
+        </option>
       ))}
     </select>
   )
