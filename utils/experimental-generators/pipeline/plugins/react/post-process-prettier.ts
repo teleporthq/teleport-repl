@@ -11,12 +11,17 @@ import { ComponentPlugin } from '../../types'
  *
  * @param structure : ComponentStructure
  */
-const prettierPostPlugin: ComponentPlugin = async (processedCode) => {
+const prettierPostPlugin: ComponentPlugin = async (structure) => {
   // inject our AST into prettier, by faking a parser implementation and
   // sending a empty string to prettier. Prettier won't parse anything,
   // we will send the AST we generated, and prettier will then apply
   // the formatiing on our AST.
-  const formatted = prettier.format(processedCode, {
+  const codeChunk = structure.chunks.find((chunk) => chunk.type === 'string')
+  if (!codeChunk) {
+    return
+  }
+
+  const formatted = prettier.format(codeChunk.content, {
     printWidth: 80,
     tabWidth: 2,
     useTabs: false,

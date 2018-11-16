@@ -14,19 +14,21 @@ import { addJSXTagStyles } from '../../../react/JSXTag/utils'
  * @param content - uidl
  * @param jsxASTNode - the JSX AST node, babel edition
  */
-const enhanceJSXWithStyles = (content: any, jsxASTNode: t.JSXText | t.JSXExpressionContainer | t.JSXSpreadChild | t.JSXElement | t.JSXFragment) => {
-  const { children, style } = content
+const enhanceJSXWithStyles = (content: any, uidlMappings: any) => {
+  const { children, style, name } = content
 
   if (style) {
+    const jsxASTTag = uidlMappings[name]
+    if (!jsxASTTag) {
+      return
+    }
+
+    const jsxASTNode = jsxASTTag.node
     addJSXTagStyles(jsxASTNode, t, style)
   }
 
   if (Array.isArray(children)) {
-    children.map((child, idx) => {
-      if (jsxASTNode.type !== 'JSXText') {
-        enhanceJSXWithStyles(child, (jsxASTNode as t.JSXFragment).children[idx])
-      }
-    })
+    children.forEach((child) => enhanceJSXWithStyles(child, uidlMappings))
   }
 }
 
@@ -39,13 +41,15 @@ const enhanceJSXWithStyles = (content: any, jsxASTNode: t.JSXText | t.JSXExpress
 const reactInlineStyleComponentPlugin: ComponentPlugin = async (structure) => {
   const { uidl, chunks } = structure
 
-  const theJSXChunk = chunks.filter((chunk) => chunk.type === 'jsx' && chunk.meta.usage === 'react-component-jsx')[0]
+  const theJSXChunk = chunks.filter(
+    (chunk) => chunk.type === 'jsx' && chunk.meta.usage === 'react-component-jsx'
+  )[0]
 
   if (!theJSXChunk) {
     return structure
   }
 
-  enhanceJSXWithStyles(uidl.content, theJSXChunk.content.node)
+  enhanceJSXWithStyles(uidl.content, theJSXChunk.meta.uidlMappings)
 
   return structure
 }
