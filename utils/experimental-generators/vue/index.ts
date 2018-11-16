@@ -5,11 +5,13 @@ import {
   vueComponentJSChunk,
   vueComponentStyleChunkPlugin,
   vueTemplateChunk,
+  vueDynamicProps,
 } from '../pipeline/plugins/vue'
 
 const asemblyLine = new ComponentAsemblyLine([
   vueTemplateChunk,
   vueComponentJSChunk,
+  vueDynamicProps,
   vueComponentStyleChunkPlugin,
   vueBasicLinker,
 ])
