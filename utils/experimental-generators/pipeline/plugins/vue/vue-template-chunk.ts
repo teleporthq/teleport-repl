@@ -34,8 +34,8 @@ const generateVueNodesTree = (
     }
   }
 
-  root.addClass(name)
-  root.attr('name', type)
+  // root.addClass(name)
+  // root.attr('name', type)
   uidlMappings[name] = root
 
   return mainTag
