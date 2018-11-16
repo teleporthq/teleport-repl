@@ -74,12 +74,12 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       return
     }
 
-    // const validationResult = uildValidator(jsonValue)
-    // if (validationResult !== true) {
-    //   // tslint:disable-next-line:no-console
-    //   console.error(validationResult)
-    //   return
-    // }
+    const validationResult = uildValidator(jsonValue)
+    if (validationResult !== true) {
+      // tslint:disable-next-line:no-console
+      console.error(validationResult)
+      return
+    }
 
     switch (targetLibrary) {
       case 'react-ast':
