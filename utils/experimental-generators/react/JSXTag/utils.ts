@@ -17,58 +17,67 @@ export const generateASTDefinitionForJSXTag = (
   t,
   instanceOptions: { tagName: string }
 ) => {
-  const jsxIdentifier = t.jsxIdentifier(instanceOptions.tagName);
-  const openingDiv = t.jsxOpeningElement(jsxIdentifier, [], false);
-  const closingDiv = t.jsxClosingElement(jsxIdentifier);
+  const jsxIdentifier = t.jsxIdentifier(instanceOptions.tagName)
+  const openingDiv = t.jsxOpeningElement(jsxIdentifier, [], false)
+  const closingDiv = t.jsxClosingElement(jsxIdentifier)
 
-  const tag = t.jsxElement(openingDiv, closingDiv, [], false);
+  const tag = t.jsxElement(openingDiv, closingDiv, [], false)
 
-  return tag;
-};
+  return tag
+}
 
 /**
  * node must be a AST node element of type JSXElement (babel-types) or
  * equivalent
  */
 export const addASTAttributeToJSXTag = (node, t, attribute) => {
-  const nameOfAttribute = t.jsxIdentifier(attribute.name);
+  const nameOfAttribute = t.jsxIdentifier(attribute.name)
   const attributeDefinition = t.jsxAttribute(
     nameOfAttribute,
     t.stringLiteral(attribute.value)
-  );
-  node.openingElement.attributes.push(attributeDefinition);
-};
+  )
+  node.openingElement.attributes.push(attributeDefinition)
+}
 
 export const addJSXTagStyles = (node, t, styleMap) => {
-  const styleObjectExpression = objectToObjectExpression(t, styleMap);
-  const styleObjectExpressionContainer = t.jsxExpressionContainer(
-    styleObjectExpression
-  );
+  const styleObjectExpression = objectToObjectExpression(t, styleMap)
+  const styleObjectExpressionContainer = t.jsxExpressionContainer(styleObjectExpression)
 
   const styleJSXAttr = t.jsxAttribute(
-    t.jsxIdentifier("style"),
+    t.jsxIdentifier('style'),
     styleObjectExpressionContainer
-  );
+  )
 
-  node.openingElement.attributes.push(styleJSXAttr);
-};
+  node.openingElement.attributes.push(styleJSXAttr)
+}
 
-export const objectToObjectExpression = (t, objectMap) => {
-  const props = Object.keys(objectMap).reduce((acc, key) => {
-    const keyIdentifier = t.identifier(key);
-    const value = objectMap[key];
-    let computedLiteralValue = null;
+export const objectToObjectExpression = (
+  t: {
+    identifier: (a: string) => any
+    stringLiteral: (a: string) => any
+    numericLiteral: (a: number) => any
+    objectProperty: (a: any, b: any) => any
+    objectExpression: (a: any) => any
+  },
+  objectMap: { [key: string]: any }
+) => {
+  const props = Object.keys(objectMap).reduce((acc: any[], key) => {
+    const keyIdentifier: string = t.identifier(key)
+    const value = objectMap[key]
+    let computedLiteralValue = null
 
-    if (typeof value === "string") {
-      computedLiteralValue = t.stringLiteral(value);
-    } else if (typeof value === "number") {
-      computedLiteralValue = t.numericLiteral(value);
+    if (typeof value === 'string') {
+      computedLiteralValue = t.stringLiteral(value)
+    } else if (typeof value === 'number') {
+      computedLiteralValue = t.numericLiteral(value)
+    } else if (typeof value === 'object') {
+      computedLiteralValue = objectToObjectExpression(t, value)
     }
 
-    acc.push(t.objectProperty(keyIdentifier, computedLiteralValue));
-    return acc;
-  }, []);
+    acc.push(t.objectProperty(keyIdentifier, computedLiteralValue))
+    return acc
+  }, [])
 
-  const objectExpression = t.objectExpression(props);
-  return objectExpression;
-};
+  const objectExpression = t.objectExpression(props)
+  return objectExpression
+}

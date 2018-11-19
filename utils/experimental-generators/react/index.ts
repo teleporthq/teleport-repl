@@ -7,12 +7,14 @@ import {
   reactBasicLinker,
   prettierPostPlugin,
   reactDynamicPropsPlugin,
+  reactJSSPlugin,
 } from '../pipeline/plugins/react'
 
 const asemblyLine = new ComponentAsemblyLine([
   reactJSXPlugin,
   reactDynamicPropsPlugin,
-  reactInlineStyleComponentPlugin,
+  reactJSSPlugin,
+  // reactInlineStyleComponentPlugin,
   reactPureComponentPlugin,
   reactBasicLinker,
   prettierPostPlugin,

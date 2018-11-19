@@ -2,10 +2,7 @@ import * as t from '@babel/types'
 import generator from '@babel/generator'
 
 import { ComponentPlugin } from '../../types'
-
-const makeDefaultExportByName = (name: string) => {
-  return t.exportDefaultDeclaration(t.identifier(name))
-}
+import { makeDefaultExport, makeJSSDefaultExport } from '../../utils/js-ast'
 
 /**
  * Link the given structure chunks into a file/files which will represent the
@@ -25,13 +22,25 @@ const reactStandardLinker: ComponentPlugin = async (structure) => {
     (chunk) => chunk.type === 'js' && chunk.meta.usage === 'react-pure-component'
   )[0]
 
+  const theReactJSSComponentChunk = chunks.filter(
+    (chunk) => chunk.type === 'js' && chunk.meta.usage === 'react-jss-style-object'
+  )[0]
+
+  const importStatements = chunks.filter(
+    (chunk) => chunk.type === 'js' && chunk.meta.usage === 'import'
+  )
+
   // injext in the return statement of the component ast the JSX chunk
   theReactJSComponentChunk.content.returnStatement.argument = theJSXChunk.content.node
 
   const ast2 = t.file(
     t.program([
+      ...importStatements.map((chunk) => chunk.content),
+      theReactJSSComponentChunk.content,
       theReactJSComponentChunk.content.component,
-      makeDefaultExportByName(componentName),
+      theReactJSSComponentChunk.content
+        ? makeJSSDefaultExport(componentName, 'styles')
+        : makeDefaultExport(componentName),
     ]),
     null,
     []

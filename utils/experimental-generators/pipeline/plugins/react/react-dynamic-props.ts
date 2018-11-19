@@ -1,28 +1,7 @@
 import { ComponentPlugin } from '../../types'
 
 import * as t from '@babel/types'
-
-/**
- * Makes `${name}={props.${value}}` happen in AST
- *
- * @param jsxASTNode the jsx ast element
- * @param name the name of the prop
- * @param value the value of the prop (will be concatenated with props. before it)
- */
-const addDynamicPropOnJsxOpeningTag = (
-  jsxASTNode: t.JSXElement,
-  name: string,
-  value: string
-) => {
-  jsxASTNode.openingElement.attributes.push(
-    t.jsxAttribute(
-      t.jsxIdentifier(name),
-      t.jsxExpressionContainer(
-        t.memberExpression(t.identifier('props'), t.identifier(value))
-      )
-    )
-  )
-}
+import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
 
 const addDynamicPropsOnJSXOpeningTag = (
   jsxASTNode: t.JSXElement,
