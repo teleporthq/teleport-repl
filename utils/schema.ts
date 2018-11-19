@@ -16,6 +16,9 @@ export default {
       type: 'string',
       default: 'v1',
     },
+    paramDefinitions: {
+      type: 'object',
+    },
     meta: {
       type: 'object',
     },

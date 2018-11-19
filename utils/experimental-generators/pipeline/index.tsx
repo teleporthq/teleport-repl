@@ -1,10 +1,12 @@
-import { ComponentPlugin, ComponentStructure } from './types'
+import { ComponentPlugin, ComponentStructure, Resolver } from './types'
 
 export default class ComponentAsemblyLine {
   private plugins: ComponentPlugin[]
+  private resolver: Resolver
 
-  constructor(pipeline: ComponentPlugin[]) {
+  constructor(pipeline: ComponentPlugin[], resolver: Resolver) {
     this.plugins = pipeline
+    this.resolver = resolver
   }
 
   public async run(uidl: any) {
@@ -12,6 +14,8 @@ export default class ComponentAsemblyLine {
       uidl,
       meta: null,
       chunks: [],
+      dependencies: [],
+      resolver: this.resolver,
     }
     const len = this.plugins.length
     for (let i = 0; i < len; i++) {
