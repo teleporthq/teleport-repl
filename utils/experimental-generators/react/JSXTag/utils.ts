@@ -62,7 +62,7 @@ export const objectToObjectExpression = (
   objectMap: { [key: string]: any }
 ) => {
   const props = Object.keys(objectMap).reduce((acc: any[], key) => {
-    const keyIdentifier: string = t.identifier(key)
+    const keyIdentifier: string = t.stringLiteral(key)
     const value = objectMap[key]
     let computedLiteralValue = null
 

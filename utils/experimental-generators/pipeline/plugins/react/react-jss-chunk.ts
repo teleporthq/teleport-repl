@@ -19,7 +19,7 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
       const className = cammelCaseToDashCase(name)
       accumulator[className] = style
       // addClassStringOnJSXTag(root.node, className)
-      addDynamicPropOnJsxOpeningTag(root.node, 'className', `classes.${className}`)
+      addDynamicPropOnJsxOpeningTag(root.node, 'className', `classes['${className}']`)
     }
 
     if (children && Array.isArray(children)) {
