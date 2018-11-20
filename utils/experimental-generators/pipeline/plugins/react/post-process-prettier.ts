@@ -35,7 +35,15 @@ const prettierPostPlugin: ComponentPlugin = async (structure) => {
     plugins: [parserPlugin],
   })
 
-  return formatted
+  structure.chunks.push({
+    type: 'string',
+    meta: {
+      usage: 'react-component-file',
+    },
+    content: formatted,
+  })
+
+  return structure
 }
 
 export default prettierPostPlugin

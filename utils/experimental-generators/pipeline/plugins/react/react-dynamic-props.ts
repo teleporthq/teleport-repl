@@ -8,8 +8,10 @@ const addDynamicPropsOnJSXOpeningTag = (
   attrs: { [key: string]: any }
 ) => {
   Object.keys(attrs).forEach((key) => {
-    const attrValue = attrs[key].replace('$props.', '')
-    addDynamicPropOnJsxOpeningTag(jsxASTNode, key, attrValue)
+    if (attrs[key][0] === '$') {
+      const attrValue = attrs[key].replace('$props.', '')
+      addDynamicPropOnJsxOpeningTag(jsxASTNode, key, attrValue)
+    }
   })
 }
 
