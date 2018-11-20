@@ -33,18 +33,18 @@ const reactStandardLinker: ComponentPlugin = async (structure) => {
   // injext in the return statement of the component ast the JSX chunk
   theReactJSComponentChunk.content.returnStatement.argument = theJSXChunk.content.node
 
-  const ast2 = t.file(
-    t.program([
-      ...importStatements.map((chunk) => chunk.content),
-      theReactJSSComponentChunk.content,
-      theReactJSComponentChunk.content.component,
-      theReactJSSComponentChunk.content
-        ? makeJSSDefaultExport(componentName, 'styles')
-        : makeDefaultExport(componentName),
-    ]),
-    null,
-    []
-  )
+  const contentInstructions = importStatements.map((chunk) => chunk.content)
+
+  if (theReactJSSComponentChunk) {
+    contentInstructions.push(theReactJSSComponentChunk.content)
+    contentInstructions.push(theReactJSComponentChunk.content.component)
+    contentInstructions.push(makeJSSDefaultExport(componentName, 'styles'))
+  } else {
+    contentInstructions.push(theReactJSComponentChunk.content.component)
+    contentInstructions.push(makeDefaultExport(componentName))
+  }
+
+  const ast2 = t.file(t.program(contentInstructions), null, [])
 
   const oneLinerCode = generator(ast2).code
 

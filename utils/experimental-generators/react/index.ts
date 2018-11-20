@@ -4,18 +4,20 @@ import htmlMapping from '../element-mappings/html'
 import {
   reactJSXPlugin,
   reactInlineStyleComponentPlugin,
+  reactStyledJSXChunkPlugin,
+  reactJSSPlugin,
   reactPureComponentPlugin,
   reactBasicLinker,
   prettierPostPlugin,
   reactDynamicPropsPlugin,
-  reactJSSPlugin,
 } from '../pipeline/plugins/react'
 
 const asemblyLine = new ComponentAsemblyLine(
   [
     reactJSXPlugin,
     reactDynamicPropsPlugin,
-    reactJSSPlugin,
+    reactStyledJSXChunkPlugin,
+    // reactJSSPlugin,
     // reactInlineStyleComponentPlugin,
     reactPureComponentPlugin,
     reactBasicLinker,
@@ -23,7 +25,7 @@ const asemblyLine = new ComponentAsemblyLine(
   ],
   (type) => {
     // Here we could select based on target (ex: react, next)
-    const result = htmlMapping[type]
+    const result = (htmlMapping as { [key: string]: any })[type]
 
     if (!result) {
       // If no mapping is found, use the type as the end value

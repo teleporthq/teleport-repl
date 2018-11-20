@@ -3,23 +3,7 @@ import jss from 'jss'
 jss.setup(preset())
 
 import { ComponentPlugin } from '../../types'
-
-const nameToCSSClass = (name: string): string => {
-  let ret = ''
-  let prevLowercase = false
-
-  for (const s of name) {
-    const isUppercase = s.toUpperCase() === s
-    if (isUppercase && prevLowercase) {
-      ret += '-'
-    }
-
-    ret += s
-    prevLowercase = !isUppercase
-  }
-
-  return ret.replace(/-+/g, '-').toLowerCase()
-}
+import { cammelCaseToDashCase } from '../../utils/helpers'
 
 const generateStyleTagStrings = (content: any, uidlMappings: any) => {
   let accumulator: any[] = []
@@ -28,7 +12,7 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
     const { style, children, name } = content
     if (style) {
       const root = uidlMappings[name]
-      const className = nameToCSSClass(name)
+      const className = cammelCaseToDashCase(name)
       accumulator.push(
         jss
           .createStyleSheet(

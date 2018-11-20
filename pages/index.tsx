@@ -118,7 +118,15 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     }
 
     loadWrapper().then((wrapper) => {
-      const result = wrapper.generateComponent(jsonValue, targetLibrary)
+      const result = wrapper.generateComponent(
+        jsonValue,
+        targetLibrary,
+        targetLibrary === 'react'
+          ? {
+              renderer: 'styled-jsx',
+            }
+          : {}
+      )
       const fileName = result.getFileNames()[0]
 
       const generatedCode = result.getContent(fileName)

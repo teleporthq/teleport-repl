@@ -70,3 +70,74 @@ export const addDynamicPropOnJsxOpeningTag = (
     )
   )
 }
+
+export const stringAsTemplateLiteral = (str: string, t = types) => {
+  const formmattedString = `
+${str}
+  `
+  return t.templateLiteral(
+    [
+      t.templateElement(
+        {
+          raw: formmattedString,
+          cooked: formmattedString,
+        },
+        true
+      ),
+    ],
+    []
+  )
+}
+
+export const generateStyledJSXTag = (
+  templateLiteral: string | types.TemplateLiteral,
+  t = types
+) => {
+  if (typeof templateLiteral === 'string') {
+    templateLiteral = stringAsTemplateLiteral(templateLiteral, t)
+  }
+
+  const jsxTagChild = t.jsxExpressionContainer(templateLiteral)
+  const jsxTag = generateBasicJSXTag('style', [jsxTagChild], t)
+  addASTAttributeToJSXTag(jsxTag, { name: 'jsx' }, t)
+  return jsxTag
+}
+
+export const generateBasicJSXTag = (tagName: string, children: any[] = [], t = types) => {
+  const jsxIdentifier = t.jsxIdentifier(tagName)
+  const openingDiv = t.jsxOpeningElement(jsxIdentifier, [], false)
+  const closingDiv = t.jsxClosingElement(jsxIdentifier)
+
+  const tag = t.jsxElement(openingDiv, closingDiv, children, false)
+
+  return tag
+}
+
+/**
+ * node must be a AST node element of type JSXElement (babel-types) or
+ * equivalent
+ */
+const getProperAttributeValueAssignment = (value: any, t = types) => {
+  switch (typeof value) {
+    case 'string':
+      return t.stringLiteral(value)
+    case 'number':
+      return t.numericLiteral(value)
+    case 'undefined':
+      return null
+    default:
+      return value
+  }
+}
+export const addASTAttributeToJSXTag = (
+  jsxNode: types.JSXElement,
+  attribute: { name: string; value?: any },
+  t = types
+) => {
+  const nameOfAttribute = t.jsxIdentifier(attribute.name)
+  const attributeDefinition = t.jsxAttribute(
+    nameOfAttribute,
+    getProperAttributeValueAssignment(attribute.value)
+  )
+  jsxNode.openingElement.attributes.push(attributeDefinition)
+}

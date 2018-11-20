@@ -13,7 +13,7 @@ const npmMappings = [
 ]
 
 interface LoadWrapperPromise {
-  generateComponent: (input: any, target: string) => any
+  generateComponent: (input: any, target: string, params: any) => any
 }
 
 const loadWrapper = (): Promise<LoadWrapperPromise> => {
@@ -21,18 +21,20 @@ const loadWrapper = (): Promise<LoadWrapperPromise> => {
     const teleport = new Teleport()
 
     const teleportWrapper = {
-      generateComponent(input: any, target = 'react') {
+      generateComponent(input: any, target = 'react', params: any = {}) {
         const generatorName = (target || 'react') + '-generator'
         const generator = teleport.generator(generatorName)
 
         if (!generator) {
           // tslint:disable-next-line:no-console
-          console.log(`${target} generator is not loaded. Please check teleportWrapper.ts`)
+          console.log(
+            `${target} generator is not loaded. Please check teleportWrapper.ts`
+          )
           return
         }
 
         try {
-          return generator.generateComponent(input, {})
+          return generator.generateComponent(input, params)
         } catch (error) {
           // tslint:disable-next-line:no-console
           console.error('Generator Error: ', error)
