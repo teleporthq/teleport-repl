@@ -29,7 +29,7 @@ const generateStyledJSXString = (content: any, uidlMappings: any) => {
           )
           .toString()
       )
-      addClassStringOnJSXTag(root.node, className)
+      addClassStringOnJSXTag(root, className)
     }
 
     if (children && Array.isArray(children)) {
@@ -62,7 +62,7 @@ const reactStyledJSXChunkPlugin: ComponentPlugin = async (structure) => {
   // these instances of JSXTag have a node reference which is the AST implementation
   // of a BabelTypes.JSXElement. Not ideal, I know. Maybe we can do something about
   // this kind of dereferencing in the future.
-  jsxChunkMappings[content.name].node.children.push(jsxASTNodeReference)
+  jsxChunkMappings[content.name].children.push(jsxASTNodeReference)
 
   return structure
 }

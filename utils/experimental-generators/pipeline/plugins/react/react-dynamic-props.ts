@@ -33,8 +33,7 @@ const enhanceJSXWithDynamicProps = (content: any, uidlMappings: any) => {
       return
     }
 
-    const jsxASTNode = jsxASTTag.node
-    addDynamicPropsOnJSXOpeningTag(jsxASTNode, attrs)
+    addDynamicPropsOnJSXOpeningTag(jsxASTTag, attrs)
   }
 
   if (Array.isArray(children)) {

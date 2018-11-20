@@ -1,7 +1,7 @@
 import * as t from '@babel/types'
 
 import { ComponentPlugin } from '../../types'
-import { objectToObjectExpression } from '../../../react/JSXTag/utils'
+import { objectToObjectExpression } from '../../../pipeline/utils/jsx-ast'
 import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
 import { makeConstAssign, makeDefaultImportStatement } from '../../utils/js-ast'
 import { cammelCaseToDashCase } from '../../utils/helpers'
@@ -16,7 +16,7 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
       const className = cammelCaseToDashCase(name)
       accumulator[className] = style
       // addClassStringOnJSXTag(root.node, className)
-      addDynamicPropOnJsxOpeningTag(root.node, 'className', `classes['${className}']`)
+      addDynamicPropOnJsxOpeningTag(root, 'className', `classes['${className}']`)
     }
 
     if (children && Array.isArray(children)) {

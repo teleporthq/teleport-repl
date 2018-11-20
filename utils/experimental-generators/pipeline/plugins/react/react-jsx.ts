@@ -1,4 +1,11 @@
-import JSXTag from '../../../react/JSXTag'
+import { JSXElement } from '@babel/types'
+
+import {
+  addChildJSXTag,
+  addChildJSXText,
+  addASTAttributeToJSXTag,
+  generateASTDefinitionForJSXTag,
+} from '../../utils/jsx-ast'
 
 import {
   ComponentPlugin,
@@ -13,7 +20,11 @@ import {
  * @param mappedElement the structure returned by the resolver, needed for mapping the tag and the attributes
  * @param attrs the attributes defined on the UIDL for this node/tag
  */
-const addAttributesToTag = (tag: JSXTag, mappedElement: MappedElement, attrs: any) => {
+const addAttributesToTag = (
+  tag: JSXElement,
+  mappedElement: MappedElement,
+  attrs: any
+) => {
   // This will gather all the attributes from the UIDL which are mapped using the element-mappings
   // These attributes will not be added on the tag as they are, but using the element-mappings
   // Such an example is the url attribute on the Link tag, which needs to be mapped in the case of html to href
@@ -32,7 +43,7 @@ const addAttributesToTag = (tag: JSXTag, mappedElement: MappedElement, attrs: an
         // (ex: Link has an url attribute in the UIDL, but it needs to be mapped to href in the case of HTML)
         const uidlAttributeKey = value.replace('$attrs.', '')
         if (attrs && attrs[uidlAttributeKey]) {
-          tag.addAttribute({ name: key, value: attrs[uidlAttributeKey] })
+          addASTAttributeToJSXTag(tag, { name: key, value: attrs[uidlAttributeKey] })
           mappedAttributes.push(uidlAttributeKey)
         }
 
@@ -42,7 +53,7 @@ const addAttributesToTag = (tag: JSXTag, mappedElement: MappedElement, attrs: an
 
       if (value) {
         // null/undefined values are not added on the tag
-        tag.addAttribute({ name: key, value })
+        addASTAttributeToJSXTag(tag, { name: key, value })
       }
     })
   }
@@ -51,7 +62,7 @@ const addAttributesToTag = (tag: JSXTag, mappedElement: MappedElement, attrs: an
   if (attrs) {
     Object.keys(attrs).forEach((key) => {
       if (attrs[key] && attrs[key][0] !== '$' && !mappedAttributes.includes(key)) {
-        tag.addAttribute({ name: key, value: attrs[key] })
+        addASTAttributeToJSXTag(tag, { name: key, value: attrs[key] })
       }
     })
   }
@@ -62,11 +73,11 @@ const generateTreeStructure = (
   uidlMappings: any = {},
   resolver: Resolver,
   dependencies: ComponentDependency[]
-): JSXTag => {
+): JSXElement => {
   const { type, children, name, attrs } = content
   const mappedElement = resolver(type)
   const mappedType = mappedElement.name
-  const mainTag = new JSXTag(mappedType)
+  const mainTag = generateASTDefinitionForJSXTag(mappedType)
   addAttributesToTag(mainTag, mappedElement, attrs)
 
   if (mappedElement.dependency) {
@@ -83,14 +94,19 @@ const generateTreeStructure = (
         if (!child) {
           return
         }
-        const newTag = generateTreeStructure(child, uidlMappings, resolver, dependencies)
-        if (!newTag) {
+        const childTag = generateTreeStructure(
+          child,
+          uidlMappings,
+          resolver,
+          dependencies
+        )
+        if (!childTag) {
           return
         }
-        mainTag.addChildJSXTag(newTag.node)
+        addChildJSXTag(mainTag, childTag)
       })
     } else {
-      mainTag.addChildJSXText(children.toString())
+      addChildJSXText(mainTag, children.toString())
     }
   }
 

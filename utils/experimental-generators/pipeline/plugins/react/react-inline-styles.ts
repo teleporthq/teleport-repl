@@ -22,7 +22,6 @@ const enhanceJSXWithStyles = (content: any, uidlMappings: any) => {
       return
     }
 
-    const jsxASTNode = jsxASTTag.node
     addJSXTagStyles(jsxASTNode, t, style)
   }
 

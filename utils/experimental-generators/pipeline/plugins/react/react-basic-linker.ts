@@ -31,7 +31,7 @@ const reactStandardLinker: ComponentPlugin = async (structure) => {
   )
 
   // injext in the return statement of the component ast the JSX chunk
-  theReactJSComponentChunk.content.returnStatement.argument = theJSXChunk.content.node
+  theReactJSComponentChunk.content.returnStatement.argument = theJSXChunk.content
 
   const contentInstructions = importStatements.map((chunk) => chunk.content)
 
