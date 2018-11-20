@@ -9,6 +9,19 @@ const generateSingleVueNode = (params: { tagName: string }): CheerioStatic => {
   })
 }
 
+// TODO move into utils, this could be the generic way of splitting/getting only
+// the dynamic props
+const getStaticOnlyProps = (props: { [key: string]: any }): { [key: string]: any } => {
+  return Object.keys(props)
+    .filter((propKey) => {
+      return !props[propKey].startsWith('$props')
+    })
+    .reduce((newMap: { [key: string]: any }, key) => {
+      newMap[key] = props[key]
+      return newMap
+    }, {})
+}
+
 const generateVueNodesTree = (
   content: {
     type: string
@@ -18,7 +31,7 @@ const generateVueNodesTree = (
   },
   uidlMappings: { [key: string]: any }
 ): CheerioStatic => {
-  const { name, type, children } = content
+  const { name, type, children, attrs } = content
   const mappedType = type === 'Text' ? 'span' : 'div'
   const mainTag = generateSingleVueNode({ tagName: mappedType })
   const root = mainTag(mappedType)
@@ -34,8 +47,12 @@ const generateVueNodesTree = (
     }
   }
 
-  // root.addClass(name)
-  // root.attr('name', type)
+  const staticAttrs = getStaticOnlyProps(attrs || {})
+
+  Object.keys(staticAttrs).forEach((key) => {
+    root.attr(key, staticAttrs[key])
+  })
+
   uidlMappings[name] = root
 
   return mainTag

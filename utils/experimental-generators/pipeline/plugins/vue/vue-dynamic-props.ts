@@ -15,6 +15,19 @@ const addDynamicTemplateBinds = (
   })
 }
 
+// TODO move into utils, this could be the generic way of splitting/getting only
+// the dynamic props
+const getDynamicOnlyProps = (props: { [key: string]: any }): { [key: string]: any } => {
+  return Object.keys(props)
+    .filter((propKey) => {
+      return props[propKey].startsWith('$props')
+    })
+    .reduce((newMap: { [key: string]: any }, key) => {
+      newMap[key] = props[key]
+      return newMap
+    }, {})
+}
+
 const enhanceStructureWithDynamicBinds = (
   content: {
     type: string
@@ -30,12 +43,12 @@ const enhanceStructureWithDynamicBinds = (
 
   if (attrs && Object.keys(attrs).length) {
     const root = uidlMappings[name]
-
+    const dynamicProps = getDynamicOnlyProps(attrs)
     if (!root) {
       return
     }
 
-    addDynamicTemplateBinds(root, attrs, accumulatedProps)
+    addDynamicTemplateBinds(root, dynamicProps, accumulatedProps)
   }
 
   if (Array.isArray(children)) {
@@ -80,6 +93,7 @@ const vueTemplateChunkPlugin: ComponentPlugin = async (structure) => {
   }
 
   const accumulatedProps = {}
+
   enhanceStructureWithDynamicBinds(
     uidl.content,
     theVueTemplateChunk.meta.uidlMappings,
