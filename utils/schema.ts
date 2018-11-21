@@ -16,26 +16,50 @@ export default {
       type: 'string',
       default: 'v1',
     },
-    paramDefinitions: {
-      type: 'object',
-    },
     meta: {
       type: 'object',
+    },
+    propDefinitions: {
+      type: 'object',
+      patternProperties: {
+        '.*': {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            type: { type: 'string' },
+            defaultValue: {
+              oneOf: [
+                {
+                  type: 'string',
+                },
+                {
+                  type: 'number',
+                },
+                {
+                  type: 'boolean',
+                },
+              ],
+            },
+          },
+        },
+      },
     },
   },
   definitions: {
     content: {
       type: 'object',
-      required: ['type', 'source'],
+      required: ['id', 'type'],
       additionalProperties: false,
       properties: {
+        id: {
+          type: 'string',
+        },
         type: {
           type: 'string',
           examples: ['Text', 'View'],
         },
-        source: {
-          type: 'string',
-          examples: ['teleport-elements-core'],
+        dependency: {
+          $ref: '#/definitions/dependency',
         },
         name: {
           type: 'string',
@@ -109,6 +133,23 @@ export default {
             },
           ],
           examples: ['magenta'],
+        },
+      },
+    },
+    dependency: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['type'],
+      properties: {
+        type: { type: 'string', examples: ['package', 'local', 'library'] },
+        meta: {
+          type: 'object',
+          properties: {
+            path: { type: 'string' },
+            version: { type: 'string' },
+            namedImport: { type: 'boolean', default: 'false' },
+            originalName: { type: 'string' },
+          },
         },
       },
     },

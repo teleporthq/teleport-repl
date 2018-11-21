@@ -2,7 +2,7 @@ import { ComponentPlugin } from '../../types'
 
 import * as t from '@babel/types'
 
-import { addJSXTagStyles } from '../../../react/JSXTag/utils'
+import { addJSXTagStyles } from '../../../pipeline/utils/jsx-ast'
 
 /**
  * Walks the content tree and modify the jsx ast representation by adding new
@@ -22,7 +22,7 @@ const enhanceJSXWithStyles = (content: any, uidlMappings: any) => {
       return
     }
 
-    addJSXTagStyles(jsxASTNode, t, style)
+    addJSXTagStyles(jsxASTTag, t, style)
   }
 
   if (Array.isArray(children)) {

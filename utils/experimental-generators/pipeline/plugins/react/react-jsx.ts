@@ -8,10 +8,17 @@ import {
 } from '../../utils/jsx-ast'
 
 import {
+  makeDefaultImportStatement,
+  makeNamedMappedImportStatement,
+  makeNamedImportStatement,
+} from '../../utils/js-ast'
+
+import {
   ComponentPlugin,
   MappedElement,
   Resolver,
   ComponentDependency,
+  ComponentStructure,
 } from '../../types'
 
 /**
@@ -72,20 +79,19 @@ const generateTreeStructure = (
   content: any,
   uidlMappings: any = {},
   resolver: Resolver,
-  dependencies: ComponentDependency[]
+  dependencies: any = {}
 ): JSXElement => {
-  const { type, children, name, attrs } = content
+  const { type, children, name, attrs, dependency } = content
   const mappedElement = resolver(type)
   const mappedType = mappedElement.name
   const mainTag = generateASTDefinitionForJSXTag(mappedType)
   addAttributesToTag(mainTag, mappedElement, attrs)
 
-  if (mappedElement.dependency) {
-    dependencies.push({
-      type: mappedElement.dependency.type,
-      path: mappedElement.dependency.path,
-      namedImport: mappedElement.dependency.namedImport || false,
-    })
+  // If dependency is specified at UIDL level it will have priority over the mapping one
+  const tagDependency = dependency || mappedElement.dependency
+  if (tagDependency) {
+    // Make a copy to avoid reference leaking
+    dependencies[mappedType] = { ...tagDependency }
   }
 
   if (children) {
@@ -116,18 +122,66 @@ const generateTreeStructure = (
   return mainTag
 }
 
+const resolveImportStatement = (componentName: string, dependency: any) => {
+  const details =
+    dependency.meta && dependency.meta.path
+      ? dependency.meta
+      : {
+          // default meta, this will probably change later
+          path: './' + componentName,
+        }
+
+  if (details.namedImport) {
+    // if the component is listed under a different originalName, then import is "x as y"
+    return details.originalName
+      ? makeNamedMappedImportStatement(
+          { [details.originalName]: componentName },
+          details.path
+        )
+      : makeNamedImportStatement([componentName], details.path)
+  }
+
+  return makeDefaultImportStatement(componentName, details.path)
+}
+
+const generateImportChunk = (
+  componentName: string,
+  dependency: any,
+  structure: ComponentStructure
+) => {
+  // If we want to resolve imports later, we can add the dependency as the content for each chunk
+  const importContent = resolveImportStatement(componentName, dependency)
+  structure.chunks.push({
+    type: 'js',
+    meta: {
+      usage: 'import',
+    },
+    content: importContent,
+  })
+
+  // Temporary, until we figure out how/when to output all depedencies
+  if (dependency.type === 'package') {
+    structure.dependencies.push(dependency)
+  }
+}
+
 const reactJSXPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, resolver, dependencies } = structure
+  const { uidl, resolver } = structure
 
   // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
   // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
   // The structure will be populated as the AST is being created
   const uidlMappings = {}
+  const jsxDependencies = {}
   const jsxTagStructure = generateTreeStructure(
     uidl.content,
     uidlMappings,
     resolver,
-    dependencies
+    jsxDependencies
+  )
+
+  Object.keys(jsxDependencies).forEach((key) =>
+    generateImportChunk(key, jsxDependencies[key], structure)
   )
 
   structure.chunks.push({

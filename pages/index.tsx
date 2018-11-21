@@ -90,7 +90,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
               generatedCode: code.toString(),
             },
             () => {
-              postData(this.getPreviewerUrl() + '/preview', code.toString())
+              // postData(this.getPreviewerUrl() + '/preview', code.toString())
             }
           )
         } catch (err) {
@@ -107,7 +107,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
               generatedCode: code,
             },
             () => {
-              postData(this.getPreviewerUrl() + '/preview', code)
+              // postData(this.getPreviewerUrl() + '/preview', code)
             }
           )
         } catch (err) {
@@ -140,7 +140,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
           generatedCode,
         },
         () => {
-          postData(this.getPreviewerUrl() + '/preview', generatedCode)
+          // postData(this.getPreviewerUrl() + '/preview', generatedCode)
         }
       )
     })

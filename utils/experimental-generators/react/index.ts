@@ -24,8 +24,30 @@ const asemblyLine = new ComponentAsemblyLine(
     prettierPostPlugin,
   ],
   (type) => {
+    const customMapping = {
+      Datepicker: {
+        name: 'ReactDatepicker',
+        attrs: {
+          'data-attr': 'test',
+        },
+        dependency: {
+          type: 'package',
+          meta: {
+            path: 'react-datepicker',
+            version: '1.0.2',
+            namedImport: true,
+            originalName: 'Datepicker',
+          },
+        },
+      },
+    }
+
+    const mapping = {
+      ...htmlMapping,
+      ...customMapping,
+    }
     // Here we could select based on target (ex: react, next)
-    const result = (htmlMapping as { [key: string]: any })[type]
+    const result = (mapping as { [key: string]: any })[type]
 
     if (!result) {
       // If no mapping is found, use the type as the end value

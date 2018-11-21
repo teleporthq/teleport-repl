@@ -15,8 +15,12 @@ export interface ChunkDefinition {
  */
 export interface ComponentDependency {
   type: string
-  path: string
-  namedImport?: boolean
+  meta: {
+    path?: string
+    version?: string
+    namedImport?: boolean
+    originalName?: string
+  }
 }
 
 /**
@@ -37,11 +41,7 @@ export interface ComponentStructure {
 export interface MappedElement {
   name: string
   attrs?: any
-  dependency?: {
-    type: string
-    path: string
-    namedImport?: boolean
-  }
+  dependency?: ComponentDependency
 }
 
 /**

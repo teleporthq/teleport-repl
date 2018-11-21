@@ -7,6 +7,9 @@ export default {
   },
   Image: {
     name: 'img',
+    attrs: {
+      src: '$attrs.url',
+    },
   },
   TextInput: {
     name: 'input',
@@ -15,16 +18,19 @@ export default {
     },
   },
   Link: {
-    name: 'a',
+    name: 'Link',
     attrs: {
       href: '$attrs.url',
       target: ({ url }: any = {}) => (url && url.startsWith('http') ? '_blank' : null),
       rel: 'nofollow noreferrer',
     },
     dependency: {
-      namedImport: true,
-      type: 'npm',
-      path: 'react-link',
+      type: 'library',
+      meta: {
+        path: 'next/link',
+        namedImport: true,
+        originalName: 'Blabla',
+      },
     },
   },
 }
