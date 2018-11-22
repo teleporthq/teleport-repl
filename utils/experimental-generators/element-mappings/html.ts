@@ -4,6 +4,9 @@ export default {
   },
   Text: {
     name: 'span',
+    attrs: {
+      static: '$attrs.dynamic',
+    },
   },
   Image: {
     name: 'img',
@@ -21,7 +24,7 @@ export default {
     name: 'Link',
     attrs: {
       href: '$attrs.url',
-      target: ({ url }: any = {}) => (url && url.startsWith('http') ? '_blank' : null),
+      target: '_blank',
       rel: 'nofollow noreferrer',
     },
     dependency: {

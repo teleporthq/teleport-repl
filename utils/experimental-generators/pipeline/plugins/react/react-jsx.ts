@@ -40,12 +40,12 @@ const addAttributesToTag = (
   // Standard attributes coming from the element mapping
   if (mappedElement.attrs) {
     Object.keys(mappedElement.attrs).forEach((key) => {
-      let value = mappedElement.attrs[key]
-      if (typeof value === 'function') {
-        // this is just a proposal, maybe it makes more sense for the mapping to be pure JSON and not have function values
-        // it computes the attribute value based on other UIDL attributes (ex: target="_blank" if url starts with http)
-        value = value(attrs)
-      } else if (typeof value === 'string' && value.startsWith('$attrs.')) {
+      const value = mappedElement.attrs[key]
+      if (!value) {
+        return
+      }
+
+      if (typeof value === 'string' && value.startsWith('$attrs.')) {
         // we lookup for the attributes in the UIDL and use the element-mapping key to set them on the tag
         // (ex: Link has an url attribute in the UIDL, but it needs to be mapped to href in the case of HTML)
         const uidlAttributeKey = value.replace('$attrs.', '')
@@ -58,10 +58,7 @@ const addAttributesToTag = (
         return
       }
 
-      if (value) {
-        // null/undefined values are not added on the tag
-        addASTAttributeToJSXTag(tag, { name: key, value })
-      }
+      addASTAttributeToJSXTag(tag, { name: key, value })
     })
   }
 
