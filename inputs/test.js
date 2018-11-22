@@ -9,7 +9,6 @@ export default {
     }
   },
   "content": {
-    "id": "1",
     "type": "View",
     "name": "View",
     "style": {
@@ -20,7 +19,6 @@ export default {
     },
     "children": [
       {
-        "id": "2",
         "type": "Text",
         "name": "Text",
         "children": "Hello world!",
@@ -32,7 +30,6 @@ export default {
         }
       },
       {
-        "id": "3",
         "type": "Datepicker",
         "name": "Picker",
         "style": {

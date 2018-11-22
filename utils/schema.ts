@@ -1,13 +1,13 @@
 export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   type: 'object',
-  title: 'Component Root',
+  title: 'Component Definition',
   required: ['name', 'content', 'version'],
   additionalProperties: false,
   properties: {
     name: {
       type: 'string',
-      default: 'ComponentName',
+      default: 'MyComponent',
     },
     content: {
       $ref: '#/definitions/content',
@@ -48,12 +48,9 @@ export default {
   definitions: {
     content: {
       type: 'object',
-      required: ['id', 'type'],
+      required: ['type', 'name'],
       additionalProperties: false,
       properties: {
-        id: {
-          type: 'string',
-        },
         type: {
           type: 'string',
           examples: ['Text', 'View'],
@@ -63,7 +60,8 @@ export default {
         },
         name: {
           type: 'string',
-          examples: ['Text', 'View'],
+          default: 'MyComponent',
+          examples: ['Component', 'View'],
         },
         style: {
           $ref: '#/definitions/style',
@@ -144,10 +142,11 @@ export default {
         type: { type: 'string', examples: ['package', 'local', 'library'] },
         meta: {
           type: 'object',
+          additionalProperties: false,
           properties: {
             path: { type: 'string' },
-            version: { type: 'string' },
-            namedImport: { type: 'boolean', default: 'false' },
+            version: { type: 'string', default: '1.0.0' },
+            namedImport: { type: 'boolean', default: false },
             originalName: { type: 'string' },
           },
         },

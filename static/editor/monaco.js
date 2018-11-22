@@ -66,9 +66,8 @@ require(['vs/editor/editor.main'], function() {
       fileMatch: [modelUri.toString()],
       schema: {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "$id": "http://example.com/root.json",
         "type": "object",
-        "title": "Component Root",
+        "title": "Component Definition",
         "required": [
           "name",
           "content",
@@ -77,9 +76,8 @@ require(['vs/editor/editor.main'], function() {
         "additionalProperties": false,
         "properties": {
           "name": {
-            "$id": "#/properties/name",
             "type": "string",
-            "default": "ComponentName"
+            "default": "MyComponent"
           },
           "content": {
             "$ref": "#/definitions/content"
@@ -119,17 +117,13 @@ require(['vs/editor/editor.main'], function() {
         },
         "definitions": {
           "content": {
-            "$id": "content",
             "type": "object",
             "required": [
-              "id",
-              "type"
+              "type",
+              "name"
             ],
             "additionalProperties": false,
             "properties": {
-              "id": {
-                "type": "string"
-              },
               "type": {
                 "type": "string",
                 "examples": [
@@ -142,8 +136,9 @@ require(['vs/editor/editor.main'], function() {
               },
               "name": {
                 "type": "string",
+                "default": "MyComponent",
                 "examples": [
-                  "Text",
+                  "Component",
                   "View"
                 ]
               },
@@ -170,7 +165,6 @@ require(['vs/editor/editor.main'], function() {
             }
           },
           "style": {
-            "$id": "style",
             "type": "object",
             "properties": {
               "width": {
@@ -228,7 +222,6 @@ require(['vs/editor/editor.main'], function() {
             }
           },
           "dependency": {
-            "$id": "dependency",
             "type": "object",
             "additionalProperties": false,
             "required": ["type"],
@@ -236,10 +229,11 @@ require(['vs/editor/editor.main'], function() {
               "type": {"type": "string", "examples": ["package", "local", "library"]},
               "meta": {
                 "type": "object", 
+                "additionalProperties": false,
                 "properties": {
                   "path": {"type": "string"},
-                  "version": {"type": "string"},
-                  "namedImport": {"type": "boolean", "default": "false"},
+                  "version": {"type": "string", "default": "1.0.0"},
+                  "namedImport": {"type": "boolean", "default": false},
                   "originalName": {"type": "string"}
                 }
               }
