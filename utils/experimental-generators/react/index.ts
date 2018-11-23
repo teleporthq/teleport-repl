@@ -6,7 +6,7 @@ import Builder from '../pipeline/builder'
 import { createPlugin as reactJSX } from '../pipeline/plugins/react/react-jsx'
 import { createPlugin as reactPureComponent } from '../pipeline/plugins/react/react-pure-component'
 import { createPlugin as styledJSX } from '../pipeline/plugins/react/react-styled-jsx-chunk'
-import { createPlugin as dynamicProps } from '../pipeline/plugins/react/react-dynamic-props'
+// import { createPlugin as dynamicProps } from '../pipeline/plugins/react/react-dynamic-props'
 import { createPlugin as reactJSS } from '../pipeline/plugins/react/react-jss'
 import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/react-inline-styles'
 
@@ -34,9 +34,9 @@ const configuredReactJSS = reactJSS({
   exportChunkName: 'main-export',
 })
 
-const configuredDynamicProps = dynamicProps({
-  targetJSXChunk: 'main-jsx',
-})
+// const configuredDynamicProps = dynamicProps({
+//   targetJSXChunk: 'main-jsx',
+// })
 
 const configuredReactInlineStyles = reactInlineStyles({
   targetJSXChunk: 'main-jsx',
@@ -83,19 +83,19 @@ const Options: { [key: string]: any } = {
     configuredReactPureComponent,
     configuredReactJSX,
     configuredReactInlineStyles,
-    configuredDynamicProps,
+    // configuredDynamicProps,
   ],
   StyledJSX: [
     configuredReactPureComponent,
     configuredReactJSX,
     configuredReactStyledJSX,
-    configuredDynamicProps,
+    // configuredDynamicProps,
   ],
   JSS: [
     configuredReactPureComponent,
     configuredReactJSX,
     configuredReactJSS,
-    configuredDynamicProps,
+    // configuredDynamicProps,
   ],
 }
 

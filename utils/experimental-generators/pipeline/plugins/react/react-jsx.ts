@@ -6,6 +6,7 @@ import {
   addASTAttributeToJSXTag,
   generateASTDefinitionForJSXTag,
   addDynamicChild,
+  addDynamicPropOnJsxOpeningTag,
 } from '../../utils/jsx-ast'
 
 import {
@@ -53,7 +54,13 @@ const addAttributesToTag = (
         // (ex: Link has an url attribute in the UIDL, but it needs to be mapped to href in the case of HTML)
         const uidlAttributeKey = value.replace('$attrs.', '')
         if (attrs && attrs[uidlAttributeKey]) {
-          addASTAttributeToJSXTag(tag, { name: key, value: attrs[uidlAttributeKey] })
+          if (attrs[uidlAttributeKey].startsWith('$props.')) {
+            const dynamicPropValue = attrs[uidlAttributeKey].replace('$props.', '')
+            addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue)
+          } else {
+            addASTAttributeToJSXTag(tag, { name: key, value: attrs[uidlAttributeKey] })
+          }
+
           mappedAttributes.push(uidlAttributeKey)
         }
 
@@ -68,8 +75,13 @@ const addAttributesToTag = (
   // Custom attributes coming from the UIDL
   if (attrs) {
     Object.keys(attrs).forEach((key) => {
-      if (attrs[key] && attrs[key][0] !== '$' && !mappedAttributes.includes(key)) {
-        addASTAttributeToJSXTag(tag, { name: key, value: attrs[key] })
+      if (!mappedAttributes.includes(key)) {
+        if (attrs[key].startsWith('$props.')) {
+          const value = attrs[key].replace('$props.', '')
+          addDynamicPropOnJsxOpeningTag(tag, key, value)
+        } else {
+          addASTAttributeToJSXTag(tag, { name: key, value: attrs[key] })
+        }
       }
     })
   }

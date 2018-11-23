@@ -5,7 +5,6 @@ export default {
   "content": {
     "name": "ImageContainer",
     "type": "View",
-    "source": "teleport-elements-core",
     "style": {
       "textAlign": "center"
     },
@@ -13,14 +12,13 @@ export default {
       {
         "name": "Image",
         "type": "Image",
-        "source": "teleport-elements-core",
         "style": {
           "maxWidth": "100%",
           "height": "auto",
           "marginTop": "30px"
         },
         "attrs": {
-          "src": "$props.src",
+          "url": "$props.src",
           "alt": "$props.alt"
         }
       }
