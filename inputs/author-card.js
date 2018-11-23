@@ -29,7 +29,7 @@ export default {
             "type": "Image",
             "name": "img",
             "attrs": {
-              "src": "$props.avatarURL",
+              "src": "$props.avatarUrl",
               "alt": "$props.authorName"
             }
           }

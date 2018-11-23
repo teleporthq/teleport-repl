@@ -10,8 +10,9 @@ const addDynamicTemplateBinds = (
   accumulatedProps: { [key: string]: string }
 ) => {
   Object.keys(attrs).forEach((key) => {
-    root.attr(`:${key}`, attrs[key].replace('$props.', ''))
-    accumulatedProps[key] = 'String'
+    const propsName = attrs[key].replace('$props.', '')
+    root.attr(`:${key}`, propsName)
+    accumulatedProps[propsName] = 'String'
   })
 }
 

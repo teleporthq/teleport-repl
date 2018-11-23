@@ -1,8 +1,14 @@
 import cheerio from 'cheerio'
-import { ComponentPlugin } from '../../types'
+import { ComponentPlugin, Resolver } from '../../types'
 
-const generateSingleVueNode = (params: { tagName: string }): CheerioStatic => {
-  return cheerio.load(`<${params.tagName}> </${params.tagName}>`, {
+const generateSingleVueNode = (params: {
+  tagName: string
+  selfClosing?: boolean
+}): CheerioStatic => {
+  const emptyDeclaration = params.selfClosing
+    ? `<${params.tagName}/>`
+    : `<${params.tagName}> </${params.tagName}>`
+  return cheerio.load(emptyDeclaration, {
     xmlMode: true, // otherwise the .html returns a <html><body> thing
     decodeEntities: false, // otherwise we can't set objects like `{ 'text-danger': hasError }`
     // without having them escaped with &quote; and stuff
@@ -28,22 +34,31 @@ const generateVueNodesTree = (
     children: any
     style: any
     name: string
+    attrs: { [key: string]: any }
   },
-  uidlMappings: { [key: string]: any }
+  uidlMappings: { [key: string]: any },
+  resolver: Resolver
 ): CheerioStatic => {
   const { name, type, children, attrs } = content
-  const mappedType = type === 'Text' ? 'span' : 'div'
-  const mainTag = generateSingleVueNode({ tagName: mappedType })
+  const mappedType = resolver(type).name
+  const mainTag = generateSingleVueNode({
+    tagName: mappedType,
+    selfClosing: !(children && children.length),
+  })
   const root = mainTag(mappedType)
 
   if (children) {
     if (Array.isArray(children)) {
       children.forEach((child) => {
-        const childTag = generateVueNodesTree(child, uidlMappings)
-        root.append(childTag(child.type === 'Text' ? 'span' : 'div'))
+        const childTag = generateVueNodesTree(child, uidlMappings, resolver)
+        root.append(childTag.root())
       })
     } else if (typeof children === 'string') {
-      root.text(children.toString())
+      if (children.startsWith('$props.')) {
+        root.append(`{{${children.replace('$props.', '')}}}`)
+      } else {
+        root.append(children.toString())
+      }
     }
   }
 
@@ -59,13 +74,14 @@ const generateVueNodesTree = (
 }
 
 const vueTemplateChunkPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks } = structure
+  const { uidl, chunks, resolver } = structure
 
   const uidlMappings = {}
-  const content = generateVueNodesTree(uidl.content, uidlMappings)
+  const content = generateVueNodesTree(uidl.content, uidlMappings, resolver)
 
   chunks.push({
     type: 'html',
+    name: 'vue-template',
     meta: {
       usage: 'vue-component-template',
       uidlMappings,
