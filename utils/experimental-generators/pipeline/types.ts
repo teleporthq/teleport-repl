@@ -1,3 +1,8 @@
+export interface EmbedDefinition {
+  chunkName: string
+  slot: string
+}
+
 /**
  * React could have one or more JS chunks, nothing else.
  * Vue has a template chunk, of type XML/HTML, a javascript
@@ -5,8 +10,16 @@
  */
 export interface ChunkDefinition {
   type: string
-  meta: any | null
+  name: string
+  meta?: any | null
   content: any
+  linker?: {
+    slots?: {
+      [key: string]: (chunks: ChunkDefinition[]) => any
+    }
+    after?: string[]
+    embed?: EmbedDefinition
+  }
 }
 
 /**
@@ -52,7 +65,15 @@ export type ComponentPlugin = (
 ) => Promise<ComponentStructure>
 
 /**
+ * Configure a componnet plugin, specifing names or ids for chunks, to be later
+ * used between other plugins and by the linker.
+ */
+export type ComponentPluginFactory<T> = (configuration?: T) => ComponentPlugin
+
+/**
  * The function which resolves element mappings (primitive and custom)
  * @param type - uidl node which is converted
  */
 export type Resolver = (type: string) => MappedElement
+
+export type GeneratorFunction = (content: any) => string

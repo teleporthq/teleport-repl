@@ -7,14 +7,13 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 import { JsonInputChooser } from '../components/JsonInputChooser'
 
-import loadWrapper from '../utils/teleportWrapper'
 import uildValidator from '../utils/uildValidator'
 
 import { generateComponent as generateReactComponent } from '../utils/experimental-generators/react'
 import { generateComponent as generateVueComponent } from '../utils/experimental-generators/vue'
 
 import { loadJSONAsync, exmaplesList } from '../inputs'
-import test1 from '../inputs/test'
+import authorCard from '../inputs/author-card'
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
@@ -46,7 +45,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
   public state: PlaygroundPageState = {
     generatedCode: '',
     inputJson: '',
-    targetLibrary: 'react-ast',
+    targetLibrary: 'react.InlineStyles',
     sourceJSON: exmaplesList[0],
   }
 
@@ -82,15 +81,20 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     }
 
     switch (targetLibrary) {
-      case 'react-ast':
+      case 'react.InlineStyles':
+      case 'react.StyledJSX':
+      case 'react.JSS':
         try {
-          const code = await generateReactComponent(jsonValue)
+          const code = await generateReactComponent(
+            jsonValue,
+            targetLibrary.replace('react.', '')
+          )
           this.setState(
             {
               generatedCode: code.toString(),
             },
             () => {
-              // postData(this.getPreviewerUrl() + '/preview', code.toString())
+              postData(this.getPreviewerUrl() + '/preview', code.toString())
             }
           )
         } catch (err) {
@@ -107,7 +111,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
               generatedCode: code,
             },
             () => {
-              // postData(this.getPreviewerUrl() + '/preview', code)
+              postData(this.getPreviewerUrl() + '/preview', code)
             }
           )
         } catch (err) {
@@ -116,34 +120,6 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
         }
         return
     }
-
-    loadWrapper().then((wrapper) => {
-      const result = wrapper.generateComponent(
-        jsonValue,
-        targetLibrary,
-        targetLibrary === 'react'
-          ? {
-              renderer: 'styled-jsx',
-            }
-          : {}
-      )
-      const fileName = result.getFileNames()[0]
-
-      const generatedCode = result.getContent(fileName)
-
-      if (!generatedCode) {
-        return
-      }
-
-      this.setState(
-        {
-          generatedCode,
-        },
-        () => {
-          // postData(this.getPreviewerUrl() + '/preview', generatedCode)
-        }
-      )
-    })
   }
 
   public handleJSONChoose = (ev: { target: { value: string } }) => {
@@ -161,10 +137,10 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
 
   public getPreviewerUrl() {
     switch (this.state.targetLibrary) {
-      case 'react':
-      case 'react-ast':
+      case 'react.InlineStyles':
+      case 'react.StyledJSX':
+      case 'react.JSS':
         return 'http://localhost:3031'
-      case 'vue':
       case 'vue-ast':
         return 'http://localhost:3032'
       default:
@@ -221,7 +197,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             <MonacoEditor
               ref={this.codeEditorRef}
               name="json-editor"
-              value={JSON.stringify(test1, null, 2)}
+              value={JSON.stringify(authorCard, null, 2)}
               onMessage={this.handleJSONUpdate}
             />
           </div>
@@ -232,11 +208,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
                 onChoose={this.handleGeneratorTypeChange}
                 value={this.state.targetLibrary}
               />
-              <button>Refresh All</button>
-              <button>Refresh Code</button>
-              <button>Refresh Project</button>
             </div>
-            <PannelTitle>Running app with generated code</PannelTitle>
             <div className="live-view-container">
               <PreviewFrame url={this.getPreviewerUrl()} />
             </div>

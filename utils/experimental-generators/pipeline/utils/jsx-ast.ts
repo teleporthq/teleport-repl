@@ -98,7 +98,7 @@ export const generateStyledJSXTag = (
   }
 
   const jsxTagChild = t.jsxExpressionContainer(templateLiteral)
-  const jsxTag = generateBasicJSXTag('style', [jsxTagChild], t)
+  const jsxTag = generateBasicJSXTag('style', [jsxTagChild, t.jsxText('\n')], t)
   addASTAttributeToJSXTag(jsxTag, { name: 'jsx' }, t)
   return jsxTag
 }
@@ -173,11 +173,19 @@ export const generateASTDefinitionForJSXTag = (tagName: string, t = types) => {
 }
 
 export const addChildJSXTag = (tag: types.JSXElement, childNode: types.JSXElement) => {
-  tag.children.push(childNode)
+  tag.children.push(types.jsxText('\n'), childNode, types.jsxText('\n'))
 }
 
 export const addChildJSXText = (tag: types.JSXElement, text: string, t = types) => {
   tag.children.push(t.jsxText(text))
+}
+
+export const addDynamicChild = (tag: types.JSXElement, value: string, t = types) => {
+  tag.children.push(
+    t.jsxExpressionContainer(
+      t.memberExpression(t.identifier('props'), t.identifier(value))
+    )
+  )
 }
 
 export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types) => {

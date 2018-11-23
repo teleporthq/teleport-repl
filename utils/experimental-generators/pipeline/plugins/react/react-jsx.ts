@@ -5,6 +5,7 @@ import {
   addChildJSXText,
   addASTAttributeToJSXTag,
   generateASTDefinitionForJSXTag,
+  addDynamicChild,
 } from '../../utils/jsx-ast'
 
 import {
@@ -18,7 +19,9 @@ import {
   MappedElement,
   Resolver,
   ComponentDependency,
+  ComponentPluginFactory,
   ComponentStructure,
+  EmbedDefinition,
 } from '../../types'
 
 /**
@@ -109,7 +112,12 @@ const generateTreeStructure = (
         addChildJSXTag(mainTag, childTag)
       })
     } else {
-      addChildJSXText(mainTag, children.toString())
+      const stringPart = children.toString()
+      if (stringPart.indexOf('$props.') === -1) {
+        addChildJSXText(mainTag, children.toString())
+      } else {
+        addDynamicChild(mainTag, children.toString().replace('$props.', ''))
+      }
     }
   }
 
@@ -150,6 +158,7 @@ const generateImportChunk = (
   const importContent = resolveImportStatement(componentName, dependency)
   structure.chunks.push({
     type: 'js',
+    name: `import-${dependency.meta.path}`,
     meta: {
       usage: 'import',
     },
@@ -162,34 +171,63 @@ const generateImportChunk = (
   }
 }
 
-const reactJSXPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, resolver } = structure
+interface JSXConfig {
+  chunkName: string
+  embed: EmbedDefinition
+}
+export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
+  const {
+    chunkName = 'react-component-jsx',
+    embed = { chunkName: 'react-pure-component', slot: 'componet-jsx' },
+  } = config || {}
 
-  // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
-  // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
-  // The structure will be populated as the AST is being created
-  const uidlMappings = {}
-  const jsxDependencies = {}
-  const jsxTagStructure = generateTreeStructure(
-    uidl.content,
-    uidlMappings,
-    resolver,
-    jsxDependencies
-  )
+  const reactJSXPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, resolver } = structure
 
-  Object.keys(jsxDependencies).forEach((key) =>
-    generateImportChunk(key, jsxDependencies[key], structure)
-  )
-
-  structure.chunks.push({
-    type: 'jsx',
-    meta: {
-      usage: 'react-component-jsx',
+    // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
+    // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
+    // The structure will be populated as the AST is being created
+    const uidlMappings = {}
+    const jsxDependencies: { [key: string]: any } = {}
+    const jsxTagStructure = generateTreeStructure(
+      uidl.content,
       uidlMappings,
-    },
-    content: jsxTagStructure,
-  })
-  return structure
+      resolver,
+      jsxDependencies
+    )
+
+    Object.keys(jsxDependencies).forEach((key) =>
+      generateImportChunk(key, jsxDependencies[key], structure)
+    )
+
+    structure.chunks.push({
+      type: 'jsx',
+      name: chunkName,
+      linker: {
+        // after: ['react-import'],
+        embed: {
+          chunkName: embed.chunkName,
+          slot: embed.slot,
+        },
+        slots: {
+          children: (chunks) => {
+            chunks.forEach((chunk) => {
+              jsxTagStructure.children.push(chunk.content)
+            })
+            return true
+          },
+        },
+      },
+      meta: {
+        usage: chunkName,
+        uidlMappings,
+      },
+      content: jsxTagStructure,
+    })
+    return structure
+  }
+
+  return reactJSXPlugin
 }
 
-export default reactJSXPlugin
+export default createPlugin()

@@ -2,7 +2,7 @@ import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
 
-import { ComponentPlugin } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory, EmbedDefinition } from '../../types'
 
 import { addClassStringOnJSXTag, generateStyledJSXTag } from '../../utils/jsx-ast'
 
@@ -42,29 +42,57 @@ const generateStyledJSXString = (content: any, uidlMappings: any) => {
 
   return accumulator
 }
-
-const reactStyledJSXChunkPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks } = structure
-
-  const { content } = uidl
-
-  const jsxChunk = chunks.filter((chunk) => chunk.type === 'jsx')[0]
-  const jsxChunkMappings = jsxChunk.meta.uidlMappings
-
-  const styleJSXString = generateStyledJSXString(content, jsxChunkMappings)
-
-  const jsxASTNodeReference = generateStyledJSXTag(styleJSXString.join('\n'))
-  // We have the ability to insert the tag into the existig JSX structure, or
-  // do something else with it. For now, to move faster, we'll add it to the existing
-  // ast structure directly.
-
-  // we have in the mappings references to JSXTags (see project class implementation)
-  // these instances of JSXTag have a node reference which is the AST implementation
-  // of a BabelTypes.JSXElement. Not ideal, I know. Maybe we can do something about
-  // this kind of dereferencing in the future.
-  jsxChunkMappings[content.name].children.push(jsxASTNodeReference)
-
-  return structure
+interface StyledJSXConfig {
+  chunkName: string
+  targetJsxChunk: string
 }
 
-export default reactStyledJSXChunkPlugin
+export const createPlugin: ComponentPluginFactory<StyledJSXConfig> = (config) => {
+  const {
+    chunkName = 'react-component-styled-jsx',
+    targetJsxChunk = 'react-component-jsx',
+  } = config || {}
+
+  const reactStyledJSXChunkPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, chunks } = structure
+
+    const { content } = uidl
+
+    const jsxChunk = chunks.filter((chunk) => chunk.name === targetJsxChunk)[0]
+    if (!jsxChunk) {
+      return structure
+    }
+
+    const jsxChunkMappings = jsxChunk.meta.uidlMappings
+
+    const styleJSXString = generateStyledJSXString(content, jsxChunkMappings)
+
+    const jsxASTNodeReference = generateStyledJSXTag(styleJSXString.join('\n'))
+    // We have the ability to insert the tag into the existig JSX structure, or
+    // do something else with it. For now, to move faster, we'll add it to the existing
+    // ast structure directly.
+
+    // we have in the mappings references to jsx ast tags
+    // jsxChunkMappings[content.name].children.push(jsxASTNodeReference)
+
+    chunks.push({
+      type: 'jsx',
+      name: chunkName,
+      meta: {},
+      linker: {
+        // after: ['react-import'],
+        embed: {
+          chunkName: targetJsxChunk,
+          slot: 'children',
+        },
+      },
+      content: jsxASTNodeReference,
+    })
+
+    return structure
+  }
+
+  return reactStyledJSXChunkPlugin
+}
+
+export default createPlugin()

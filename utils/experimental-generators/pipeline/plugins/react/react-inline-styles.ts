@@ -1,8 +1,8 @@
-import { ComponentPlugin } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 
 import * as t from '@babel/types'
 
-import { addJSXTagStyles } from '../../../pipeline/utils/jsx-ast'
+import { addJSXTagStyles } from '../../utils/jsx-ast'
 
 /**
  * Walks the content tree and modify the jsx ast representation by adding new
@@ -22,7 +22,7 @@ const enhanceJSXWithStyles = (content: any, uidlMappings: any) => {
       return
     }
 
-    addJSXTagStyles(jsxASTTag, t, style)
+    addJSXTagStyles(jsxASTTag, style, t)
   }
 
   if (Array.isArray(children)) {
@@ -30,26 +30,31 @@ const enhanceJSXWithStyles = (content: any, uidlMappings: any) => {
   }
 }
 
-/**
- * Generate the inlines stlye definition as a AST block which will represent the
- * defined styles of this component in UIDL
- *
- * @param structure : ComponentStructure
- */
-const reactInlineStyleComponentPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks } = structure
+interface InlineStyleConfig {
+  targetJSXChunk: string
+}
+export const createPlugin: ComponentPluginFactory<InlineStyleConfig> = (config) => {
+  const { targetJSXChunk = 'react-component-jsx' } = config || {}
+  /**
+   * Generate the inlines stlye definition as a AST block which will represent the
+   * defined styles of this component in UIDL
+   *
+   * @param structure : ComponentStructure
+   */
+  const reactInlineStyleComponentPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, chunks } = structure
 
-  const theJSXChunk = chunks.filter(
-    (chunk) => chunk.type === 'jsx' && chunk.meta.usage === 'react-component-jsx'
-  )[0]
+    const theJSXChunk = chunks.filter((chunk) => chunk.name === targetJSXChunk)[0]
 
-  if (!theJSXChunk) {
+    if (!theJSXChunk) {
+      return structure
+    }
+
+    enhanceJSXWithStyles(uidl.content, theJSXChunk.meta.uidlMappings)
+
     return structure
   }
-
-  enhanceJSXWithStyles(uidl.content, theJSXChunk.meta.uidlMappings)
-
-  return structure
+  return reactInlineStyleComponentPlugin
 }
 
-export default reactInlineStyleComponentPlugin
+export default createPlugin()

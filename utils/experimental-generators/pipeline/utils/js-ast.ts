@@ -23,6 +23,9 @@ export const makeJSSDefaultExport = (
   )
 }
 
+export const makeProgramBody = (statements: any[] = [], t = types) =>
+  t.program(statements)
+
 export const makeDefaultImportStatement = (
   specifier: string,
   source: string,

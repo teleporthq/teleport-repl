@@ -1,4 +1,4 @@
-import { ComponentPlugin } from '../../types'
+import { ComponentPlugin, EmbedDefinition, ComponentPluginFactory } from '../../types'
 
 import * as t from '@babel/types'
 import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
@@ -44,23 +44,29 @@ const enhanceJSXWithDynamicProps = (content: any, uidlMappings: any) => {
 /**
  * Generate the inlines stlye definition as a AST block which will represent the
  * defined styles of this component in UIDL
- *
- * @param structure : ComponentStructure
  */
-const reactDynamicPropsPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks } = structure
 
-  const theJSXChunk = chunks.filter(
-    (chunk) => chunk.type === 'jsx' && chunk.meta.usage === 'react-component-jsx'
-  )[0]
+interface JSXConfig {
+  targetJSXChunk: string
+}
+export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
+  const { targetJSXChunk = 'react-component-jsx' } = config || {}
 
-  if (!theJSXChunk) {
+  const reactDynamicPropsPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, chunks } = structure
+
+    const targetJSX = chunks.filter((chunk) => chunk.name === targetJSXChunk)[0]
+
+    if (!targetJSX) {
+      return structure
+    }
+
+    enhanceJSXWithDynamicProps(uidl.content, targetJSX.meta.uidlMappings)
+
     return structure
   }
 
-  enhanceJSXWithDynamicProps(uidl.content, theJSXChunk.meta.uidlMappings)
-
-  return structure
+  return reactDynamicPropsPlugin
 }
 
-export default reactDynamicPropsPlugin
+export default createPlugin()
