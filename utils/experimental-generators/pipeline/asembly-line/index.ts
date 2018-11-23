@@ -1,4 +1,4 @@
-import { ComponentPlugin, ComponentStructure, Resolver } from './types'
+import { ComponentPlugin, ComponentStructure, Resolver } from '../types'
 
 export default class ComponentAsemblyLine {
   private plugins: ComponentPlugin[]

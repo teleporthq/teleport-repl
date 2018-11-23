@@ -1,4 +1,4 @@
-import ComponentAsemblyLine from '../pipeline/'
+import ComponentAsemblyLine from '../pipeline/asembly-line'
 import htmlMapping from '../element-mappings/html'
 
 import {
