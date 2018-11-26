@@ -189,7 +189,7 @@ export const addDynamicChild = (tag: types.JSXElement, value: string, t = types)
 }
 
 export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types) => {
-  const styleObjectExpression = objectToObjectExpression(t, styleMap)
+  const styleObjectExpression = objectToObjectExpression(styleMap, t)
   const styleObjectExpressionContainer = t.jsxExpressionContainer(styleObjectExpression)
 
   const styleJSXAttr = t.jsxAttribute(
@@ -201,17 +201,11 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
 }
 
 export const objectToObjectExpression = (
-  t: {
-    identifier: (a: string) => any
-    stringLiteral: (a: string) => any
-    numericLiteral: (a: number) => any
-    objectProperty: (a: any, b: any) => any
-    objectExpression: (a: any) => any
-  },
-  objectMap: { [key: string]: any }
+  objectMap: { [key: string]: any },
+  t = types
 ) => {
   const props = Object.keys(objectMap).reduce((acc: any[], key) => {
-    const keyIdentifier: string = t.stringLiteral(key)
+    const keyIdentifier = t.stringLiteral(key)
     const value = objectMap[key]
     let computedLiteralValue = null
 
@@ -220,10 +214,16 @@ export const objectToObjectExpression = (
     } else if (typeof value === 'number') {
       computedLiteralValue = t.numericLiteral(value)
     } else if (typeof value === 'object') {
-      computedLiteralValue = objectToObjectExpression(t, value)
+      computedLiteralValue = objectToObjectExpression(value, t)
+    } else if (value === String) {
+      computedLiteralValue = t.identifier('String')
+    } else if (value === Number) {
+      computedLiteralValue = t.identifier('Number')
     }
 
-    acc.push(t.objectProperty(keyIdentifier, computedLiteralValue))
+    if (computedLiteralValue) {
+      acc.push(t.objectProperty(keyIdentifier, computedLiteralValue))
+    }
     return acc
   }, [])
 

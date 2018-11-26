@@ -80,10 +80,7 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
       linker: {
         after: [jssImportChunkName],
       },
-      content: makeConstAssign(
-        jssDeclarationName,
-        objectToObjectExpression(t, jssStyleMap)
-      ),
+      content: makeConstAssign(jssDeclarationName, objectToObjectExpression(jssStyleMap)),
     })
 
     const exportChunk = chunks.filter((chunk) => chunk.name === exportChunkName)[0]

@@ -5,13 +5,13 @@ jss.setup(preset())
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { cammelCaseToDashCase } from '../../utils/helpers'
 
-const generateStyleTagStrings = (content: any, uidlMappings: any) => {
+const generateStyleTagStrings = (content: any, mappings: any) => {
   let accumulator: any[] = []
   // only do stuff if content is a object
   if (content && typeof content === 'object') {
     const { style, children, name } = content
     if (style) {
-      const root = uidlMappings[name]
+      const root = mappings[name]
       const className = cammelCaseToDashCase(name)
       accumulator.push(
         jss
@@ -31,7 +31,7 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
 
     if (children && Array.isArray(children)) {
       children.forEach((child) => {
-        const items = generateStyleTagStrings(child, uidlMappings)
+        const items = generateStyleTagStrings(child, mappings)
         accumulator = accumulator.concat(...items)
       })
     }
@@ -58,21 +58,17 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
     const { content } = uidl
 
     const templateChunk = chunks.filter((chunk) => chunk.name === vueTemplateChunk)[0]
-    const templateChunkMappings = templateChunk.meta.uidlMappings
+    const templateChunkMappings = templateChunk.meta.mappings
 
     const jssStylesArray = generateStyleTagStrings(content, templateChunkMappings)
 
     chunks.push({
       type: 'string',
       name: chunkName,
-      meta: {
-        usage: 'vue-component-styles-string',
+      wrap: (generatedContent) => {
+        return `<style>\n\n${generatedContent}</style>\n`
       },
-      content: `
-<style>
-${jssStylesArray.join('\n')}
-</style>
-`,
+      content: jssStylesArray.join('\n'),
     })
 
     return structure
