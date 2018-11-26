@@ -2,7 +2,7 @@ import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
 
-import { ComponentPlugin } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { cammelCaseToDashCase } from '../../utils/helpers'
 
 const generateStyleTagStrings = (content: any, uidlMappings: any) => {
@@ -40,25 +40,45 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
   return accumulator
 }
 
-const vueComponentStyleChunkPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks } = structure
-
-  const { content } = uidl
-
-  const templateChunk = chunks.filter((chunk) => chunk.type === 'html')[0]
-  const templateChunkMappings = templateChunk.meta.uidlMappings
-
-  const jssStylesArray = generateStyleTagStrings(content, templateChunkMappings)
-
-  chunks.push({
-    type: 'css',
-    meta: {
-      usage: 'vue-component-styles-string',
-    },
-    content: jssStylesArray.join('\n'),
-  })
-
-  return structure
+interface VueStyleChunkConfig {
+  chunkName: string
+  vueJSChunk: string
+  vueTemplateChunk: string
 }
 
-export default vueComponentStyleChunkPlugin
+export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config) => {
+  const {
+    chunkName = 'vue-component-style-chunk',
+    vueTemplateChunk = 'vue-component-template-chunk',
+  } = config || {}
+
+  const vueComponentStyleChunkPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, chunks } = structure
+
+    const { content } = uidl
+
+    const templateChunk = chunks.filter((chunk) => chunk.name === vueTemplateChunk)[0]
+    const templateChunkMappings = templateChunk.meta.uidlMappings
+
+    const jssStylesArray = generateStyleTagStrings(content, templateChunkMappings)
+
+    chunks.push({
+      type: 'string',
+      name: chunkName,
+      meta: {
+        usage: 'vue-component-styles-string',
+      },
+      content: `
+<style>
+${jssStylesArray.join('\n')}
+</style>
+`,
+    })
+
+    return structure
+  }
+
+  return vueComponentStyleChunkPlugin
+}
+
+export default createPlugin()

@@ -22,7 +22,7 @@ export const generator: GeneratorFunction = (anyContent) => {
     jsxBracketSameLine: false,
 
     plugins: [parserPlugin],
-
+    parser: 'babylon',
     // parser(text:string, { babylon }: any) {
     //   const tempAst = babylon(text);
     //   // console.log(

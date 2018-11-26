@@ -12,6 +12,7 @@ export interface ChunkDefinition {
   type: string
   name: string
   meta?: any | null
+  wrap?: (content: string) => string
   content: any
   linker?: {
     slots?: {

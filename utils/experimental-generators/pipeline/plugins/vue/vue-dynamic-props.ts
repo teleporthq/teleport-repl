@@ -1,6 +1,6 @@
 import * as t from '@babel/types'
 
-import { ComponentPlugin } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 
 // add dynamic props on tempalte tags and also gather all found props to be added
 // on the exported js chunk
@@ -78,31 +78,43 @@ const insertTypeDefsInVueJSExport = (
   })
 }
 
-const vueTemplateChunkPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks } = structure
+interface VueDynamicPropsConfig {
+  vueJSChunk: string
+  vueTemplateChunk: string
+}
 
-  const theVueTemplateChunk = chunks.filter(
-    (chunk) => chunk.type === 'html' && chunk.meta.usage === 'vue-component-template'
-  )[0]
+export const createPlugin: ComponentPluginFactory<VueDynamicPropsConfig> = (config) => {
+  const {
+    vueJSChunk = 'vue-component-js-chunk',
+    vueTemplateChunk = 'vue-component-template-chunk',
+  } = config || {}
 
-  const theVueJSChunk = chunks.filter(
-    (chunk) => chunk.type === 'js' && chunk.meta.usage === 'vue-component-js'
-  )[0]
+  const vueTemplateChunkPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, chunks } = structure
 
-  if (!theVueTemplateChunk || !theVueJSChunk) {
+    const theVueTemplateChunk = chunks.filter(
+      (chunk) => chunk.name === vueTemplateChunk
+    )[0]
+
+    const theVueJSChunk = chunks.filter((chunk) => chunk.name === vueJSChunk)[0]
+
+    if (!theVueTemplateChunk || !theVueJSChunk) {
+      return structure
+    }
+
+    const accumulatedProps = {}
+
+    enhanceStructureWithDynamicBinds(
+      uidl.content,
+      theVueTemplateChunk.meta.uidlMappings,
+      accumulatedProps
+    )
+
+    insertTypeDefsInVueJSExport(theVueJSChunk.meta.uidlMappings, accumulatedProps)
+
     return structure
   }
-
-  const accumulatedProps = {}
-
-  enhanceStructureWithDynamicBinds(
-    uidl.content,
-    theVueTemplateChunk.meta.uidlMappings,
-    accumulatedProps
-  )
-
-  insertTypeDefsInVueJSExport(theVueJSChunk.meta.uidlMappings, accumulatedProps)
-
-  return structure
+  return vueTemplateChunkPlugin
 }
-export default vueTemplateChunkPlugin
+
+export default createPlugin()

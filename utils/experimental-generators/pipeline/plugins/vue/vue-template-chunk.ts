@@ -1,5 +1,5 @@
 import cheerio from 'cheerio'
-import { ComponentPlugin, Resolver } from '../../types'
+import { ComponentPlugin, Resolver, ComponentPluginFactory } from '../../types'
 
 const generateSingleVueNode = (params: {
   tagName: string
@@ -73,23 +73,39 @@ const generateVueNodesTree = (
   return mainTag
 }
 
-const vueTemplateChunkPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks, resolver } = structure
-
-  const uidlMappings = {}
-  const content = generateVueNodesTree(uidl.content, uidlMappings, resolver)
-
-  chunks.push({
-    type: 'html',
-    name: 'vue-template',
-    meta: {
-      usage: 'vue-component-template',
-      uidlMappings,
-    },
-    content,
-  })
-
-  return structure
+interface VueStyleChunkConfig {
+  chunkName: string
+  vueJSChunk: string
+  vueTemplateChunk: string
 }
 
-export default vueTemplateChunkPlugin
+export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config) => {
+  const { chunkName = 'vue-component-template-chunk' } = config || {}
+
+  const vueTemplateChunkPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, chunks, resolver } = structure
+
+    const uidlMappings = {}
+
+    const content = generateVueNodesTree(uidl.content, uidlMappings, resolver)
+
+    chunks.push({
+      type: 'html',
+      name: chunkName,
+      meta: {
+        usage: 'vue-component-template',
+        uidlMappings,
+      },
+      wrap: (generatedContent) => {
+        return `<template>\n\n${generatedContent}\n</template>\n`
+      },
+      content,
+    })
+
+    return structure
+  }
+
+  return vueTemplateChunkPlugin
+}
+
+export default createPlugin()

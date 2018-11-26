@@ -30,6 +30,7 @@ export default class Builder {
   public generators: { [key: string]: GeneratorFunction } = {
     js: babelCodeGenerator,
     html: cheerioHTMLGenerator,
+    string: (a) => a,
   }
 
   constructor(structure?: ComponentStructure) {
@@ -221,14 +222,28 @@ export default class Builder {
     totalOrder.map((key) => {
       const chunkToCompile = dependencies[key].chunk
       if (chunkToCompile) {
-        const { type, content } = chunkToCompile
+        const { type, content, wrap } = chunkToCompile
         // console.log(type, '->', content, this.generators[type](content))
-        resultingString.push(this.generators[type](content))
+        let compiledContent = this.generateByType(type, content)
+        if (wrap) {
+          compiledContent = wrap(compiledContent)
+        }
+        resultingString.push(compiledContent)
       }
     })
 
     // console.log(resultingString.join('\n'))
 
     return resultingString.join('\n')
+  }
+
+  public generateByType(type: string, content: any) {
+    if (!this.generators[type]) {
+      throw new Error(
+        `Attempted to generate unkown type ${type}. Please register a generator for this type in builder/index.ts`
+      )
+    }
+
+    return this.generators[type](content)
   }
 }

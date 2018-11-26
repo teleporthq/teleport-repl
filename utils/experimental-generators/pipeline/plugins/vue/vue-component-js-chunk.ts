@@ -1,6 +1,6 @@
 import * as t from '@babel/types'
 
-import { ComponentPlugin } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { buildEmptyVueJSExport } from '../../../vue/utils'
 
 const makeEmptyAST = () => {
@@ -18,22 +18,35 @@ const generateEmptyVueComponentJS = (jsDoc: any, uidlMappings: any) => {
   return astFile
 }
 
-const vueComponentJSChunkPlugin: ComponentPlugin = async (structure) => {
-  const { uidl, chunks } = structure
-
-  const uidlMappings = {}
-  const content = generateEmptyVueComponentJS(uidl, uidlMappings)
-
-  chunks.push({
-    type: 'js',
-    meta: {
-      usage: 'vue-component-js',
-      uidlMappings,
-    },
-    content,
-  })
-
-  return structure
+interface ChunkNameConfig {
+  chunkName: string
 }
 
-export default vueComponentJSChunkPlugin
+export const createPlugin: ComponentPluginFactory<ChunkNameConfig> = (config) => {
+  const { chunkName = 'vue-component-js-chunk' } = config || {}
+  const vueComponentJSChunkPlugin: ComponentPlugin = async (structure) => {
+    const { uidl, chunks } = structure
+
+    const uidlMappings = {}
+    const content = generateEmptyVueComponentJS(uidl, uidlMappings)
+
+    chunks.push({
+      type: 'js',
+      name: chunkName,
+      meta: {
+        usage: 'vue-component-js',
+        uidlMappings,
+      },
+      wrap: (generatedContent) => {
+        return `<script>\n\n${generatedContent}\n</script>`
+      },
+      content,
+    })
+
+    return structure
+  }
+
+  return vueComponentJSChunkPlugin
+}
+
+export default createPlugin()

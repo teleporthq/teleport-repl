@@ -9,17 +9,19 @@ import {
   vueDynamicProps,
 } from '../pipeline/plugins/vue'
 
+import Builder from '../pipeline/builder'
+
 const asemblyLine = new ComponentAsemblyLine(
   [
     vueTemplateChunk,
     vueComponentJSChunk,
     vueDynamicProps,
     vueComponentStyleChunkPlugin,
-    vueBasicLinker,
+    // vueBasicLinker,
   ],
   (type) => {
     // Here we could select based on target (ex: react, next)
-    const result = htmlMapping[type]
+    const result = (htmlMapping as { [key: string]: any })[type]
 
     if (!result) {
       // If no mapping is found, use the type as the end value
@@ -33,8 +35,9 @@ const asemblyLine = new ComponentAsemblyLine(
 )
 
 const generateComponent = async (jsDoc: any) => {
+  const chunksLinker = new Builder()
   const result = await asemblyLine.run(jsDoc)
-  return result.chunks[result.chunks.length - 1].content
+  return chunksLinker.link(result)
 }
 
 export { generateComponent }
