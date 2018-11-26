@@ -2,7 +2,6 @@ import ComponentAsemblyLine from '../pipeline/asembly-line'
 import htmlMapping from '../element-mappings/html'
 
 import {
-  vueBasicLinker,
   vueComponentJSChunk,
   vueComponentStyleChunkPlugin,
   vueTemplateChunk,
@@ -12,13 +11,7 @@ import {
 import Builder from '../pipeline/builder'
 
 const asemblyLine = new ComponentAsemblyLine(
-  [
-    vueTemplateChunk,
-    vueComponentJSChunk,
-    vueDynamicProps,
-    vueComponentStyleChunkPlugin,
-    // vueBasicLinker,
-  ],
+  [vueTemplateChunk, vueComponentJSChunk, vueDynamicProps, vueComponentStyleChunkPlugin],
   (type) => {
     // Here we could select based on target (ex: react, next)
     const result = (htmlMapping as { [key: string]: any })[type]
