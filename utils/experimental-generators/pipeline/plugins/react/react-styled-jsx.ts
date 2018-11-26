@@ -2,7 +2,7 @@ import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
 
-import { ComponentPlugin, ComponentPluginFactory, EmbedDefinition } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 
 import { addClassStringOnJSXTag, generateStyledJSXTag } from '../../utils/jsx-ast'
 
@@ -43,51 +43,33 @@ const generateStyledJSXString = (content: any, uidlMappings: any) => {
   return accumulator
 }
 interface StyledJSXConfig {
-  chunkName: string
-  targetJsxChunk: string
+  componentChunkName: string
 }
 
 export const createPlugin: ComponentPluginFactory<StyledJSXConfig> = (config) => {
-  const {
-    chunkName = 'react-component-styled-jsx',
-    targetJsxChunk = 'react-component-jsx',
-  } = config || {}
+  const { componentChunkName = 'react-component' } = config || {}
 
   const reactStyledJSXChunkPlugin: ComponentPlugin = async (structure) => {
     const { uidl, chunks } = structure
 
     const { content } = uidl
 
-    const jsxChunk = chunks.filter((chunk) => chunk.name === targetJsxChunk)[0]
-    if (!jsxChunk) {
+    const componentChunk = chunks.find((chunk) => chunk.name === componentChunkName)
+    if (!componentChunk) {
       return structure
     }
 
-    const jsxChunkMappings = jsxChunk.meta.uidlMappings
+    const jsxChunkMappings = componentChunk.meta.uidlMappings
 
     const styleJSXString = generateStyledJSXString(content, jsxChunkMappings)
 
     const jsxASTNodeReference = generateStyledJSXTag(styleJSXString.join('\n'))
-    // We have the ability to insert the tag into the existig JSX structure, or
-    // do something else with it. For now, to move faster, we'll add it to the existing
-    // ast structure directly.
+    const rootJSXNode = jsxChunkMappings[content.name]
 
-    // we have in the mappings references to jsx ast tags
-    // jsxChunkMappings[content.name].children.push(jsxASTNodeReference)
-
-    chunks.push({
-      type: 'jsx',
-      name: chunkName,
-      meta: {},
-      linker: {
-        // after: ['react-import'],
-        embed: {
-          chunkName: targetJsxChunk,
-          slot: 'children',
-        },
-      },
-      content: jsxASTNodeReference,
-    })
+    // We have the ability to insert the tag into the existig JSX structure, or do something else with it.
+    // Here we take the JSX <style> tag and we insert it as the last child of the JSX structure
+    // inside the React Component
+    rootJSXNode.children.push(jsxASTNodeReference)
 
     return structure
   }

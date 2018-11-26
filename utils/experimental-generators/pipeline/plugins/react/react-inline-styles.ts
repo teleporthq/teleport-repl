@@ -31,10 +31,10 @@ const enhanceJSXWithStyles = (content: any, uidlMappings: any) => {
 }
 
 interface InlineStyleConfig {
-  targetJSXChunk: string
+  componentChunkName: string
 }
 export const createPlugin: ComponentPluginFactory<InlineStyleConfig> = (config) => {
-  const { targetJSXChunk = 'react-component-jsx' } = config || {}
+  const { componentChunkName = 'react-component' } = config || {}
   /**
    * Generate the inlines stlye definition as a AST block which will represent the
    * defined styles of this component in UIDL
@@ -44,13 +44,13 @@ export const createPlugin: ComponentPluginFactory<InlineStyleConfig> = (config) 
   const reactInlineStyleComponentPlugin: ComponentPlugin = async (structure) => {
     const { uidl, chunks } = structure
 
-    const theJSXChunk = chunks.filter((chunk) => chunk.name === targetJSXChunk)[0]
+    const componentChunk = chunks.find((chunk) => chunk.name === componentChunkName)
 
-    if (!theJSXChunk) {
+    if (!componentChunk) {
       return structure
     }
 
-    enhanceJSXWithStyles(uidl.content, theJSXChunk.meta.uidlMappings)
+    enhanceJSXWithStyles(uidl.content, componentChunk.meta.uidlMappings)
 
     return structure
   }

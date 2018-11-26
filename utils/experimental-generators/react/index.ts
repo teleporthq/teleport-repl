@@ -3,43 +3,27 @@ import htmlMapping from '../element-mappings/html'
 import ComponentAsemblyLine from '../pipeline/asembly-line'
 import Builder from '../pipeline/builder'
 
-import { createPlugin as reactJSX } from '../pipeline/plugins/react/react-jsx'
-import { createPlugin as reactPureComponent } from '../pipeline/plugins/react/react-pure-component'
-import { createPlugin as styledJSX } from '../pipeline/plugins/react/react-styled-jsx-chunk'
-// import { createPlugin as dynamicProps } from '../pipeline/plugins/react/react-dynamic-props'
+import { createPlugin as reactComponent } from '../pipeline/plugins/react/react-base-component'
+import { createPlugin as reactStyledJSX } from '../pipeline/plugins/react/react-styled-jsx'
 import { createPlugin as reactJSS } from '../pipeline/plugins/react/react-jss'
 import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/react-inline-styles'
 
-const configuredReactPureComponent = reactPureComponent({
-  componentChunkName: 'main-component',
-  exportChunkName: 'main-export',
+const configuredReactJSX = reactComponent({
+  componentChunkName: 'react-component',
+  exportChunkName: 'export',
 })
 
-const configuredReactJSX = reactJSX({
-  chunkName: 'main-jsx',
-  embed: {
-    chunkName: 'main-component',
-    slot: 'componet-jsx',
-  },
-})
-
-const configuredReactStyledJSX = styledJSX({
-  chunkName: 'component-styled-jsx',
-  targetJsxChunk: 'main-jsx',
+const configuredReactStyledJSX = reactStyledJSX({
+  componentChunkName: 'react-component',
 })
 
 const configuredReactJSS = reactJSS({
-  targetJSXChunk: 'main-jsx',
-  styleChunkName: 'component-jss',
-  exportChunkName: 'main-export',
+  componentChunkName: 'react-component',
+  exportChunkName: 'export',
 })
 
-// const configuredDynamicProps = dynamicProps({
-//   targetJSXChunk: 'main-jsx',
-// })
-
 const configuredReactInlineStyles = reactInlineStyles({
-  targetJSXChunk: 'main-jsx',
+  componentChunkName: 'react-component',
 })
 
 const mapperConfiguration = (type: string) => {
@@ -79,24 +63,9 @@ const mapperConfiguration = (type: string) => {
 }
 
 const Options: { [key: string]: any } = {
-  InlineStyles: [
-    configuredReactPureComponent,
-    configuredReactJSX,
-    configuredReactInlineStyles,
-    // configuredDynamicProps,
-  ],
-  StyledJSX: [
-    configuredReactPureComponent,
-    configuredReactJSX,
-    configuredReactStyledJSX,
-    // configuredDynamicProps,
-  ],
-  JSS: [
-    configuredReactPureComponent,
-    configuredReactJSX,
-    configuredReactJSS,
-    // configuredDynamicProps,
-  ],
+  InlineStyles: [configuredReactJSX, configuredReactInlineStyles],
+  StyledJSX: [configuredReactJSX, configuredReactStyledJSX],
+  JSS: [configuredReactJSX, configuredReactJSS],
 }
 
 const generateComponent = async (jsDoc: any, variation: string = 'InlineStyles') => {

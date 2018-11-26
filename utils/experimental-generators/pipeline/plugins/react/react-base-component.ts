@@ -1,4 +1,4 @@
-import { JSXElement } from '@babel/types'
+import * as t from '@babel/types'
 
 import {
   addChildJSXTag,
@@ -10,6 +10,7 @@ import {
 } from '../../utils/jsx-ast'
 
 import {
+  makeDefaultExport,
   makeDefaultImportStatement,
   makeNamedMappedImportStatement,
   makeNamedImportStatement,
@@ -19,10 +20,8 @@ import {
   ComponentPlugin,
   MappedElement,
   Resolver,
-  ComponentDependency,
   ComponentPluginFactory,
   ComponentStructure,
-  EmbedDefinition,
 } from '../../types'
 
 /**
@@ -32,7 +31,7 @@ import {
  * @param attrs the attributes defined on the UIDL for this node/tag
  */
 const addAttributesToTag = (
-  tag: JSXElement,
+  tag: t.JSXElement,
   mappedElement: MappedElement,
   attrs: any
 ) => {
@@ -92,7 +91,7 @@ const generateTreeStructure = (
   uidlMappings: any = {},
   resolver: Resolver,
   dependencies: any = {}
-): JSXElement => {
+): t.JSXElement => {
   const { type, children, name, attrs, dependency } = content
   const mappedElement = resolver(type)
   const mappedType = mappedElement.name
@@ -171,9 +170,6 @@ const generateImportChunk = (
   structure.chunks.push({
     type: 'js',
     name: `import-${dependency.meta.path}`,
-    meta: {
-      usage: 'import',
-    },
     content: importContent,
   })
 
@@ -183,18 +179,41 @@ const generateImportChunk = (
   }
 }
 
-interface JSXConfig {
-  chunkName: string
-  embed: EmbedDefinition
+const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) => {
+  const { name, jsxTagTree } = params
+  const returnStatement = t.returnStatement(jsxTagTree)
+  const arrowFunction = t.arrowFunctionExpression(
+    [t.identifier('props')],
+    t.blockStatement([returnStatement] || [])
+  )
+
+  const declarator = t.variableDeclarator(t.identifier(name), arrowFunction)
+  const component = t.variableDeclaration('const', [declarator])
+
+  return component
 }
+
+interface JSXConfig {
+  componentChunkName: string
+  exportChunkName: string
+  importReactChunkName?: string
+}
+
 export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
   const {
-    chunkName = 'react-component-jsx',
-    embed = { chunkName: 'react-pure-component', slot: 'componet-jsx' },
+    componentChunkName = 'react-component',
+    exportChunkName = 'export',
+    importReactChunkName = 'import-react',
   } = config || {}
 
-  const reactJSXPlugin: ComponentPlugin = async (structure) => {
+  const reactComponentPlugin: ComponentPlugin = async (structure) => {
     const { uidl, resolver } = structure
+
+    structure.chunks.push({
+      type: 'js',
+      name: importReactChunkName,
+      content: makeDefaultImportStatement('React', 'react'),
+    })
 
     // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
     // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
@@ -212,34 +231,36 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
       generateImportChunk(key, jsxDependencies[key], structure)
     )
 
+    const pureComponent = makePureComponent({
+      name: uidl.name,
+      jsxTagTree: jsxTagStructure,
+    })
+
     structure.chunks.push({
-      type: 'jsx',
-      name: chunkName,
+      type: 'js',
+      name: componentChunkName,
       linker: {
-        // after: ['react-import'],
-        embed: {
-          chunkName: embed.chunkName,
-          slot: embed.slot,
-        },
-        slots: {
-          children: (chunks) => {
-            chunks.forEach((chunk) => {
-              jsxTagStructure.children.push(chunk.content)
-            })
-            return true
-          },
-        },
+        after: [importReactChunkName],
       },
       meta: {
-        usage: chunkName,
         uidlMappings,
       },
-      content: jsxTagStructure,
+      content: pureComponent,
     })
+
+    structure.chunks.push({
+      type: 'js',
+      name: exportChunkName,
+      linker: {
+        after: [componentChunkName],
+      },
+      content: makeDefaultExport(uidl.name),
+    })
+
     return structure
   }
 
-  return reactJSXPlugin
+  return reactComponentPlugin
 }
 
 export default createPlugin()

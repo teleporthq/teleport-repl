@@ -1,7 +1,7 @@
-import { ComponentPlugin, ComponentPluginFactory } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../../types'
 
 import * as t from '@babel/types'
-import { makeDefaultExport } from '../../utils/js-ast'
+import { makeDefaultExport } from '../../../utils/js-ast'
 
 const makePureComponent = (params: { name: string; jsxTagTree: any }) => {
   const { name, jsxTagTree } = params

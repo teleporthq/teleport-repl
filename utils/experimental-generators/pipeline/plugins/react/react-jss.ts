@@ -42,16 +42,16 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
 interface JSSConfig {
   styleChunkName?: string
   jssImportChunkName?: string
-  targetJSXChunk: string
+  componentChunkName: string
   exportChunkName: string
   jssDeclarationName?: string
 }
 export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
   const {
-    targetJSXChunk = 'react-component-jsx',
-    jssImportChunkName = 'jss-import',
+    componentChunkName = 'react-component',
+    jssImportChunkName = 'import-jss',
     styleChunkName = 'jss-style-definition',
-    exportChunkName = 'react-component-export',
+    exportChunkName = 'export',
     jssDeclarationName = 'style',
   } = config || {}
 
@@ -60,8 +60,12 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
 
     const { content } = uidl
 
-    const templateChunk = chunks.filter((chunk) => chunk.name === targetJSXChunk)[0]
-    const jsxChunkMappings = templateChunk.meta.uidlMappings
+    const componentChunk = chunks.find((chunk) => chunk.name === componentChunkName)
+    if (!componentChunk) {
+      return structure
+    }
+
+    const jsxChunkMappings = componentChunk.meta.uidlMappings
 
     const jssStyleMap = generateStyleTagStrings(content, jsxChunkMappings)
 
@@ -83,7 +87,7 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
       content: makeConstAssign(jssDeclarationName, objectToObjectExpression(jssStyleMap)),
     })
 
-    const exportChunk = chunks.filter((chunk) => chunk.name === exportChunkName)[0]
+    const exportChunk = chunks.find((chunk) => chunk.name === exportChunkName)
 
     const exportStatement = makeJSSDefaultExport(uidl.name, jssDeclarationName)
 
