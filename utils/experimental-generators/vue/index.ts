@@ -3,12 +3,12 @@ import htmlMapping from '../element-mappings/html'
 
 import { createPlugin as vueBaseComponent } from '../pipeline/plugins/vue/vue-base-component'
 import { createPlugin as vueStyleComponent } from '../pipeline/plugins/vue/vue-style-chunk'
-import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
+// import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
 import Builder from '../pipeline/builder'
 
 const asemblyLine = new ComponentAsemblyLine(
-  [vueBaseComponent(), vueStyleComponent(), importStatements()],
+  [vueBaseComponent(), vueStyleComponent()],
   (type) => {
     const customMapping = {
       Datepicker: {
