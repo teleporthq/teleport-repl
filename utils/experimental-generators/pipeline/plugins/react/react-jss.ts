@@ -37,7 +37,7 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
 
 interface JSSConfig {
   styleChunkName?: string
-  jssImportChunkName?: string
+  importChunkName?: string
   componentChunkName: string
   exportChunkName: string
   jssDeclarationName?: string
@@ -45,14 +45,18 @@ interface JSSConfig {
 export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
   const {
     componentChunkName = 'react-component',
-    jssImportChunkName = 'import-jss',
+    importChunkName = 'import',
     styleChunkName = 'jss-style-definition',
     exportChunkName = 'export',
     jssDeclarationName = 'style',
   } = config || {}
 
-  const reactJSSComponentStyleChunksPlugin: ComponentPlugin = async (structure) => {
+  const reactJSSComponentStyleChunksPlugin: ComponentPlugin = async (
+    structure,
+    operations
+  ) => {
     const { uidl, chunks } = structure
+    const { registerDependency } = operations
 
     const { content } = uidl
 
@@ -65,20 +69,18 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
 
     const jssStyleMap = generateStyleTagStrings(content, jsxChunkMappings)
 
-    // TODO, discuss.
-    // should we make the import statement here, or just define a flow of registering
-    // required dependecies and have the linker create the import statements?
-    chunks.push({
-      type: 'js',
-      name: jssImportChunkName,
-      content: makeDefaultImportStatement('injectSheet', 'react-jss'),
+    registerDependency('injectSheet', {
+      type: 'library',
+      meta: {
+        path: 'react-jss',
+      },
     })
 
     chunks.push({
       type: 'js',
       name: styleChunkName,
       linker: {
-        after: [jssImportChunkName],
+        after: [importChunkName],
       },
       content: makeConstAssign(jssDeclarationName, objectToObjectExpression(jssStyleMap)),
     })
@@ -93,7 +95,7 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
         exportChunk.linker.after.push(styleChunkName)
       } else {
         exportChunk.linker = exportChunk.linker || {}
-        exportChunk.linker.after = [jssImportChunkName, styleChunkName]
+        exportChunk.linker.after = [importChunkName, styleChunkName]
       }
     } else {
       chunks.push({
@@ -101,7 +103,7 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
         name: exportChunkName,
         content: exportStatement,
         linker: {
-          after: [jssImportChunkName, styleChunkName],
+          after: [importChunkName, styleChunkName],
         },
       })
     }

@@ -45,8 +45,14 @@ export interface ComponentStructure {
   chunks: ChunkDefinition[]
   meta: any
   uidl: any
-  dependencies: ComponentDependency[]
+}
+
+export interface PipelineOperations {
+  registerDependency: RegisterDependency
   resolver: Resolver
+  getDependencies: () => {
+    [key: string]: ComponentDependency
+  }
 }
 
 /**
@@ -62,7 +68,8 @@ export interface MappedElement {
  * A consumer (plugin basically) is
  */
 export type ComponentPlugin = (
-  structure: ComponentStructure
+  structure: ComponentStructure,
+  operations: PipelineOperations
 ) => Promise<ComponentStructure>
 
 /**
@@ -76,5 +83,7 @@ export type ComponentPluginFactory<T> = (configuration?: T) => ComponentPlugin
  * @param type - uidl node which is converted
  */
 export type Resolver = (type: string) => MappedElement
+
+export type RegisterDependency = (name: string, dependency: ComponentDependency) => void
 
 export type GeneratorFunction = (content: any) => string

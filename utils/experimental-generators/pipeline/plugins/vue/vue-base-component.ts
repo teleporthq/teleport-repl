@@ -1,10 +1,17 @@
-import { ComponentPlugin, Resolver, ComponentPluginFactory } from '../../types'
+import {
+  ComponentPlugin,
+  Resolver,
+  ComponentPluginFactory,
+  RegisterDependency,
+} from '../../types'
+
 import {
   generateSingleVueNode,
   splitProps,
   generateEmptyVueComponentJS,
   generateVueComponentPropTypes,
 } from './utils'
+
 import { resolveImportStatement, objectToObjectExpression } from '../../utils/js-ast'
 
 const generateVueNodesTree = (
@@ -19,7 +26,7 @@ const generateVueNodesTree = (
   mappings: { [key: string]: any },
   resolver: Resolver,
   accumulatedProps: { [key: string]: any },
-  accumulatedDependencies: { [key: string]: any }
+  registerDependency: RegisterDependency
 ): CheerioStatic => {
   const { name, type, children, attrs, dependency } = content
 
@@ -29,7 +36,7 @@ const generateVueNodesTree = (
   const tagDependency = dependency || mappedElement.dependency
 
   if (tagDependency) {
-    accumulatedDependencies[mappedType] = { ...tagDependency }
+    registerDependency(mappedType, { ...tagDependency })
   }
 
   const mainTag = generateSingleVueNode({
@@ -46,7 +53,7 @@ const generateVueNodesTree = (
           mappings,
           resolver,
           accumulatedProps,
-          accumulatedDependencies
+          registerDependency
         )
         root.append(childTag.root())
       })
@@ -89,8 +96,9 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
     vueJSChunkName = 'vue-component-js-chunk',
   } = config || {}
 
-  const vueBasicComponentChunks: ComponentPlugin = async (structure) => {
-    const { uidl, chunks, resolver } = structure
+  const vueBasicComponentChunks: ComponentPlugin = async (structure, operations) => {
+    const { uidl, chunks } = structure
+    const { resolver, registerDependency, getDependencies } = operations
 
     const mappings: {
       templateMapping: { [key: string]: any }
@@ -100,14 +108,17 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
       jsMapping: {},
     }
 
-    const accumulatedDependencies: { [key: string]: any } = {}
+    const accumulatedProps = {}
+
     const tempalteContent = generateVueNodesTree(
       uidl.content,
       mappings,
       resolver,
       uidl.propDefinitions,
-      accumulatedDependencies
+      registerDependency
     )
+
+    const accumulatedDependencies = getDependencies()
 
     /**
      * For now, merge the prop declarations into accumulatedProps.
@@ -119,19 +130,7 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
     Object.keys(accumulatedDependencies).forEach((key) => {
       const dependency = accumulatedDependencies[key]
       const importContent = resolveImportStatement(key, dependency)
-
-      // importStatements.push({
-      //   type: 'js',
-      //   name: `import-${dependency.meta.path}`,
-      //   content: importContent,
-      // })
-
       importStatements.push(importContent)
-
-      // Temporary, until we figure out how/when to output all depedencies
-      if (dependency.type === 'package') {
-        structure.dependencies.push(dependency)
-      }
     })
 
     chunks.push({

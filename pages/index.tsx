@@ -85,10 +85,13 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       case 'react.StyledJSX':
       case 'react.JSS':
         try {
-          const code = await generateReactComponent(
+          const { code, dependencies } = await generateReactComponent(
             jsonValue,
             targetLibrary.replace('react.', '')
           )
+
+          // tslint:disable-next-line:no-console
+          console.info('output dependencies: ', dependencies)
           this.setState(
             {
               generatedCode: code.toString(),
@@ -105,7 +108,10 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
 
       case 'vue-ast':
         try {
-          const code = await generateVueComponent(jsonValue)
+          const { code, dependencies } = await generateVueComponent(jsonValue)
+
+          // tslint:disable-next-line:no-console
+          console.info('output dependencies: ', dependencies)
           this.setState(
             {
               generatedCode: code,
