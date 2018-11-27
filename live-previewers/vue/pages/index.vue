@@ -1,8 +1,5 @@
 <template>
-  <PreviewedComponent
-    avatar-url="https://picsum.photos/150/150"
-    author-name="TeleportHQ Rocks"
-  />
+  <PreviewedComponent />
 </template>
 
 <script>

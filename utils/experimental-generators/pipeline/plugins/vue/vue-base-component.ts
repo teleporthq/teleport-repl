@@ -1,5 +1,10 @@
 import { ComponentPlugin, Resolver, ComponentPluginFactory } from '../../types'
-import { generateSingleVueNode, splitProps, generateEmptyVueComponentJS } from './utils'
+import {
+  generateSingleVueNode,
+  splitProps,
+  generateEmptyVueComponentJS,
+  generateVueComponentPropTypes,
+} from './utils'
 import { objectToObjectExpression } from '../../utils/jsx-ast'
 import { resolveImportStatement } from '../../utils/js-ast'
 
@@ -49,7 +54,7 @@ const generateVueNodesTree = (
     } else if (typeof children === 'string') {
       if (children.startsWith('$props.')) {
         const propName = children.replace('$props.', '')
-        accumulatedProps[propName] = String
+        // accumulatedProps[propName] = String
         root.append(`{{${propName}}}`)
       } else {
         root.append(children.toString())
@@ -66,7 +71,7 @@ const generateVueNodesTree = (
   Object.keys(dynamicProps).forEach((key) => {
     const propName = dynamicProps[key].replace('$props.', '')
     root.attr(`:${key}`, propName)
-    accumulatedProps[propName] = String
+    // accumulatedProps[propName] = String
   })
 
   mappings.templateMapping[name] = root
@@ -97,14 +102,19 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
     }
 
     const accumulatedDependencies: { [key: string]: any } = {}
-    const accumulatedProps = {}
     const tempalteContent = generateVueNodesTree(
       uidl.content,
       mappings,
       resolver,
-      accumulatedProps,
+      uidl.propDefinitions,
       accumulatedDependencies
     )
+
+    /**
+     * For now, merge the prop declarations into accumulatedProps.
+     * This mapping, the accumulatedProps, will not exist soon. We will
+     * do the mapping directly in UIDL at the very start of the pipeline.
+     */
 
     const importStatements: any[] = []
     Object.keys(accumulatedDependencies).forEach((key) => {
@@ -146,8 +156,10 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
       mappings.jsMapping
     )
 
+    // todo refactor into pure function
     mappings.jsMapping.props.value.properties.push(
-      ...objectToObjectExpression(accumulatedProps).properties
+      ...objectToObjectExpression(generateVueComponentPropTypes(uidl.propDefinitions))
+        .properties
     )
 
     chunks.push({

@@ -2,6 +2,16 @@
 export default {
   "version": "v1",
   "name": "AuthorCard",
+  "propDefinitions": {
+    "authorName": {
+      "type": "string",
+      "defaultValue": "TeleportHQ Rocks"
+    },
+    "avatarUrl": {
+      "type": "string",
+      "defaultValue": "https://picsum.photos/150/150"
+    }
+  },
   "content": {
     "type": "View",
     "name": "View",

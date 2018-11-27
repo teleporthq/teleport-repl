@@ -129,3 +129,24 @@ export const generateEmptyVueComponentJS = (
 
   return astFile
 }
+
+export const generateVueComponentPropTypes = (uidlPropDefinitions: any) => {
+  return Object.keys(uidlPropDefinitions).reduce((acc: { [key: string]: any }, name) => {
+    let mappedType = null
+    const { type, defaultValue } = uidlPropDefinitions[name]
+    switch (type) {
+      case 'string':
+        mappedType = String
+        break
+      case 'number':
+        mappedType = Number
+        break
+      case 'boolean':
+        mappedType = Boolean
+        break
+    }
+
+    acc[name] = defaultValue ? { type: mappedType, default: defaultValue } : mappedType
+    return acc
+  }, {})
+}
