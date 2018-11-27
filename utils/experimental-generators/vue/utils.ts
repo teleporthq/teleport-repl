@@ -17,6 +17,9 @@ import * as types from '@babel/types'
  */
 export const buildEmptyVueJSExport = (t = types, params: { name: string }) => {
   return t.exportDefaultDeclaration(
-    t.objectExpression([t.objectProperty(t.identifier('name'), t.stringLiteral(params.name)), t.objectProperty(t.identifier('props'), t.objectExpression([]))])
+    t.objectExpression([
+      t.objectProperty(t.identifier('name'), t.stringLiteral(params.name)),
+      t.objectProperty(t.identifier('props'), t.objectExpression([])),
+    ])
   )
 }
