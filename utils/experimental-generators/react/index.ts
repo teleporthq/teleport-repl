@@ -7,9 +7,11 @@ import { createPlugin as reactComponent } from '../pipeline/plugins/react/react-
 import { createPlugin as reactStyledJSX } from '../pipeline/plugins/react/react-styled-jsx'
 import { createPlugin as reactJSS } from '../pipeline/plugins/react/react-jss'
 import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/react-inline-styles'
+import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
 const configuredReactJSX = reactComponent({
   componentChunkName: 'react-component',
+  importChunkName: 'import',
   exportChunkName: 'export',
 })
 
@@ -19,11 +21,16 @@ const configuredReactStyledJSX = reactStyledJSX({
 
 const configuredReactJSS = reactJSS({
   componentChunkName: 'react-component',
+  importChunkName: 'import',
   exportChunkName: 'export',
 })
 
 const configuredReactInlineStyles = reactInlineStyles({
   componentChunkName: 'react-component',
+})
+
+const configureImportStatements = importStatements({
+  importChunkName: 'import',
 })
 
 const mapperConfiguration = (type: string) => {
@@ -63,17 +70,21 @@ const mapperConfiguration = (type: string) => {
 }
 
 const Options: { [key: string]: any } = {
-  InlineStyles: [configuredReactJSX, configuredReactInlineStyles],
-  StyledJSX: [configuredReactJSX, configuredReactStyledJSX],
-  JSS: [configuredReactJSX, configuredReactJSS],
+  InlineStyles: [
+    configuredReactJSX,
+    configuredReactInlineStyles,
+    configureImportStatements,
+  ],
+  StyledJSX: [configuredReactJSX, configuredReactStyledJSX, configureImportStatements],
+  JSS: [configuredReactJSX, configuredReactJSS, configureImportStatements],
 }
 
 const generateComponent = async (jsDoc: any, variation: string = 'InlineStyles') => {
   const asemblyLine = new ComponentAsemblyLine(Options[variation], mapperConfiguration)
 
   const chunksLinker = new Builder()
-
   const result = await asemblyLine.run(jsDoc)
+
   return chunksLinker.link(result)
 }
 

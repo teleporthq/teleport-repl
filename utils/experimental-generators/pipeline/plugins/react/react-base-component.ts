@@ -9,19 +9,13 @@ import {
   addDynamicPropOnJsxOpeningTag,
 } from '../../utils/jsx-ast'
 
-import {
-  makeDefaultExport,
-  makeDefaultImportStatement,
-  makeNamedMappedImportStatement,
-  makeNamedImportStatement,
-} from '../../utils/js-ast'
+import { makeDefaultExport } from '../../utils/js-ast'
 
 import {
   ComponentPlugin,
   MappedElement,
   Resolver,
   ComponentPluginFactory,
-  ComponentStructure,
 } from '../../types'
 
 /**
@@ -138,47 +132,6 @@ const generateTreeStructure = (
   return mainTag
 }
 
-const resolveImportStatement = (componentName: string, dependency: any) => {
-  const details =
-    dependency.meta && dependency.meta.path
-      ? dependency.meta
-      : {
-          // default meta, this will probably change later
-          path: './' + componentName,
-        }
-
-  if (details.namedImport) {
-    // if the component is listed under a different originalName, then import is "x as y"
-    return details.originalName
-      ? makeNamedMappedImportStatement(
-          { [details.originalName]: componentName },
-          details.path
-        )
-      : makeNamedImportStatement([componentName], details.path)
-  }
-
-  return makeDefaultImportStatement(componentName, details.path)
-}
-
-const generateImportChunk = (
-  componentName: string,
-  dependency: any,
-  structure: ComponentStructure
-) => {
-  // If we want to resolve imports later, we can add the dependency as the content for each chunk
-  const importContent = resolveImportStatement(componentName, dependency)
-  structure.chunks.push({
-    type: 'js',
-    name: `import-${dependency.meta.path}`,
-    content: importContent,
-  })
-
-  // Temporary, until we figure out how/when to output all depedencies
-  if (dependency.type === 'package') {
-    structure.dependencies.push(dependency)
-  }
-}
-
 const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) => {
   const { name, jsxTagTree } = params
   const returnStatement = t.returnStatement(jsxTagTree)
@@ -196,39 +149,35 @@ const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) =
 interface JSXConfig {
   componentChunkName: string
   exportChunkName: string
-  importReactChunkName?: string
+  importChunkName?: string
 }
 
 export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
   const {
     componentChunkName = 'react-component',
     exportChunkName = 'export',
-    importReactChunkName = 'import-react',
+    importChunkName = 'import',
   } = config || {}
 
   const reactComponentPlugin: ComponentPlugin = async (structure) => {
-    const { uidl, resolver } = structure
+    const { uidl, resolver, dependencies } = structure
 
-    structure.chunks.push({
-      type: 'js',
-      name: importReactChunkName,
-      content: makeDefaultImportStatement('React', 'react'),
-    })
+    dependencies.React = {
+      type: 'library',
+      meta: {
+        path: 'react',
+      },
+    }
 
     // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
     // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
     // The structure will be populated as the AST is being created
     const uidlMappings = {}
-    const jsxDependencies: { [key: string]: any } = {}
     const jsxTagStructure = generateTreeStructure(
       uidl.content,
       uidlMappings,
       resolver,
-      jsxDependencies
-    )
-
-    Object.keys(jsxDependencies).forEach((key) =>
-      generateImportChunk(key, jsxDependencies[key], structure)
+      dependencies
     )
 
     const pureComponent = makePureComponent({
@@ -240,7 +189,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
       type: 'js',
       name: componentChunkName,
       linker: {
-        after: [importReactChunkName],
+        after: [importChunkName],
       },
       meta: {
         uidlMappings,

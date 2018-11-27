@@ -45,7 +45,9 @@ export interface ComponentStructure {
   chunks: ChunkDefinition[]
   meta: any
   uidl: any
-  dependencies: ComponentDependency[]
+  dependencies: {
+    [key: string]: ComponentDependency
+  }
   resolver: Resolver
 }
 

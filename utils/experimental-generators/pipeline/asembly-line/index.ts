@@ -14,7 +14,7 @@ export default class ComponentAsemblyLine {
       uidl,
       meta: null,
       chunks: [],
-      dependencies: [],
+      dependencies: {},
       resolver: this.resolver,
     }
     const len = this.plugins.length

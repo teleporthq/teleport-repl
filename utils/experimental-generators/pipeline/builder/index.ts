@@ -223,7 +223,6 @@ export default class Builder {
       const chunkToCompile = dependencies[key].chunk
       if (chunkToCompile) {
         const { type, content, wrap } = chunkToCompile
-        // console.log(type, '->', content, this.generators[type](content))
         let compiledContent = this.generateByType(type, content)
         if (wrap) {
           compiledContent = wrap(compiledContent)
@@ -232,12 +231,14 @@ export default class Builder {
       }
     })
 
-    // console.log(resultingString.join('\n'))
-
     return resultingString.join('\n')
   }
 
-  public generateByType(type: string, content: any) {
+  public generateByType(type: string, content: any): string {
+    if (Array.isArray(content)) {
+      return content.map((contentItem) => this.generateByType(type, contentItem)).join('')
+    }
+
     if (!this.generators[type]) {
       throw new Error(
         `Attempted to generate unkown type ${type}. Please register a generator for this type in builder/index.ts`
