@@ -1,5 +1,3 @@
-import htmlMapping from '../element-mappings/html'
-
 import ComponentAsemblyLine from '../pipeline/asembly-line'
 import Builder from '../pipeline/builder'
 
@@ -33,40 +31,21 @@ const configureImportStatements = importStatements({
   importChunkName: 'import',
 })
 
-const mapperConfiguration = (type: string) => {
-  const customMapping = {
-    Datepicker: {
-      name: 'ReactDatepicker',
-      attrs: {
-        'data-attr': 'test',
-      },
-      dependency: {
-        type: 'package',
-        meta: {
-          path: 'react-datepicker',
-          version: '1.0.2',
-          namedImport: false,
-        },
+const customMappings = {
+  Datepicker: {
+    name: 'ReactDatepicker',
+    attrs: {
+      'data-attr': 'test',
+    },
+    dependency: {
+      type: 'package',
+      meta: {
+        path: 'react-datepicker',
+        version: '1.0.2',
+        namedImport: false,
       },
     },
-  }
-
-  const mapping = {
-    ...htmlMapping,
-    ...customMapping,
-  }
-
-  // Here we could select based on target (ex: react, next)
-  const result = (mapping as { [key: string]: any })[type]
-
-  if (!result) {
-    // If no mapping is found, use the type as the end value
-    return {
-      name: type,
-    }
-  }
-
-  return result
+  },
 }
 
 const Options: { [key: string]: any } = {
@@ -80,7 +59,11 @@ const Options: { [key: string]: any } = {
 }
 
 const generateComponent = async (jsDoc: any, variation: string = 'InlineStyles') => {
-  const asemblyLine = new ComponentAsemblyLine(Options[variation], mapperConfiguration)
+  const asemblyLine = new ComponentAsemblyLine(
+    'react',
+    Options[variation],
+    customMappings
+  )
 
   const chunksLinker = new Builder()
   const result = await asemblyLine.run(jsDoc)
