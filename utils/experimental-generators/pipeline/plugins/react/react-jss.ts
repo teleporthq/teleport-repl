@@ -1,14 +1,10 @@
-import * as t from '@babel/types'
-
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
-import {
-  addDynamicPropOnJsxOpeningTag,
-  objectToObjectExpression,
-} from '../../utils/jsx-ast'
+import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
 import {
   makeConstAssign,
   makeDefaultImportStatement,
   makeJSSDefaultExport,
+  objectToObjectExpression,
 } from '../../utils/js-ast'
 import { cammelCaseToDashCase } from '../../utils/helpers'
 

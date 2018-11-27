@@ -1,5 +1,51 @@
 import * as types from '@babel/types'
 
+/**
+ * A tricky way to pass down custom configuration into
+ * the objectToObjectExpression values, to allow for member expressions like
+ * Proptypes.String.isRequired to be handled by the function.
+ */
+export class ParsedASTNode {
+  public ast: any
+
+  constructor(ast: any) {
+    this.ast = ast
+  }
+}
+
+export const objectToObjectExpression = (
+  objectMap: { [key: string]: any },
+  t = types
+) => {
+  const props = Object.keys(objectMap).reduce((acc: any[], key) => {
+    const keyIdentifier = t.stringLiteral(key)
+    const value = objectMap[key]
+    let computedLiteralValue = null
+
+    if (value instanceof ParsedASTNode) {
+      computedLiteralValue = value.ast
+    } else if (typeof value === 'string') {
+      computedLiteralValue = t.stringLiteral(value)
+    } else if (typeof value === 'number') {
+      computedLiteralValue = t.numericLiteral(value)
+    } else if (typeof value === 'object') {
+      computedLiteralValue = objectToObjectExpression(value, t)
+    } else if (value === String) {
+      computedLiteralValue = t.identifier('String')
+    } else if (value === Number) {
+      computedLiteralValue = t.identifier('Number')
+    }
+
+    if (computedLiteralValue) {
+      acc.push(t.objectProperty(keyIdentifier, computedLiteralValue))
+    }
+    return acc
+  }, [])
+
+  const objectExpression = t.objectExpression(props)
+  return objectExpression
+}
+
 export const makeConstAssign = (constName: string, asignment = null, t = types) => {
   const declarator = t.variableDeclarator(t.identifier(constName), asignment)
   const constAsignment = t.variableDeclaration('const', [declarator])

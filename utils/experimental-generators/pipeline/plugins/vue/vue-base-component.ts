@@ -5,8 +5,7 @@ import {
   generateEmptyVueComponentJS,
   generateVueComponentPropTypes,
 } from './utils'
-import { objectToObjectExpression } from '../../utils/jsx-ast'
-import { resolveImportStatement } from '../../utils/js-ast'
+import { resolveImportStatement, objectToObjectExpression } from '../../utils/js-ast'
 
 const generateVueNodesTree = (
   content: {

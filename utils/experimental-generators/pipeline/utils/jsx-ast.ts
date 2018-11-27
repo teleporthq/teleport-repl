@@ -1,4 +1,5 @@
 import * as types from '@babel/types'
+import { objectToObjectExpression } from './js-ast'
 
 /**
  * Gets the existing className declaration attribute or generates and returns
@@ -198,35 +199,4 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
   )
 
   tag.openingElement.attributes.push(styleJSXAttr)
-}
-
-export const objectToObjectExpression = (
-  objectMap: { [key: string]: any },
-  t = types
-) => {
-  const props = Object.keys(objectMap).reduce((acc: any[], key) => {
-    const keyIdentifier = t.stringLiteral(key)
-    const value = objectMap[key]
-    let computedLiteralValue = null
-
-    if (typeof value === 'string') {
-      computedLiteralValue = t.stringLiteral(value)
-    } else if (typeof value === 'number') {
-      computedLiteralValue = t.numericLiteral(value)
-    } else if (typeof value === 'object') {
-      computedLiteralValue = objectToObjectExpression(value, t)
-    } else if (value === String) {
-      computedLiteralValue = t.identifier('String')
-    } else if (value === Number) {
-      computedLiteralValue = t.identifier('Number')
-    }
-
-    if (computedLiteralValue) {
-      acc.push(t.objectProperty(keyIdentifier, computedLiteralValue))
-    }
-    return acc
-  }, [])
-
-  const objectExpression = t.objectExpression(props)
-  return objectExpression
 }

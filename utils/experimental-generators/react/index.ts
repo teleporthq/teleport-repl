@@ -7,6 +7,7 @@ import { createPlugin as reactComponent } from '../pipeline/plugins/react/react-
 import { createPlugin as reactStyledJSX } from '../pipeline/plugins/react/react-styled-jsx'
 import { createPlugin as reactJSS } from '../pipeline/plugins/react/react-jss'
 import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/react-inline-styles'
+import { createPlugin as reactPropTypes } from '../pipeline/plugins/react/react-proptypes'
 
 const configuredReactJSX = reactComponent({
   componentChunkName: 'react-component',
@@ -23,6 +24,10 @@ const configuredReactJSS = reactJSS({
 })
 
 const configuredReactInlineStyles = reactInlineStyles({
+  componentChunkName: 'react-component',
+})
+
+const configuredPropTypes = reactPropTypes({
   componentChunkName: 'react-component',
 })
 
@@ -63,9 +68,9 @@ const mapperConfiguration = (type: string) => {
 }
 
 const Options: { [key: string]: any } = {
-  InlineStyles: [configuredReactJSX, configuredReactInlineStyles],
-  StyledJSX: [configuredReactJSX, configuredReactStyledJSX],
-  JSS: [configuredReactJSX, configuredReactJSS],
+  InlineStyles: [configuredReactJSX, configuredReactInlineStyles, configuredPropTypes],
+  StyledJSX: [configuredReactJSX, configuredReactStyledJSX, configuredPropTypes],
+  JSS: [configuredReactJSX, configuredReactJSS, configuredPropTypes],
 }
 
 const generateComponent = async (jsDoc: any, variation: string = 'InlineStyles') => {
