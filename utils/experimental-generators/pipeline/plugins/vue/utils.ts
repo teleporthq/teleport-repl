@@ -1,7 +1,29 @@
 import * as types from '@babel/types'
 import cheerio from 'cheerio'
 
-import { buildEmptyVueJSExport } from '../../../vue/utils'
+/**
+ * Generate the AST version of
+ * export default {
+ *    name: "TestComponent",
+ *    props: {  },
+ *
+ *
+ *  }
+ *
+ * to be used by the vue generator.
+ *
+ * t is the @babel/types api, used to generate sections of AST
+ *
+ * params.name is the name of the component ('TestComponent' in the example above)
+ */
+export const buildEmptyVueJSExport = (t = types, params: { name: string }) => {
+  return t.exportDefaultDeclaration(
+    t.objectExpression([
+      t.objectProperty(t.identifier('name'), t.stringLiteral(params.name)),
+      t.objectProperty(t.identifier('props'), t.objectExpression([])),
+    ])
+  )
+}
 
 export const generateSingleVueNode = (params: {
   tagName: string
@@ -10,11 +32,23 @@ export const generateSingleVueNode = (params: {
   const emptyDeclaration = params.selfClosing
     ? `<${params.tagName}/>`
     : `<${params.tagName}> </${params.tagName}>`
-  return cheerio.load(emptyDeclaration, {
-    xmlMode: true, // otherwise the .html returns a <html><body> thing
-    decodeEntities: false, // otherwise we can't set objects like `{ 'text-danger': hasError }`
-    // without having them escaped with &quote; and stuff
-  })
+  let result
+
+  try {
+    result = cheerio.load(emptyDeclaration, {
+      xmlMode: true, // otherwise the .html returns a <html><body> thing
+      decodeEntities: false, // otherwise we can't set objects like `{ 'text-danger': hasError }`
+      // without having them escaped with &quote; and stuff
+    })
+  } catch (err) {
+    result = cheerio.load(`<${params.tagName}> </${params.tagName}>`, {
+      xmlMode: true, // otherwise the .html returns a <html><body> thing
+      decodeEntities: false, // otherwise we can't set objects like `{ 'text-danger': hasError }`
+      // without having them escaped with &quote; and stuff
+    })
+  }
+
+  return result
 }
 
 /**
@@ -49,14 +83,49 @@ export const addDynamicTemplateBinds = (
 
 export const generateEmptyVueComponentJS = (
   componentName: string,
+  extras: {
+    importStatements: any[]
+    componentDeclarations: any[]
+  },
   mappings: any,
   t = types
 ) => {
+  extras = extras || {
+    importStatements: [],
+    componentDeclarations: [],
+  }
+
   const astFile = t.file(t.program([]), null, [])
   const vueJSExport = buildEmptyVueJSExport(t, { name: componentName })
+  mappings.file = astFile
   mappings.export = vueJSExport
-  mappings.props = (vueJSExport.declaration as types.ObjectExpression).properties[1]
+  mappings.exportDeclaration = vueJSExport.declaration as types.ObjectExpression
+  mappings.props = mappings.exportDeclaration.properties[1]
+
+  astFile.program.body.push(...extras.importStatements)
   astFile.program.body.push(vueJSExport)
+
+  if (extras.componentDeclarations.length) {
+    const componentsObjectDeclaration = t.objectProperty(
+      t.identifier('components'),
+      t.objectExpression([])
+    )
+
+    const componentsList = componentsObjectDeclaration.value as types.ObjectExpression
+
+    componentsList.properties.push(
+      ...extras.componentDeclarations.map((declarationName) => {
+        return t.objectProperty(
+          t.identifier(declarationName),
+          t.identifier(declarationName),
+          false,
+          true
+        )
+      })
+    )
+
+    mappings.exportDeclaration.properties.push(componentsObjectDeclaration)
+  }
 
   return astFile
 }

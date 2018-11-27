@@ -76,3 +76,28 @@ export const makeNamedMappedImportStatement = (
     t.stringLiteral(source)
   )
 }
+
+/**
+ * Generatate a js import statement based a standard UIDL dependency
+ */
+export const resolveImportStatement = (componentName: string, dependency: any) => {
+  const details =
+    dependency.meta && dependency.meta.path
+      ? dependency.meta
+      : {
+          // default meta, this will probably change later
+          path: './' + componentName,
+        }
+
+  if (details.namedImport) {
+    // if the component is listed under a different originalName, then import is "x as y"
+    return details.originalName
+      ? makeNamedMappedImportStatement(
+          { [details.originalName]: componentName },
+          details.path
+        )
+      : makeNamedImportStatement([componentName], details.path)
+  }
+
+  return makeDefaultImportStatement(componentName, details.path)
+}

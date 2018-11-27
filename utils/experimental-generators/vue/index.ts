@@ -9,8 +9,30 @@ import Builder from '../pipeline/builder'
 const asemblyLine = new ComponentAsemblyLine(
   [vueBaseComponent(), vueStyleComponent()],
   (type) => {
+    const customMapping = {
+      Datepicker: {
+        name: 'Datepicker',
+        attrs: {
+          'data-attr': 'test',
+        },
+        dependency: {
+          type: 'package',
+          meta: {
+            path: 'vuejs-datepicker',
+            version: '1.5.4',
+            namedImport: false,
+          },
+        },
+      },
+    }
+
+    const mapping = {
+      ...htmlMapping,
+      ...customMapping,
+    }
+
     // Here we could select based on target (ex: react, next)
-    const result = (htmlMapping as { [key: string]: any })[type]
+    const result = (mapping as { [key: string]: any })[type]
 
     if (!result) {
       // If no mapping is found, use the type as the end value
