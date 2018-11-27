@@ -85,7 +85,10 @@ const generateComponent = async (jsDoc: any, variation: string = 'InlineStyles')
   const chunksLinker = new Builder()
   const result = await asemblyLine.run(jsDoc)
 
-  return chunksLinker.link(result)
+  return {
+    code: chunksLinker.link(result.chunks),
+    dependencies: result.dependencies,
+  }
 }
 
 export { generateComponent }

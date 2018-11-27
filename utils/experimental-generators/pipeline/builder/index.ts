@@ -25,7 +25,7 @@ interface EmbedDependency {
 }
 
 export default class Builder {
-  public structure: ComponentStructure | null = null
+  public chunkDefinitions: ChunkDefinition[] = []
 
   public generators: { [key: string]: GeneratorFunction } = {
     js: babelCodeGenerator,
@@ -33,9 +33,9 @@ export default class Builder {
     string: (a) => a,
   }
 
-  constructor(structure?: ComponentStructure) {
-    if (structure) {
-      this.structure = structure
+  constructor(chunkDefinitions?: ChunkDefinition[]) {
+    if (chunkDefinitions) {
+      this.chunkDefinitions = chunkDefinitions
     }
   }
 
@@ -43,13 +43,12 @@ export default class Builder {
    * Linnks all chunks togather based on their requirements and returns an array
    * of ordered chunkn names which need to be compiled and glued togather.
    */
-  public link(structure?: ComponentStructure): string {
-    const struct = structure || this.structure
-    if (!struct) {
+  public link(chunkDefinitions?: ChunkDefinition[]): string {
+    const chunks = chunkDefinitions || this.chunkDefinitions
+    if (!chunks) {
       return ''
     }
 
-    const { chunks } = struct
     const dependencies: {
       [key: string]: {
         after: string[]

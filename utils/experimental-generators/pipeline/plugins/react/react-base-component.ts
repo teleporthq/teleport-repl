@@ -16,6 +16,7 @@ import {
   MappedElement,
   Resolver,
   ComponentPluginFactory,
+  RegisterDependency,
 } from '../../types'
 
 /**
@@ -84,7 +85,7 @@ const generateTreeStructure = (
   content: any,
   uidlMappings: any = {},
   resolver: Resolver,
-  dependencies: any = {}
+  registerDependency: RegisterDependency
 ): t.JSXElement => {
   const { type, children, name, attrs, dependency } = content
   const mappedElement = resolver(type)
@@ -96,7 +97,7 @@ const generateTreeStructure = (
   const tagDependency = dependency || mappedElement.dependency
   if (tagDependency) {
     // Make a copy to avoid reference leaking
-    dependencies[mappedType] = { ...tagDependency }
+    registerDependency(mappedType, { ...tagDependency })
   }
 
   if (children) {
@@ -109,7 +110,7 @@ const generateTreeStructure = (
           child,
           uidlMappings,
           resolver,
-          dependencies
+          registerDependency
         )
         if (!childTag) {
           return
@@ -159,15 +160,16 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
     importChunkName = 'import',
   } = config || {}
 
-  const reactComponentPlugin: ComponentPlugin = async (structure) => {
-    const { uidl, resolver, dependencies } = structure
+  const reactComponentPlugin: ComponentPlugin = async (structure, operations) => {
+    const { uidl } = structure
+    const { resolver, registerDependency } = operations
 
-    dependencies.React = {
+    registerDependency('React', {
       type: 'library',
       meta: {
         path: 'react',
       },
-    }
+    })
 
     // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
     // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
@@ -177,7 +179,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
       uidl.content,
       uidlMappings,
       resolver,
-      dependencies
+      registerDependency
     )
 
     const pureComponent = makePureComponent({

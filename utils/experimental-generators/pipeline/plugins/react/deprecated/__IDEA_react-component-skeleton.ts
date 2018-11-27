@@ -1,6 +1,6 @@
-import { makeProgramBody } from '../../utils/js-ast'
+import { makeProgramBody } from '../../../utils/js-ast'
 
-import { ComponentPlugin, ComponentPluginFactory } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../../types'
 
 interface ReactComponentSkeletonConfig {
   strcutureChunkName: string

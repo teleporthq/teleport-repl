@@ -53,8 +53,12 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
     jssDeclarationName = 'style',
   } = config || {}
 
-  const reactJSSComponentStyleChunksPlugin: ComponentPlugin = async (structure) => {
-    const { uidl, chunks, dependencies } = structure
+  const reactJSSComponentStyleChunksPlugin: ComponentPlugin = async (
+    structure,
+    operations
+  ) => {
+    const { uidl, chunks } = structure
+    const { registerDependency } = operations
 
     const { content } = uidl
 
@@ -67,12 +71,12 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
 
     const jssStyleMap = generateStyleTagStrings(content, jsxChunkMappings)
 
-    dependencies.injectSheet = {
+    registerDependency('injectSheet', {
       type: 'library',
       meta: {
         path: 'react-jss',
       },
-    }
+    })
 
     chunks.push({
       type: 'js',

@@ -1,42 +1,18 @@
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 
-import {
-  makeDefaultImportStatement,
-  makeNamedMappedImportStatement,
-  makeNamedImportStatement,
-} from '../../utils/js-ast'
+import { resolveImportStatement } from '../../utils/js-ast'
 
 interface ImportPluginConfig {
   importChunkName: string
 }
 
-const resolveImportStatement = (componentName: string, dependency: any) => {
-  const details =
-    dependency.meta && dependency.meta.path
-      ? dependency.meta
-      : {
-          // default meta, this will probably change later
-          path: './' + componentName,
-        }
-
-  if (details.namedImport) {
-    // if the component is listed under a different originalName, then import is "x as y"
-    return details.originalName
-      ? makeNamedMappedImportStatement(
-          { [details.originalName]: componentName },
-          details.path
-        )
-      : makeNamedImportStatement([componentName], details.path)
-  }
-
-  return makeDefaultImportStatement(componentName, details.path)
-}
-
 export const createPlugin: ComponentPluginFactory<ImportPluginConfig> = (config) => {
   const { importChunkName = 'import' } = config || {}
 
-  const importPlugin: ComponentPlugin = async (structure) => {
-    const { dependencies } = structure
+  const importPlugin: ComponentPlugin = async (structure, operations) => {
+    const dependencies = operations.getDependencies()
+
+    // TODO: We need to merge imports that have the same path
 
     const importASTs = Object.keys(dependencies).map((key) =>
       resolveImportStatement(key, dependencies[key])

@@ -1,12 +1,22 @@
-import { ComponentPlugin, ComponentStructure, Resolver } from '../types'
+import {
+  ComponentPlugin,
+  ComponentStructure,
+  Resolver,
+  ComponentDependency,
+  PipelineOperations,
+} from '../types'
 
 export default class ComponentAsemblyLine {
   private plugins: ComponentPlugin[]
   private resolver: Resolver
+  private dependencies: {
+    [key: string]: ComponentDependency
+  }
 
   constructor(pipeline: ComponentPlugin[], resolver: Resolver) {
     this.plugins = pipeline
     this.resolver = resolver
+    this.dependencies = {}
   }
 
   public async run(uidl: any) {
@@ -14,14 +24,26 @@ export default class ComponentAsemblyLine {
       uidl,
       meta: null,
       chunks: [],
-      dependencies: {},
-      resolver: this.resolver,
-    }
-    const len = this.plugins.length
-    for (let i = 0; i < len; i++) {
-      structure = await this.plugins[i](structure)
     }
 
-    return structure
+    const pipelineOperations: PipelineOperations = {
+      registerDependency: this.registerDependency.bind(this),
+      resolver: this.resolver,
+      getDependencies: () => this.dependencies,
+    }
+
+    const len = this.plugins.length
+    for (let i = 0; i < len; i++) {
+      structure = await this.plugins[i](structure, pipelineOperations)
+    }
+
+    return {
+      chunks: structure.chunks,
+      dependencies: this.dependencies,
+    }
+  }
+
+  private registerDependency(name: string, dependency: ComponentDependency) {
+    this.dependencies[name] = dependency
   }
 }
