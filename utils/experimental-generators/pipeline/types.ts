@@ -59,7 +59,7 @@ export interface PipelineOperations {
  * The structure returned by the resolver function for each element of the UIDL
  */
 export interface MappedElement {
-  name: string
+  nodeName: string
   attrs?: any
   dependency?: ComponentDependency
 }
@@ -82,7 +82,11 @@ export type ComponentPluginFactory<T> = (configuration?: T) => ComponentPlugin
  * The function which resolves element mappings (primitive and custom)
  * @param type - uidl node which is converted
  */
-export type Resolver = (type: string) => MappedElement
+export type Resolver = (
+  uidlType: string,
+  uidlAttrs?: any,
+  uidlDependency?: ComponentDependency
+) => MappedElement
 
 export type RegisterDependency = (name: string, dependency: ComponentDependency) => void
 

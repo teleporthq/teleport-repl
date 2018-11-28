@@ -17,7 +17,6 @@ const frameworkMappingsLookup: { [key: string]: any } = {
 
 export default class ComponentAsemblyLine {
   private plugins: ComponentPlugin[]
-  // private target: string
   private elementMappings: { [key: string]: any }
   private dependencies: {
     [key: string]: ComponentDependency
@@ -66,17 +65,70 @@ export default class ComponentAsemblyLine {
     }
   }
 
-  private resolver: Resolver = (elementType: string) => {
-    const result = this.elementMappings[elementType]
+  // This function returns the mapped element (the tag literal) together with its attributes and dependenices.
+  // All the parameters come from the UIDL.
+  // The attributes and dependencies specified at the UIDL level have priority over the mappings in the assembly line.
+  private resolver: Resolver = (uidlType: string, uidlAttrs, uidlDependency) => {
+    let mappedElement = this.elementMappings[uidlType]
 
-    if (!result) {
-      // If no mapping is found, use the type as the end value
-      return {
-        name: elementType,
-      }
+    // In case the element is not found, we maintain the type as the tag name.
+    const identityMapping = {
+      name: uidlType,
     }
 
-    return result
+    mappedElement = mappedElement || identityMapping
+
+    // We gather the results here uniting the mapped attributes and the uidl attributes.
+    const resolvedAttrs: { [key: string]: any } = {}
+
+    // This will gather all the attributes from the UIDL which are mapped using the element-mappings
+    // These attributes will not be added on the tag as they are, but using the element-mappings
+    // Such an example is the url attribute on the Link tag, which needs to be mapped in the case of html to href
+    const mappedAttributes: [string?] = []
+
+    // First we iterate through the mapping attributes and we add them to the result
+    if (mappedElement.attrs) {
+      Object.keys(mappedElement.attrs).forEach((key) => {
+        const value = mappedElement.attrs[key]
+        if (!value) {
+          return
+        }
+
+        if (typeof value === 'string' && value.startsWith('$attrs.')) {
+          // we lookup for the attributes in the UIDL and use the element-mapping key to set them on the tag
+          // (ex: Link has an url attribute in the UIDL, but it needs to be mapped to href in the case of HTML)
+          const uidlAttributeKey = value.replace('$attrs.', '')
+          if (uidlAttrs && uidlAttrs[uidlAttributeKey]) {
+            resolvedAttrs[key] = uidlAttrs[uidlAttributeKey]
+            mappedAttributes.push(uidlAttributeKey)
+          }
+
+          // in the case of mapped reference attributes ($attrs) we don't write them unless they are specified in the uidl
+          return
+        }
+
+        resolvedAttrs[key] = mappedElement.attrs[key]
+      })
+    }
+
+    // The UIDL attributes can override the mapped attributes, so they come last
+    if (uidlAttrs) {
+      Object.keys(uidlAttrs).forEach((key) => {
+        // Skip the attributes that were mapped from $attrs
+        if (!mappedAttributes.includes(key)) {
+          resolvedAttrs[key] = uidlAttrs[key]
+        }
+      })
+    }
+
+    // If dependency is specified at UIDL level it will have priority over the mapping one
+    const nodeDependency = uidlDependency || mappedElement.dependency
+
+    return {
+      nodeName: mappedElement.name,
+      attrs: resolvedAttrs,
+      dependency: nodeDependency,
+    }
   }
 
   private registerDependency = (name: string, dependency: ComponentDependency) => {

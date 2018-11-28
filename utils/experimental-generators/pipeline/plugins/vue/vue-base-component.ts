@@ -30,18 +30,17 @@ const generateVueNodesTree = (
 ): CheerioStatic => {
   const { name, type, children, attrs, dependency } = content
 
-  const mappedElement = resolver(type)
-  const mappedType = mappedElement.name
+  const mappedElement = resolver(type, attrs, dependency)
+  const mappedType = mappedElement.nodeName
 
-  const tagDependency = dependency || mappedElement.dependency
-
-  if (tagDependency) {
-    registerDependency(mappedType, { ...tagDependency })
+  if (mappedElement.dependency) {
+    registerDependency(mappedType, { ...mappedElement.dependency })
   }
 
   const mainTag = generateSingleVueNode({
     tagName: mappedType,
-    selfClosing: !tagDependency && !(children && children.length),
+    // custom elements cannot be self-enclosing in Vue
+    selfClosing: !mappedElement.dependency && !(children && children.length),
   })
   const root = mainTag(mappedType)
 
@@ -68,7 +67,7 @@ const generateVueNodesTree = (
     }
   }
 
-  const { staticProps, dynamicProps } = splitProps(attrs || {})
+  const { staticProps, dynamicProps } = splitProps(mappedElement.attrs || {})
 
   Object.keys(staticProps).forEach((key) => {
     root.attr(key, staticProps[key])
@@ -85,12 +84,12 @@ const generateVueNodesTree = (
   return mainTag
 }
 
-interface VueStyleChunkConfig {
+interface VueComponentConfig {
   vueTemplateChunkName: string
   vueJSChunkName: string
 }
 
-export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config) => {
+export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config) => {
   const {
     vueTemplateChunkName = 'vue-component-template-chunk',
     vueJSChunkName = 'vue-component-js-chunk',
