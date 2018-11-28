@@ -27,7 +27,7 @@ export default class ComponentAsemblyLine {
     }
 
     const pipelineOperations: PipelineOperations = {
-      registerDependency: this.registerDependency.bind(this),
+      registerDependency: this.registerDependency,
       resolver: this.resolver,
       getDependencies: () => this.dependencies,
     }
@@ -43,7 +43,7 @@ export default class ComponentAsemblyLine {
     }
   }
 
-  private registerDependency(name: string, dependency: ComponentDependency) {
+  private registerDependency = (name: string, dependency: ComponentDependency) => {
     this.dependencies[name] = dependency
   }
 }
