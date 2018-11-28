@@ -4,9 +4,6 @@ export default {
   },
   Text: {
     name: 'span',
-    attrs: {
-      static: '$attrs.dynamic',
-    },
   },
   Image: {
     name: 'img',
@@ -21,19 +18,6 @@ export default {
     },
   },
   Link: {
-    name: 'Link',
-    attrs: {
-      href: '$attrs.url',
-      target: '_blank',
-      rel: 'nofollow noreferrer',
-    },
-    dependency: {
-      type: 'library',
-      meta: {
-        path: 'next/link',
-        namedImport: true,
-        originalName: 'Blabla',
-      },
-    },
+    name: 'a',
   },
 }
