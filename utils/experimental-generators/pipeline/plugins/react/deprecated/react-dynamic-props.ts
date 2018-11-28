@@ -1,7 +1,7 @@
-import { ComponentPlugin, EmbedDefinition, ComponentPluginFactory } from '../../types'
+import { ComponentPlugin, EmbedDefinition, ComponentPluginFactory } from '../../../types'
 
 import * as t from '@babel/types'
-import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
+import { addDynamicPropOnJsxOpeningTag } from '../../../utils/jsx-ast'
 
 const addDynamicPropsOnJSXOpeningTag = (
   jsxASTNode: t.JSXElement,

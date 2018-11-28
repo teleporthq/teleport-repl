@@ -13,7 +13,6 @@ import { makeDefaultExport } from '../../utils/js-ast'
 
 import {
   ComponentPlugin,
-  MappedElement,
   Resolver,
   ComponentPluginFactory,
   RegisterDependency,
@@ -22,63 +21,17 @@ import {
 /**
  *
  * @param tag the ref to the AST tag under construction
- * @param mappedElement the structure returned by the resolver, needed for mapping the tag and the attributes
- * @param attrs the attributes defined on the UIDL for this node/tag
+ * @param attrs the attributes that should be added on the current AST node
  */
-const addAttributesToTag = (
-  tag: t.JSXElement,
-  mappedElement: MappedElement,
-  attrs: any
-) => {
-  // This will gather all the attributes from the UIDL which are mapped using the element-mappings
-  // These attributes will not be added on the tag as they are, but using the element-mappings
-  // Such an example is the url attribute on the Link tag, which needs to be mapped in the case of html to href
-  const mappedAttributes: [string?] = []
-
-  // Standard attributes coming from the element mapping
-  if (mappedElement.attrs) {
-    Object.keys(mappedElement.attrs).forEach((key) => {
-      const value = mappedElement.attrs[key]
-      if (!value) {
-        return
-      }
-
-      if (typeof value === 'string' && value.startsWith('$attrs.')) {
-        // we lookup for the attributes in the UIDL and use the element-mapping key to set them on the tag
-        // (ex: Link has an url attribute in the UIDL, but it needs to be mapped to href in the case of HTML)
-        const uidlAttributeKey = value.replace('$attrs.', '')
-        if (attrs && attrs[uidlAttributeKey]) {
-          if (attrs[uidlAttributeKey].startsWith('$props.')) {
-            const dynamicPropValue = attrs[uidlAttributeKey].replace('$props.', '')
-            addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue)
-          } else {
-            addASTAttributeToJSXTag(tag, { name: key, value: attrs[uidlAttributeKey] })
-          }
-
-          mappedAttributes.push(uidlAttributeKey)
-        }
-
-        // in the case of mapped reference attributes ($attrs) we don't write them unless they are specified in the uidl
-        return
-      }
-
-      addASTAttributeToJSXTag(tag, { name: key, value })
-    })
-  }
-
-  // Custom attributes coming from the UIDL
-  if (attrs) {
-    Object.keys(attrs).forEach((key) => {
-      if (!mappedAttributes.includes(key)) {
-        if (attrs[key].startsWith('$props.')) {
-          const value = attrs[key].replace('$props.', '')
-          addDynamicPropOnJsxOpeningTag(tag, key, value)
-        } else {
-          addASTAttributeToJSXTag(tag, { name: key, value: attrs[key] })
-        }
-      }
-    })
-  }
+const addAttributesToTag = (tag: t.JSXElement, attrs: any) => {
+  Object.keys(attrs).forEach((key) => {
+    if (attrs[key].startsWith('$props.')) {
+      const dynamicPropValue = attrs[key].replace('$props.', '')
+      addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue)
+    } else {
+      addASTAttributeToJSXTag(tag, { name: key, value: attrs[key] })
+    }
+  })
 }
 
 const generateTreeStructure = (
@@ -88,22 +41,21 @@ const generateTreeStructure = (
   registerDependency: RegisterDependency
 ): t.JSXElement => {
   const { type, children, name, attrs, dependency } = content
-  const mappedElement = resolver(type)
-  const mappedType = mappedElement.name
+  const mappedElement = resolver(type, attrs, dependency)
+  const mappedNodeName = mappedElement.nodeName
+  const mainTag = generateASTDefinitionForJSXTag(mappedNodeName)
 
-  if (mappedType === undefined) {
+  if (mappedNodeName === undefined) {
     // tslint:disable-next-line:no-console
     console.error('mappedType erorr for uidl content', content)
     throw new Error(`mappedType not found for ${type}`)
   }
-  const mainTag = generateASTDefinitionForJSXTag(mappedType)
-  addAttributesToTag(mainTag, mappedElement, attrs)
 
-  // If dependency is specified at UIDL level it will have priority over the mapping one
-  const tagDependency = dependency || mappedElement.dependency
-  if (tagDependency) {
+  addAttributesToTag(mainTag, mappedElement.attrs)
+
+  if (mappedElement.dependency) {
     // Make a copy to avoid reference leaking
-    registerDependency(mappedType, { ...tagDependency })
+    registerDependency(mappedNodeName, { ...mappedElement.dependency })
   }
 
   if (children) {
