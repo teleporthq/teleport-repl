@@ -5,6 +5,9 @@ export default {
   Text: {
     name: 'span',
   },
+  PageHeading: {
+    name: 'h1',
+  },
   Image: {
     name: 'img',
     attrs: {

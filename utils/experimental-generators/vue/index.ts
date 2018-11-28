@@ -30,7 +30,7 @@ const asemblyLine = new ComponentAsemblyLine('vue', [
 
 const generateComponent = async (jsDoc: any) => {
   const chunksLinker = new Builder()
-  const result = await asemblyLine.run(jsDoc, customMapping)
+  const result = await asemblyLine.run(jsDoc, { customMappings: customMapping })
   return {
     code: chunksLinker.link(result.chunks),
     dependencies: result.dependencies,

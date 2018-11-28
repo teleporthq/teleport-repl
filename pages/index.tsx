@@ -15,6 +15,8 @@ import { generateComponent as generateVueComponent } from '../utils/experimental
 import { loadJSONAsync, exmaplesList } from '../inputs'
 import authorCard from '../inputs/author-card'
 
+import '../utils/experimental-generators/react-router-pages'
+
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
   // Default options are marked with *

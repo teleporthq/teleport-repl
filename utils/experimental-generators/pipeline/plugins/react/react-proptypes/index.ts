@@ -1,15 +1,11 @@
 import { ComponentPlugin, ComponentPluginFactory } from '../../../types'
-import {
-  buildDefaultPropsAst,
-  buildTypesOfPropsAst,
-  buildReactSFCTypescriptAnnotation,
-} from './utils'
+import { buildDefaultPropsAst, buildTypesOfPropsAst } from './utils'
 
 interface ReactJSPropTypesConfig {
-  componentChunkName: string
-  defaultPropsChunkName: string
-  typesOfPropsChunkName: string
-  exportComponentName: string
+  componentChunkName?: string
+  defaultPropsChunkName?: string
+  typesOfPropsChunkName?: string
+  exportComponentName?: string
 }
 
 export const createPlugin: ComponentPluginFactory<ReactJSPropTypesConfig> = (config) => {

@@ -7,9 +7,9 @@ import {
   generateASTDefinitionForJSXTag,
   addDynamicChild,
   addDynamicPropOnJsxOpeningTag,
-} from '../../utils/jsx-ast'
+} from '../../pipeline/utils/jsx-ast'
 
-import { makeDefaultExport } from '../../utils/js-ast'
+import { makeDefaultExport } from '../../pipeline/utils/js-ast'
 
 import {
   ComponentPlugin,
@@ -17,7 +17,7 @@ import {
   Resolver,
   ComponentPluginFactory,
   RegisterDependency,
-} from '../../types'
+} from '../../pipeline/types'
 
 /**
  *
@@ -90,12 +90,6 @@ const generateTreeStructure = (
   const { type, children, name, attrs, dependency } = content
   const mappedElement = resolver(type)
   const mappedType = mappedElement.name
-
-  if (mappedType === undefined) {
-    // tslint:disable-next-line:no-console
-    console.error('mappedType erorr for uidl content', content)
-    throw new Error(`mappedType not found for ${type}`)
-  }
   const mainTag = generateASTDefinitionForJSXTag(mappedType)
   addAttributesToTag(mainTag, mappedElement, attrs)
 
@@ -153,20 +147,23 @@ const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) =
   return component
 }
 
-interface JSXConfig {
+interface AppRoutingComponentConfig {
   componentChunkName: string
   exportChunkName: string
-  importChunkName?: string
 }
 
-export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
-  const {
-    componentChunkName = 'react-component',
-    exportChunkName = 'export',
-    importChunkName = 'import',
-  } = config || {}
+export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
+  config
+) => {
+  // const {
+  //   componentChunkName = 'app-routing-component',
+  //   exportChunkName = 'app-routing-export',
+  // } = config || {}
 
-  const reactComponentPlugin: ComponentPlugin = async (structure, operations) => {
+  const reactAppRoutingComponentPlugin: ComponentPlugin = async (
+    structure,
+    operations
+  ) => {
     const { uidl } = structure
     const { resolver, registerDependency } = operations
 
@@ -177,47 +174,61 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
       },
     })
 
+    registerDependency('React', {
+      type: 'library',
+      meta: {
+        path: 'react-router-dom',
+      },
+    })
+
+    const { states, content } = uidl
+    const pages = states || {}
+
+    if (content) {
+      pages.default = 'index'
+      pages.index = content
+    }
+
+    // console.log({ pages })
+
     // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
     // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
-    // The structure will be populated as the AST is being created
-    const uidlMappings = {}
-    const jsxTagStructure = generateTreeStructure(
-      uidl.content,
-      uidlMappings,
-      resolver,
-      registerDependency
-    )
+    // // The structure will be populated as the AST is being created
+    // const uidlMappings = {}
+    // const jsxTagStructure = generateTreeStructure(
+    //   uidl.content,
+    //   uidlMappings,
+    //   resolver,
+    //   registerDependency
+    // )
 
-    const pureComponent = makePureComponent({
-      name: uidl.name,
-      jsxTagTree: jsxTagStructure,
-    })
+    // const pureComponent = makePureComponent({
+    //   name: uidl.name,
+    //   jsxTagTree: jsxTagStructure,
+    // })
 
-    structure.chunks.push({
-      type: 'js',
-      name: componentChunkName,
-      linker: {
-        after: [importChunkName],
-      },
-      meta: {
-        uidlMappings,
-      },
-      content: pureComponent,
-    })
+    // structure.chunks.push({
+    //   type: 'js',
+    //   name: componentChunkName,
+    //   meta: {
+    //     uidlMappings,
+    //   },
+    //   content: pureComponent,
+    // })
 
-    structure.chunks.push({
-      type: 'js',
-      name: exportChunkName,
-      linker: {
-        after: [componentChunkName],
-      },
-      content: makeDefaultExport(uidl.name),
-    })
+    // structure.chunks.push({
+    //   type: 'js',
+    //   name: exportChunkName,
+    //   linker: {
+    //     after: [componentChunkName],
+    //   },
+    //   content: makeDefaultExport(uidl.name),
+    // })
 
     return structure
   }
 
-  return reactComponentPlugin
+  return reactAppRoutingComponentPlugin
 }
 
 export default createPlugin()
