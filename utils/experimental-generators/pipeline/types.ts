@@ -88,6 +88,9 @@ export type Resolver = (
   uidlDependency?: ComponentDependency
 ) => MappedElement
 
-export type RegisterDependency = (name: string, dependency: ComponentDependency) => void
+export type RegisterDependency = (
+  name: string | string[],
+  dependency: ComponentDependency
+) => void
 
 export type GeneratorFunction = (content: any) => string
