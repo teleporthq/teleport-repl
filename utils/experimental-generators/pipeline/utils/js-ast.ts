@@ -129,21 +129,28 @@ export const makeNamedMappedImportStatement = (
  */
 export const makeGenericImportStatement = (path: string, imports: any[], t = types) => {
   // Only one of the imports can be the default one so this is a fail safe for invalid UIDL data
-  let defaultImportUsed = false
-  return t.importDeclaration(
-    imports.map((imp) => {
-      if (imp.namedImport || defaultImportUsed) {
-        return t.importSpecifier(
-          t.identifier(imp.identifier),
-          t.identifier(imp.originalName)
-        )
-      } else {
-        defaultImportUsed = true
-        return t.importDefaultSpecifier(t.identifier(imp.identifier))
-      }
-    }),
-    t.stringLiteral(path)
-  )
+
+  const defaultImport = imports.find((imp) => !imp.namedImport) // only one import can be default
+  let importASTs = []
+  if (defaultImport) {
+    const namedImports = imports.filter(
+      (imp) => imp.identifier !== defaultImport.identifier
+    )
+    // Default import needs to be the first in the array
+    importASTs = [
+      t.importDefaultSpecifier(t.identifier(defaultImport.identifier)),
+      ...namedImports.map((imp) =>
+        t.importSpecifier(t.identifier(imp.identifier), t.identifier(imp.originalName))
+      ),
+    ]
+  } else {
+    // No default import, so array order doesn't matter
+    importASTs = imports.map((imp) =>
+      t.importSpecifier(t.identifier(imp.identifier), t.identifier(imp.originalName))
+    )
+  }
+
+  return t.importDeclaration(importASTs, t.stringLiteral(path))
 }
 
 /**
