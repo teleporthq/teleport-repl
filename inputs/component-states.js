@@ -31,7 +31,10 @@ export default {
           "type": "PageTitle",
           "name": "HomeTitleInstance", // page title will not get name PageTitle, but HomeTitle
                                // PageTitle is redundant in the "PageTitle" declaration
-          "children": "Home Page" // will be passed to $props.children as children
+          "children": "Home Page", // will be passed to $props.children as children
+          "dependency": { 
+            "type": "local"
+          } 
         }]
       }
     },
@@ -51,7 +54,10 @@ export default {
         "children": [{
           "type": "PageTitle",
           "name": "AboutTitleInstance",
-          "children": "About Page"
+          "children": "About Page",
+          "dependency": { 
+            "type": "local"
+          }
         }]
       }
     },
@@ -69,6 +75,9 @@ export default {
           "content": {
             "name": "HomeInstance",
             "type": "Home",
+            "dependency": { 
+              "type": "local"
+            }
           }
         },
 
@@ -76,6 +85,9 @@ export default {
           "content": {
             "name": "AboutInstance",
             "type": "About",
+            "dependency": { 
+              "type": "local"
+            }
           }
         }
 

@@ -5,10 +5,10 @@ import componentWithStates from '../../../inputs/component-states'
 import ComponentAsemblyLine from '../pipeline/asembly-line'
 import Builder from '../pipeline/builder'
 
-import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
-import { configureAsemlyLine, ReactComponentFlavors } from './react-component-pipeline'
+import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
+import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
 
 const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.JSS,
@@ -17,7 +17,7 @@ const componentGenerator = configureAsemlyLine({
 const configureRouterAsemblyLine = () => {
   const configureAppRouterComponent = appComponentPlugin({
     componentChunkName: 'app-router-component',
-    exportChunkName: 'app-router-export',
+    domRenderChunkName: 'app-router-export',
     importChunkName: 'import',
   })
 
@@ -68,12 +68,6 @@ const processProjectUIDL = async (jsDoc: any) => {
             type: 'dir',
             content: {},
           },
-          'index.js': {
-            type: 'file',
-            content: {
-              code: null,
-            },
-          },
         },
       },
       'package.json': {
@@ -90,33 +84,45 @@ const processProjectUIDL = async (jsDoc: any) => {
   const srcDir = fileTree.content && fileTree.content.src && fileTree.content.src.content
 
   const compoenntsDir = srcDir && srcDir.components.content
-
+  let allDependencies = {}
   // tslint:disable-next-line:forin
   for (const i in keys) {
     const key = keys[i]
     if (components[key].name === root) {
       try {
         const compiledComponent = await routingComponentGenerator(components[key])
-
-        srcDir[root] = {
+        console.log(compiledComponent.code)
+        srcDir.index = {
           type: 'file',
-          name: `${root}.js`,
+          name: `index.js`,
           content: {
             code: compiledComponent.code,
           },
+        }
+
+        allDependencies = {
+          ...allDependencies,
+          ...compiledComponent.dependencies,
         }
       } catch (err) {
         console.error(key, err)
       }
     } else {
       try {
-        const compiledComponend = await componentGenerator(components[key])
+        const compiledComponent = await componentGenerator(components[key])
         compoenntsDir[components[key].name] = {
           type: 'file',
           name: `${components[key].name}.js`,
           content: {
-            code: compiledComponend.code,
+            code: compiledComponent.code,
           },
+        }
+
+        console.log(compiledComponent.code)
+
+        allDependencies = {
+          ...allDependencies,
+          ...compiledComponent.dependencies,
         }
       } catch (err) {
         console.error(key, err)
@@ -124,7 +130,7 @@ const processProjectUIDL = async (jsDoc: any) => {
     }
   }
 
-  console.log(fileTree)
+  console.log(fileTree, allDependencies)
 }
 
 processProjectUIDL(componentWithStates)

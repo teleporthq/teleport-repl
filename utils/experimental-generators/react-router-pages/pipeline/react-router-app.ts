@@ -22,7 +22,7 @@ const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) =
 
 interface AppRoutingComponentConfig {
   componentChunkName: string
-  exportChunkName: string
+  domRenderChunkName: string
   importChunkName: string
 }
 
@@ -32,7 +32,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
   const {
     importChunkName = 'imports',
     componentChunkName = 'app-routing-component',
-    exportChunkName = 'app-routing-export',
+    domRenderChunkName = 'app-routing-bind-to-dom',
   } = config || {}
 
   const reactAppRoutingComponentPlugin: ComponentPlugin = async (
@@ -49,7 +49,23 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       },
     })
 
-    registerDependency(['Router', 'Route'], {
+    registerDependency('ReactDOM', {
+      type: 'library',
+      meta: {
+        path: 'react-dom',
+      },
+    })
+
+    registerDependency('Router', {
+      type: 'library',
+      meta: {
+        path: 'react-router-dom',
+        namedImport: true,
+        originalName: 'BrowserRouter',
+      },
+    })
+
+    registerDependency('Route', {
       type: 'library',
       meta: {
         path: 'react-router-dom',
@@ -77,6 +93,20 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         const { type, attrs, dependency } = stateComponent
         const mappedElement = resolver(type, attrs, dependency)
         const route = generateASTDefinitionForJSXTag('Route')
+
+        const urlRoute =
+          pages.default === pageKey ? '/' : `/${pageKey.toLocaleLowerCase()}`
+
+        registerDependency(mappedElement.nodeName, {
+          type: 'local',
+          meta: {
+            path: `./components/${mappedElement.nodeName}`,
+          },
+        })
+
+        route.openingElement.attributes.push(
+          t.jsxAttribute(t.jsxIdentifier('url'), t.stringLiteral(urlRoute))
+        )
 
         route.openingElement.attributes.push(
           t.jsxAttribute(
@@ -108,13 +138,27 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       content: pureComponent,
     })
 
+    // makes ReactDOM.render(AppName, document.getElementById('root'));
+    const reactDomBind = t.expressionStatement(
+      t.callExpression(
+        t.memberExpression(t.identifier('ReactDOM'), t.identifier('render')),
+        [
+          t.identifier(uidl.name),
+          t.callExpression(
+            t.memberExpression(t.identifier('document'), t.identifier('getElementById')),
+            [t.stringLiteral('root')]
+          ),
+        ]
+      )
+    )
+
     structure.chunks.push({
       type: 'js',
-      name: exportChunkName,
+      name: domRenderChunkName,
       linker: {
         after: [componentChunkName],
       },
-      content: makeDefaultExport(uidl.name),
+      content: reactDomBind,
     })
 
     return structure
