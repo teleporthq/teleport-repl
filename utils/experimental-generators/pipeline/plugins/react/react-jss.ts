@@ -69,6 +69,11 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
 
     const jssStyleMap = generateStyleTagStrings(content, jsxChunkMappings)
 
+    if (!Object.keys(jssStyleMap).length) {
+      // if no styles are defined, no need to build the jss style at all
+      return structure
+    }
+
     registerDependency('injectSheet', {
       type: 'library',
       meta: {

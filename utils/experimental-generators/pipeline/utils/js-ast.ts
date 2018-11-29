@@ -46,7 +46,7 @@ export const objectToObjectExpression = (
   return objectExpression
 }
 
-export const makeConstAssign = (constName: string, asignment = null, t = types) => {
+export const makeConstAssign = (constName: string, asignment: any = null, t = types) => {
   const declarator = t.variableDeclarator(t.identifier(constName), asignment)
   const constAsignment = t.variableDeclaration('const', [declarator])
   return constAsignment
