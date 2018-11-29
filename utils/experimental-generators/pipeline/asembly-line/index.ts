@@ -132,6 +132,14 @@ export default class ComponentAsemblyLine {
 
     // If dependency is specified at UIDL level it will have priority over the mapping one
     const nodeDependency = uidlDependency || mappedElement.dependency
+    if (nodeDependency) {
+      // When a dependency is specified without a path, we infer it is a local import.
+      // This might be removed at a later point
+      nodeDependency.meta =
+        nodeDependency.meta && nodeDependency.meta.path
+          ? nodeDependency.meta
+          : { ...nodeDependency.meta, path: './' + mappedElement.name }
+    }
 
     return {
       nodeName: mappedElement.name,

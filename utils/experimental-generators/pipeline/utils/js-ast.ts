@@ -124,13 +124,33 @@ export const makeNamedMappedImportStatement = (
 }
 
 /**
+ * You can pass the path of the package which is added at the top of the file and
+ * an array of imports that we extract from that package.
+ */
+export const makeGenericImportStatement = (path: string, imports: any[], t = types) => {
+  // Only one of the imports can be the default one so this is a fail safe for invalid UIDL data
+  let defaultImportUsed = false
+  return t.importDeclaration(
+    imports.map((imp) => {
+      if (imp.namedImport || defaultImportUsed) {
+        return t.importSpecifier(
+          t.identifier(imp.identifier),
+          t.identifier(imp.originalName)
+        )
+      } else {
+        defaultImportUsed = true
+        return t.importDefaultSpecifier(t.identifier(imp.identifier))
+      }
+    }),
+    t.stringLiteral(path)
+  )
+}
+
+/**
  * Generatate a js import statement based a standard UIDL dependency
  */
 export const resolveImportStatement = (componentName: string, dependency: any) => {
-  const details =
-    dependency.meta && dependency.meta.path
-      ? dependency.meta
-      : { ...dependency.meta, path: './' + componentName }
+  const details = dependency.meta
 
   if (details.namedImport) {
     // if the component is listed under a different originalName, then import is "x as y"

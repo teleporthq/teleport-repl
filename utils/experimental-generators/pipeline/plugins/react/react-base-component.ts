@@ -64,6 +64,10 @@ const generateTreeStructure = (
         if (!child) {
           return
         }
+        if (typeof child === 'string') {
+          // Handle text node
+        }
+
         const childTag = generateTreeStructure(
           child,
           uidlMappings,

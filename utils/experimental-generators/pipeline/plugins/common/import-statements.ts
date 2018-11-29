@@ -1,6 +1,33 @@
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 
-import { resolveImportStatement } from '../../utils/js-ast'
+import { makeGenericImportStatement } from '../../utils/js-ast'
+
+interface ImportDependency {
+  identifier: string
+  namedImport: boolean
+  originalName: string
+}
+
+const groupDependenciesByPackage = (dependencies: any) => {
+  const result: { [key: string]: ImportDependency[] } = {}
+
+  Object.keys(dependencies).map((key) => {
+    const dep = dependencies[key]
+    const packagePath = dep.meta.path
+
+    if (!result[packagePath]) {
+      result[packagePath] = [] // Initialize the dependencies from this path
+    }
+
+    result[packagePath].push({
+      identifier: key,
+      namedImport: !!dep.meta.namedImport,
+      originalName: dep.meta.originalName || key,
+    })
+  })
+
+  return result
+}
 
 interface ImportPluginConfig {
   importChunkName: string
@@ -11,14 +38,10 @@ export const createPlugin: ComponentPluginFactory<ImportPluginConfig> = (config)
 
   const importPlugin: ComponentPlugin = async (structure, operations) => {
     const dependencies = operations.getDependencies()
-
-    // TODO: We need to merge imports that have the same path
-
-    const importASTs = Object.keys(dependencies).map((key) =>
-      resolveImportStatement(key, dependencies[key])
+    const groupedDependencies = groupDependenciesByPackage(dependencies)
+    const importASTs = Object.keys(groupedDependencies).map((key) =>
+      makeGenericImportStatement(key, groupedDependencies[key])
     )
-
-    // TODO: Should we remove resolved dependencies from the code?
 
     if (importASTs.length <= 0) {
       return structure
