@@ -12,7 +12,7 @@ import {
   generateVueComponentPropTypes,
 } from './utils'
 
-import { resolveImportStatement, objectToObjectExpression } from '../../utils/js-ast'
+import { objectToObjectExpression } from '../../utils/js-ast'
 
 const addTextNodeToTag = (tag: Cheerio, text: string) => {
   if (text.startsWith('$props.') && !text.endsWith('$props.')) {
@@ -116,12 +116,12 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
 
     const accumulatedDependencies = getDependencies()
 
-    const importStatements: any[] = []
-    Object.keys(accumulatedDependencies).forEach((key) => {
-      const dependency = accumulatedDependencies[key]
-      const importContent = resolveImportStatement(key, dependency)
-      importStatements.push(importContent)
-    })
+    // const importStatements: any[] = []
+    // Object.keys(accumulatedDependencies).forEach((key) => {
+    //   const dependency = accumulatedDependencies[key]
+    //   const importContent = resolveImportStatement(key, dependency)
+    //   importStatements.push(importContent)
+    // })
 
     chunks.push({
       type: 'html',
@@ -138,7 +138,7 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
     const jsContent = generateEmptyVueComponentJS(
       uidl.name,
       {
-        importStatements,
+        importStatements: [],
         componentDeclarations: Object.keys(accumulatedDependencies),
       },
       scriptLookup

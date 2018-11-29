@@ -2,7 +2,7 @@ import ComponentAsemblyLine from '../pipeline/asembly-line'
 
 import { createPlugin as vueBaseComponent } from '../pipeline/plugins/vue/vue-base-component'
 import { createPlugin as vueStyleComponent } from '../pipeline/plugins/vue/vue-style-chunk'
-// import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
+import { createPlugin as vueImportStatements } from '../pipeline/plugins/vue/vue-import-statements'
 
 import Builder from '../pipeline/builder'
 
@@ -26,6 +26,7 @@ const customMapping = {
 const asemblyLine = new ComponentAsemblyLine('vue', [
   vueBaseComponent(),
   vueStyleComponent(),
+  vueImportStatements(),
 ])
 
 const generateComponent = async (jsDoc: any) => {

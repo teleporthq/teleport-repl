@@ -46,6 +46,9 @@ export default class ComponentAsemblyLine {
       chunks: [],
     }
 
+    // reset dependencies
+    this.dependencies = {}
+
     const pipelineOperations: PipelineOperations = {
       registerDependency: this.registerDependency,
       resolver: this.resolver,
