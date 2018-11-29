@@ -34,6 +34,14 @@ const addAttributesToTag = (tag: t.JSXElement, attrs: any) => {
   })
 }
 
+const addTextElementToTag = (tag: t.JSXElement, text: string) => {
+  if (text.startsWith('$props.') && !text.endsWith('$props.')) {
+    addDynamicChild(tag, text.replace('$props.', ''))
+  } else {
+    addChildJSXText(tag, text)
+  }
+}
+
 const generateTreeStructure = (
   content: any,
   uidlMappings: any = {},
@@ -59,7 +67,8 @@ const generateTreeStructure = (
           return
         }
         if (typeof child === 'string') {
-          // Handle text node
+          addTextElementToTag(mainTag, child)
+          return
         }
 
         const childTag = generateTreeStructure(
@@ -74,12 +83,8 @@ const generateTreeStructure = (
         addChildJSXTag(mainTag, childTag)
       })
     } else {
-      const stringPart = children.toString()
-      if (stringPart.indexOf('$props.') === -1) {
-        addChildJSXText(mainTag, children.toString())
-      } else {
-        addDynamicChild(mainTag, children.toString().replace('$props.', ''))
-      }
+      const textElement = children.toString()
+      addTextElementToTag(mainTag, textElement)
     }
   }
 

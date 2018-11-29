@@ -14,6 +14,16 @@ import {
 
 import { resolveImportStatement, objectToObjectExpression } from '../../utils/js-ast'
 
+const addTextNodeToTag = (tag: Cheerio, text: string) => {
+  if (text.startsWith('$props.') && !text.endsWith('$props.')) {
+    // For real time, when users are typing we need to make sure there's something after the dot (.)
+    const propName = text.replace('$props.', '')
+    tag.append(`{{${propName}}}`)
+  } else {
+    tag.append(text.toString())
+  }
+}
+
 const generateVueNodesTree = (
   content: {
     type: string
@@ -47,6 +57,10 @@ const generateVueNodesTree = (
   if (children) {
     if (Array.isArray(children)) {
       children.forEach((child) => {
+        if (typeof child === 'string') {
+          addTextNodeToTag(root, child)
+          return
+        }
         const childTag = generateVueNodesTree(
           child,
           mappings,
@@ -57,13 +71,7 @@ const generateVueNodesTree = (
         root.append(childTag.root())
       })
     } else if (typeof children === 'string') {
-      if (children.startsWith('$props.')) {
-        const propName = children.replace('$props.', '')
-        // accumulatedProps[propName] = String
-        root.append(`{{${propName}}}`)
-      } else {
-        root.append(children.toString())
-      }
+      addTextNodeToTag(root, children)
     }
   }
 
@@ -106,8 +114,6 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
       templateMapping: {},
       jsMapping: {},
     }
-
-    const accumulatedProps = {}
 
     const tempalteContent = generateVueNodesTree(
       uidl.content,

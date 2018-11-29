@@ -153,7 +153,10 @@ require(['vs/editor/editor.main'], function() {
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/definitions/content"
+                      "oneOf": [
+                        { "$ref": "#/definitions/content" },
+                        { "type": "string" }
+                      ]
                     },
                     "default": []
                   },

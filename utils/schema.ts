@@ -74,7 +74,7 @@ export default {
             {
               type: 'array',
               items: {
-                $ref: '#/definitions/content',
+                oneOf: [{ $ref: '#/definitions/content' }, { type: 'string' }],
               },
               default: [],
             },
