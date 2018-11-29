@@ -10,7 +10,7 @@ import { createPlugin as importStatements } from '../pipeline/plugins/common/imp
 
 const configuredReactJSX = reactComponent({
   componentChunkName: 'react-component',
-  importChunkName: 'import',
+  importChunkName: 'import-libs',
   exportChunkName: 'export',
 })
 
@@ -20,7 +20,7 @@ const configuredReactStyledJSX = reactStyledJSX({
 
 const configuredReactJSS = reactJSS({
   componentChunkName: 'react-component',
-  importChunkName: 'import',
+  importChunkName: 'import-libs',
   exportChunkName: 'export',
 })
 
@@ -33,7 +33,7 @@ const configuredPropTypes = reactPropTypes({
 })
 
 const configureImportStatements = importStatements({
-  importChunkName: 'import',
+  importLibsChunkName: 'import-libs',
 })
 
 const customMappings = {

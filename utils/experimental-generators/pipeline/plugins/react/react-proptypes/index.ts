@@ -6,10 +6,10 @@ import {
 } from './utils'
 
 interface ReactJSPropTypesConfig {
-  componentChunkName: string
-  defaultPropsChunkName: string
-  typesOfPropsChunkName: string
-  exportComponentName: string
+  componentChunkName?: string
+  defaultPropsChunkName?: string
+  typesOfPropsChunkName?: string
+  exportComponentName?: string
 }
 
 export const createPlugin: ComponentPluginFactory<ReactJSPropTypesConfig> = (config) => {
