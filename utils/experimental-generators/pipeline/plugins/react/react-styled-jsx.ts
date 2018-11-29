@@ -8,14 +8,14 @@ import { addClassStringOnJSXTag, generateStyledJSXTag } from '../../utils/jsx-as
 
 import { cammelCaseToDashCase } from '../../utils/helpers'
 
-const generateStyledJSXString = (content: any, uidlMappings: any) => {
+const generateStyledJSXString = (content: any, nodesLookup: any) => {
   let accumulator: any[] = []
 
   // only do stuff if content is a object
   if (content && typeof content === 'object') {
     const { style, children, name } = content
     if (style) {
-      const root = uidlMappings[name]
+      const root = nodesLookup[name]
       const className = cammelCaseToDashCase(name)
       accumulator.push(
         jss
@@ -34,7 +34,7 @@ const generateStyledJSXString = (content: any, uidlMappings: any) => {
 
     if (children && Array.isArray(children)) {
       children.forEach((child) => {
-        const items = generateStyledJSXString(child, uidlMappings)
+        const items = generateStyledJSXString(child, nodesLookup)
         accumulator = accumulator.concat(...items)
       })
     }
@@ -59,7 +59,7 @@ export const createPlugin: ComponentPluginFactory<StyledJSXConfig> = (config) =>
       return structure
     }
 
-    const jsxChunkMappings = componentChunk.meta.uidlMappings
+    const jsxChunkMappings = componentChunk.meta.nodesLookup
 
     const styleJSXString = generateStyledJSXString(content, jsxChunkMappings)
 

@@ -2,19 +2,18 @@ import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
 import {
   makeConstAssign,
-  makeDefaultImportStatement,
   makeJSSDefaultExport,
   objectToObjectExpression,
 } from '../../utils/js-ast'
 import { cammelCaseToDashCase } from '../../utils/helpers'
 
-const generateStyleTagStrings = (content: any, uidlMappings: any) => {
+const generateStyleTagStrings = (content: any, nodesLookup: any) => {
   let accumulator: { [key: string]: any } = {}
   // only do stuff if content is a object
   if (content && typeof content === 'object') {
     const { style, children, name } = content
     if (style) {
-      const root = uidlMappings[name]
+      const root = nodesLookup[name]
       const className = cammelCaseToDashCase(name)
       accumulator[className] = style
       // addClassStringOnJSXTag(root.node, className)
@@ -23,7 +22,7 @@ const generateStyleTagStrings = (content: any, uidlMappings: any) => {
 
     if (children && Array.isArray(children)) {
       children.forEach((child) => {
-        const items = generateStyleTagStrings(child, uidlMappings)
+        const items = generateStyleTagStrings(child, nodesLookup)
         accumulator = {
           ...accumulator,
           ...items,
@@ -65,9 +64,9 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
       return structure
     }
 
-    const jsxChunkMappings = componentChunk.meta.uidlMappings
+    const jsxNodesLookup = componentChunk.meta.nodesLookup
 
-    const jssStyleMap = generateStyleTagStrings(content, jsxChunkMappings)
+    const jssStyleMap = generateStyleTagStrings(content, jsxNodesLookup)
 
     registerDependency('injectSheet', {
       type: 'library',

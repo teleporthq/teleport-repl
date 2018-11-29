@@ -33,9 +33,8 @@ const generateVueNodesTree = (
     dependency: any
     attrs: { [key: string]: any }
   },
-  mappings: { [key: string]: any },
+  templateLookup: { [key: string]: any },
   resolver: Resolver,
-  accumulatedProps: { [key: string]: any },
   registerDependency: RegisterDependency
 ): CheerioStatic => {
   const { name, type, children, attrs, dependency } = content
@@ -63,9 +62,8 @@ const generateVueNodesTree = (
         }
         const childTag = generateVueNodesTree(
           child,
-          mappings,
+          templateLookup,
           resolver,
-          accumulatedProps,
           registerDependency
         )
         root.append(childTag.root())
@@ -84,10 +82,9 @@ const generateVueNodesTree = (
   Object.keys(dynamicProps).forEach((key) => {
     const propName = dynamicProps[key].replace('$props.', '')
     root.attr(`:${key}`, propName)
-    // accumulatedProps[propName] = String
   })
 
-  mappings.templateMapping[name] = root
+  templateLookup[name] = root
 
   return mainTag
 }
@@ -107,29 +104,17 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
     const { uidl, chunks } = structure
     const { resolver, registerDependency, getDependencies } = operations
 
-    const mappings: {
-      templateMapping: { [key: string]: any }
-      jsMapping: { [key: string]: any }
-    } = {
-      templateMapping: {},
-      jsMapping: {},
-    }
+    const templateLookup: { [key: string]: any } = {}
+    const scriptLookup: { [key: string]: any } = {}
 
-    const tempalteContent = generateVueNodesTree(
+    const templateContent = generateVueNodesTree(
       uidl.content,
-      mappings,
+      templateLookup,
       resolver,
-      uidl.propDefinitions,
       registerDependency
     )
 
     const accumulatedDependencies = getDependencies()
-
-    /**
-     * For now, merge the prop declarations into accumulatedProps.
-     * This mapping, the accumulatedProps, will not exist soon. We will
-     * do the mapping directly in UIDL at the very start of the pipeline.
-     */
 
     const importStatements: any[] = []
     Object.keys(accumulatedDependencies).forEach((key) => {
@@ -142,12 +127,12 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
       type: 'html',
       name: vueTemplateChunkName,
       meta: {
-        mappings: mappings.templateMapping,
+        lookup: templateLookup,
       },
       wrap: (generatedContent) => {
         return `<template>\n\n${generatedContent}\n</template>\n`
       },
-      content: tempalteContent,
+      content: templateContent,
     })
 
     const jsContent = generateEmptyVueComponentJS(
@@ -156,11 +141,11 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
         importStatements,
         componentDeclarations: Object.keys(accumulatedDependencies),
       },
-      mappings.jsMapping
+      scriptLookup
     )
 
     // todo refactor into pure function
-    mappings.jsMapping.props.value.properties.push(
+    scriptLookup.props.value.properties.push(
       ...objectToObjectExpression(generateVueComponentPropTypes(uidl.propDefinitions))
         .properties
     )
@@ -169,7 +154,7 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
       type: 'js',
       name: vueJSChunkName,
       meta: {
-        mappings: mappings.jsMapping,
+        lookup: scriptLookup,
       },
       wrap: (generatedContent) => {
         return `<script>\n\n${generatedContent}\n</script>`

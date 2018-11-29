@@ -87,7 +87,7 @@ export const generateEmptyVueComponentJS = (
     importStatements: any[]
     componentDeclarations: any[]
   },
-  mappings: any,
+  scriptLookup: any,
   t = types
 ) => {
   extras = extras || {
@@ -97,10 +97,10 @@ export const generateEmptyVueComponentJS = (
 
   const astFile = t.file(t.program([]), null, [])
   const vueJSExport = buildEmptyVueJSExport(t, { name: componentName })
-  mappings.file = astFile
-  mappings.export = vueJSExport
-  mappings.exportDeclaration = vueJSExport.declaration as types.ObjectExpression
-  mappings.props = mappings.exportDeclaration.properties[1]
+  scriptLookup.file = astFile
+  scriptLookup.export = vueJSExport
+  scriptLookup.exportDeclaration = vueJSExport.declaration as types.ObjectExpression
+  scriptLookup.props = scriptLookup.exportDeclaration.properties[1]
 
   astFile.program.body.push(...extras.importStatements)
   astFile.program.body.push(vueJSExport)
@@ -124,7 +124,7 @@ export const generateEmptyVueComponentJS = (
       })
     )
 
-    mappings.exportDeclaration.properties.push(componentsObjectDeclaration)
+    scriptLookup.exportDeclaration.properties.push(componentsObjectDeclaration)
   }
 
   return astFile

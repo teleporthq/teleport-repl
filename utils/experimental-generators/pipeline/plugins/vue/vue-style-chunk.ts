@@ -5,13 +5,13 @@ jss.setup(preset())
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { cammelCaseToDashCase } from '../../utils/helpers'
 
-const generateStyleTagStrings = (content: any, mappings: any) => {
+const generateStyleTagStrings = (content: any, templateLookup: any) => {
   let accumulator: any[] = []
   // only do stuff if content is a object
   if (content && typeof content === 'object') {
     const { style, children, name } = content
     if (style) {
-      const root = mappings[name]
+      const root = templateLookup[name]
       const className = cammelCaseToDashCase(name)
       accumulator.push(
         jss
@@ -31,7 +31,7 @@ const generateStyleTagStrings = (content: any, mappings: any) => {
 
     if (children && Array.isArray(children)) {
       children.forEach((child) => {
-        const items = generateStyleTagStrings(child, mappings)
+        const items = generateStyleTagStrings(child, templateLookup)
         accumulator = accumulator.concat(...items)
       })
     }
@@ -58,9 +58,9 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
     const { content } = uidl
 
     const templateChunk = chunks.filter((chunk) => chunk.name === vueTemplateChunk)[0]
-    const templateChunkMappings = templateChunk.meta.mappings
+    const templateLookup = templateChunk.meta.lookup
 
-    const jssStylesArray = generateStyleTagStrings(content, templateChunkMappings)
+    const jssStylesArray = generateStyleTagStrings(content, templateLookup)
 
     chunks.push({
       type: 'string',

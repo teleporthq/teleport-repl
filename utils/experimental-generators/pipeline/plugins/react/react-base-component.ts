@@ -44,7 +44,7 @@ const addTextElementToTag = (tag: t.JSXElement, text: string) => {
 
 const generateTreeStructure = (
   content: any,
-  uidlMappings: any = {},
+  nodesLookup: any = {},
   resolver: Resolver,
   registerDependency: RegisterDependency
 ): t.JSXElement => {
@@ -73,7 +73,7 @@ const generateTreeStructure = (
 
         const childTag = generateTreeStructure(
           child,
-          uidlMappings,
+          nodesLookup,
           resolver,
           registerDependency
         )
@@ -89,7 +89,7 @@ const generateTreeStructure = (
   }
 
   // UIDL name should be unique
-  uidlMappings[name] = mainTag
+  nodesLookup[name] = mainTag
 
   return mainTag
 }
@@ -135,10 +135,10 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
     // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
     // This will help us inject style or classes at a later stage in the pipeline, upon traversing the UIDL
     // The structure will be populated as the AST is being created
-    const uidlMappings = {}
+    const nodesLookup = {}
     const jsxTagStructure = generateTreeStructure(
       uidl.content,
-      uidlMappings,
+      nodesLookup,
       resolver,
       registerDependency
     )
@@ -155,7 +155,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
         after: [importChunkName],
       },
       meta: {
-        uidlMappings,
+        nodesLookup,
       },
       content: pureComponent,
     })
