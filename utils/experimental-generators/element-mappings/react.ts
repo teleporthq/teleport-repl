@@ -1,4 +1,14 @@
 export default {
+  Group: {
+    name: 'Fragment',
+    dependency: {
+      type: 'library',
+      meta: {
+        path: 'react',
+        namedImport: true,
+      },
+    },
+  },
   Link: {
     name: 'Link',
     attrs: {

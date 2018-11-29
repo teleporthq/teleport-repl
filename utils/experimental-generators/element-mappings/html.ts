@@ -2,6 +2,9 @@ export default {
   View: {
     name: 'div',
   },
+  Group: {
+    name: 'div',
+  },
   Text: {
     name: 'span',
   },
