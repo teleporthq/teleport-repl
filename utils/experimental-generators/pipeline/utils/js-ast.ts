@@ -20,7 +20,7 @@ export const objectToObjectExpression = (
   const props = Object.keys(objectMap).reduce((acc: any[], key) => {
     const keyIdentifier = t.stringLiteral(key)
     const value = objectMap[key]
-    let computedLiteralValue = null
+    let computedLiteralValue: any = null
 
     if (value instanceof ParsedASTNode) {
       computedLiteralValue = value.ast
@@ -131,7 +131,7 @@ export const makeGenericImportStatement = (path: string, imports: any[], t = typ
   // Only one of the imports can be the default one so this is a fail safe for invalid UIDL data
 
   const defaultImport = imports.find((imp) => !imp.namedImport) // only one import can be default
-  let importASTs = []
+  let importASTs: any = []
   if (defaultImport) {
     const namedImports = imports.filter(
       (imp) => imp.identifier !== defaultImport.identifier
