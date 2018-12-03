@@ -45,7 +45,7 @@ export default class Builder {
    */
   public link(chunkDefinitions?: ChunkDefinition[]): string {
     const chunks = chunkDefinitions || this.chunkDefinitions
-    if (!chunks) {
+    if (!chunks || !chunks.length) {
       return ''
     }
 

@@ -15,6 +15,10 @@ const frameworkMappingsLookup: { [key: string]: any } = {
   vue: vueMappings,
 }
 
+export interface RuntimeParams {
+  customMappings?: { [key: string]: any }
+  initialStructure?: ComponentStructure
+}
 export default class ComponentAsemblyLine {
   private plugins: ComponentPlugin[]
   private elementMappings: { [key: string]: any }
@@ -39,12 +43,17 @@ export default class ComponentAsemblyLine {
     }
   }
 
-  public async run(uidl: any, customMappings: { [key: string]: any } = {}) {
-    let structure: ComponentStructure = {
-      uidl,
-      meta: null,
-      chunks: [],
-    }
+  public async run(uidl: any, params?: RuntimeParams) {
+    const {
+      initialStructure = {
+        uidl,
+        meta: null,
+        chunks: [],
+      },
+      customMappings = {},
+    } = params || {}
+
+    let structure = initialStructure
 
     // reset dependencies
     this.dependencies = {}

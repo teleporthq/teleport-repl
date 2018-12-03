@@ -53,6 +53,12 @@ const generateTreeStructure = (
   const mappedNodeName = mappedElement.nodeName
   const mainTag = generateASTDefinitionForJSXTag(mappedNodeName)
 
+  if (mappedNodeName === undefined) {
+    // tslint:disable-next-line:no-console
+    console.error('mappedType erorr for uidl content', content)
+    throw new Error(`mappedType not found for ${type}`)
+  }
+
   addAttributesToTag(mainTag, mappedElement.attrs)
 
   if (mappedElement.dependency) {
