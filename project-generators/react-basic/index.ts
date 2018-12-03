@@ -1,3 +1,5 @@
+import path from 'path'
+
 // tslint:disable:no-console
 import componentWithStates from '../../inputs/component-states'
 
@@ -9,6 +11,7 @@ import { createPlugin as importStatements } from '../../utils/experimental-gener
 
 import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
+import { copyDirRec } from './utils'
 
 const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.JSS,
@@ -132,3 +135,5 @@ const processProjectUIDL = async (jsDoc: any) => {
 }
 
 processProjectUIDL(componentWithStates)
+
+copyDirRec(path.resolve(__dirname, './project-boilerplate'), 'null')

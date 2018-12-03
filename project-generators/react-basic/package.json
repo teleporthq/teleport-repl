@@ -11,6 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/generator": "^7.1.6",
+    "@types/node": "^10.12.11",
     "@types/prettier": "^1.15.2",
     "rimraf": "^2.6.2",
     "ts-node": "^7.0.1",
