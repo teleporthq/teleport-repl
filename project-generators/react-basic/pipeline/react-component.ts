@@ -1,13 +1,13 @@
-import ComponentAsemblyLine from '../../pipeline/asembly-line'
-import Builder from '../../pipeline/builder'
+import ComponentAsemblyLine from '../../../utils/experimental-generators/pipeline/asembly-line'
+import Builder from '../../../utils/experimental-generators/pipeline/builder'
 
-import { createPlugin as reactComponent } from '../../pipeline/plugins/react/react-base-component'
-import { createPlugin as reactStyledJSX } from '../../pipeline/plugins/react/react-styled-jsx'
-import { createPlugin as reactJSS } from '../../pipeline/plugins/react/react-jss'
-import { createPlugin as reactInlineStyles } from '../../pipeline/plugins/react/react-inline-styles'
-import { createPlugin as reactPropTypes } from '../../pipeline/plugins/react/react-proptypes'
-import { createPlugin as importStatements } from '../../pipeline/plugins/common/import-statements'
-import { ComponentPlugin } from '../../pipeline/types'
+import { createPlugin as reactComponent } from '../../../utils/experimental-generators/pipeline/plugins/react/react-base-component'
+import { createPlugin as reactStyledJSX } from '../../../utils/experimental-generators/pipeline/plugins/react/react-styled-jsx'
+import { createPlugin as reactJSS } from '../../../utils/experimental-generators/pipeline/plugins/react/react-jss'
+import { createPlugin as reactInlineStyles } from '../../../utils/experimental-generators/pipeline/plugins/react/react-inline-styles'
+import { createPlugin as reactPropTypes } from '../../../utils/experimental-generators/pipeline/plugins/react/react-proptypes'
+import { createPlugin as importStatements } from '../../../utils/experimental-generators/pipeline/plugins/common/import-statements'
+import { ComponentPlugin } from '../../../utils/experimental-generators/pipeline/types'
 
 export enum ReactComponentFlavors {
   InlineStyles,

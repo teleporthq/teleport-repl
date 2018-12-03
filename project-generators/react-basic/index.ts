@@ -1,11 +1,12 @@
 // tslint:disable:no-console
 
-import componentWithStates from '../../../inputs/component-states'
+import componentWithStates from '../../inputs/component-states'
 
-import ComponentAsemblyLine from '../pipeline/asembly-line'
-import Builder from '../pipeline/builder'
+import ComponentAsemblyLine from '../../utils/experimental-generators/pipeline/asembly-line'
 
-import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
+import Builder from '../../utils/experimental-generators/pipeline/builder'
+
+import { createPlugin as importStatements } from '../../utils/experimental-generators/pipeline/plugins/common/import-statements'
 
 import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
