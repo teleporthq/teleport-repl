@@ -1,10 +1,11 @@
 import * as t from '@babel/types'
 
-import { generateASTDefinitionForJSXTag } from '../../pipeline/utils/jsx-ast'
+import { generateASTDefinitionForJSXTag } from '../../../utils/experimental-generators/pipeline/utils/jsx-ast'
 
-import { makeDefaultExport } from '../../pipeline/utils/js-ast'
-
-import { ComponentPlugin, ComponentPluginFactory } from '../../pipeline/types'
+import {
+  ComponentPlugin,
+  ComponentPluginFactory,
+} from '../../../utils/experimental-generators/pipeline/types'
 
 const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) => {
   const { name, jsxTagTree } = params

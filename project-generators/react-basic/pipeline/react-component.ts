@@ -47,7 +47,7 @@ const configureAsemlyLine = (params: FactoryParams) => {
   })
 
   const configureImportStatements = importStatements({
-    importChunkName: 'import',
+    importLibsChunkName: 'import',
   })
 
   const customMappings = {
@@ -110,8 +110,11 @@ const configureAsemlyLine = (params: FactoryParams) => {
 
     const chunksLinker = new Builder()
     const result = await asemblyLine.run(jsDoc)
-    result.code = chunksLinker.link(result.chunks)
-    return result
+    const code = chunksLinker.link(result.chunks)
+    return {
+      ...result,
+      code,
+    }
   }
 
   return generateComponentChunks

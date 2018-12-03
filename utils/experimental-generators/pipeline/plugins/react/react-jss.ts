@@ -2,7 +2,6 @@ import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
 import {
   makeConstAssign,
-  makeDefaultImportStatement,
   makeJSSDefaultExport,
   objectToObjectExpression,
 } from '../../utils/js-ast'

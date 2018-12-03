@@ -1,5 +1,4 @@
 // tslint:disable:no-console
-
 import componentWithStates from '../../inputs/component-states'
 
 import ComponentAsemblyLine from '../../utils/experimental-generators/pipeline/asembly-line'
@@ -23,7 +22,7 @@ const configureRouterAsemblyLine = () => {
   })
 
   const configureImportStatements = importStatements({
-    importChunkName: 'import',
+    importLibsChunkName: 'import',
   })
 
   const generateComponent = async (jsDoc: any) => {
@@ -47,14 +46,14 @@ const configureRouterAsemblyLine = () => {
 
 const routingComponentGenerator = configureRouterAsemblyLine()
 
-interface FileDescriptor {
-  type: 'file' | 'dir'
-  content: { [key: string]: FileDescriptor } | null | FileContent
-}
+// interface FileDescriptor {
+//   type: 'file' | 'dir'
+//   content: { [key: string]: FileDescriptor } | null | FileContent
+// }
 
-interface FileContent {
-  code: null | string
-}
+// interface FileContent {
+//   code: null | string
+// }
 
 const processProjectUIDL = async (jsDoc: any) => {
   console.log('processing', jsDoc)
@@ -114,12 +113,10 @@ const processProjectUIDL = async (jsDoc: any) => {
         compoenntsDir[components[key].name] = {
           type: 'file',
           name: `${components[key].name}.js`,
-          content: {
-            code: compiledComponent.code,
-          },
+          content: compiledComponent,
         }
 
-        console.log(compiledComponent.code)
+        console.log(compiledComponent)
 
         allDependencies = {
           ...allDependencies,

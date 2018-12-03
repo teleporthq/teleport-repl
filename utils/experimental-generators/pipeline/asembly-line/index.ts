@@ -4,6 +4,7 @@ import {
   Resolver,
   ComponentDependency,
   PipelineOperations,
+  RegisterDependency,
 } from '../types'
 
 import htmlMappings from '../../element-mappings/html'
@@ -148,7 +149,10 @@ export default class ComponentAsemblyLine {
     }
   }
 
-  private registerDependency = (name: string, dependency: ComponentDependency) => {
+  private registerDependency: RegisterDependency = (
+    name,
+    dependency: ComponentDependency
+  ) => {
     this.dependencies[name] = dependency
   }
 }
