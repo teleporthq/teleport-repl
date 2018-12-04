@@ -127,3 +127,6 @@ export const readJSON = async (pathToFile) => {
     return null
   }
 }
+
+export const tsEnumToArray = (enumeration: any) =>
+  Object.keys(enumeration).filter((v) => isNaN(Number(v)))

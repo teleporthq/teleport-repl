@@ -7,12 +7,14 @@ import { createPlugin as reactJSS } from '../../../utils/experimental-generators
 import { createPlugin as reactInlineStyles } from '../../../utils/experimental-generators/pipeline/plugins/react/react-inline-styles'
 import { createPlugin as reactPropTypes } from '../../../utils/experimental-generators/pipeline/plugins/react/react-proptypes'
 import { createPlugin as importStatements } from '../../../utils/experimental-generators/pipeline/plugins/common/import-statements'
+
 // import { ComponentPlugin } from '../../../utils/experimental-generators/pipeline/types'
 
 export enum ReactComponentFlavors {
   InlineStyles,
   StyledJSX,
   JSS,
+  CSSModules,
 }
 
 interface FactoryParams {

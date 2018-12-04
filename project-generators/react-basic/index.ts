@@ -1,4 +1,6 @@
 // tslint:disable:no-console
+import chalk from 'chalk'
+import inquirer from 'inquirer'
 
 import path from 'path'
 
@@ -6,7 +8,15 @@ import componentWithStates from '../../inputs/component-states'
 
 import { configureRouterAsemblyLine } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
-import { copyDirRec, removeDir, writeTextFile, mkdir, readJSON } from './utils'
+
+import {
+  tsEnumToArray,
+  copyDirRec,
+  removeDir,
+  writeTextFile,
+  mkdir,
+  readJSON,
+} from './utils'
 
 const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.JSS,
@@ -75,9 +85,36 @@ interface GeneratorInputParams {
   distPath: string
   uidlInput: any
 }
+
+const init = () => {
+  console.log(chalk.green('Generating React Project'))
+}
+
+const pickOptions = () => {
+  Object.keys(ReactComponentFlavors).forEach((v) => {
+    console.log(v, typeof v, Number(v))
+  })
+  const questions = [
+    // {
+    //   name: "FILENAME",
+    //   type: "input",
+    //   message: "What is the name of the file without extension?"
+    // },
+    {
+      type: 'list',
+      name: 'CSSFLAVOR',
+      message: 'What css flavor do you want?',
+      choices: tsEnumToArray(ReactComponentFlavors),
+    },
+  ]
+  return inquirer.prompt(questions)
+}
+
 const run = async (params: GeneratorInputParams) => {
   const { inputPath, distPath, uidlInput } = params
-
+  init()
+  const options = await pickOptions()
+  console.log(options)
   await removeDir(distPath)
   await copyDirRec(inputPath, distPath)
 
