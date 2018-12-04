@@ -1,10 +1,14 @@
 import * as t from '@babel/types'
 
-import { generateASTDefinitionForJSXTag } from '../../pipeline/utils/jsx-ast'
+import { generateASTDefinitionForJSXTag } from '../../../utils/experimental-generators/pipeline/utils/jsx-ast'
 
-import { makeDefaultExport } from '../../pipeline/utils/js-ast'
-
-import { ComponentPlugin, ComponentPluginFactory } from '../../pipeline/types'
+import {
+  ComponentPlugin,
+  ComponentPluginFactory,
+} from '../../../utils/experimental-generators/pipeline/types'
+import { createPlugin as importStatements } from '../../../utils/experimental-generators/pipeline/plugins/common/import-statements'
+import ComponentAsemblyLine from '../../../utils/experimental-generators/pipeline/asembly-line'
+import Builder from '../../../utils/experimental-generators/pipeline/builder'
 
 const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) => {
   const { name, jsxTagTree } = params
@@ -46,6 +50,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       type: 'library',
       meta: {
         path: 'react',
+        version: '16.6.1',
       },
     })
 
@@ -53,6 +58,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       type: 'library',
       meta: {
         path: 'react-dom',
+        version: '16.6.1',
       },
     })
 
@@ -62,6 +68,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         path: 'react-router-dom',
         namedImport: true,
         originalName: 'BrowserRouter',
+        version: '4.3.1',
       },
     })
 
@@ -70,6 +77,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       meta: {
         path: 'react-router-dom',
         namedImport: true,
+        version: '4.3.1',
       },
     })
 
@@ -105,7 +113,8 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         })
 
         route.openingElement.attributes.push(
-          t.jsxAttribute(t.jsxIdentifier('url'), t.stringLiteral(urlRoute))
+          t.jsxAttribute(t.jsxIdentifier('exact')),
+          t.jsxAttribute(t.jsxIdentifier('path'), t.stringLiteral(urlRoute))
         )
 
         route.openingElement.attributes.push(
@@ -118,7 +127,12 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         return route
       })
 
-    rootRouterTag.children.push(...routeDefinitions)
+    const divContainer = generateASTDefinitionForJSXTag('div')
+
+    rootRouterTag.children.push(divContainer)
+
+    divContainer.children.push(...routeDefinitions)
+
     mappings.routes = routeDefinitions
 
     const pureComponent = makePureComponent({
@@ -143,7 +157,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       t.callExpression(
         t.memberExpression(t.identifier('ReactDOM'), t.identifier('render')),
         [
-          t.identifier(uidl.name),
+          generateASTDefinitionForJSXTag(uidl.name),
           t.callExpression(
             t.memberExpression(t.identifier('document'), t.identifier('getElementById')),
             [t.stringLiteral('root')]
@@ -167,4 +181,32 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
   return reactAppRoutingComponentPlugin
 }
 
-export default createPlugin()
+export const configureRouterAsemblyLine = () => {
+  const configureAppRouterComponent = createPlugin({
+    componentChunkName: 'app-router-component',
+    domRenderChunkName: 'app-router-export',
+    importChunkName: 'import',
+  })
+
+  const configureImportStatements = importStatements({
+    importLibsChunkName: 'import',
+  })
+
+  const generateComponent = async (jsDoc: any) => {
+    const asemblyLine = new ComponentAsemblyLine('react', [
+      configureAppRouterComponent,
+      configureImportStatements,
+    ])
+
+    const result = await asemblyLine.run(jsDoc)
+
+    const chunksLinker = new Builder()
+
+    return {
+      code: chunksLinker.link(result.chunks),
+      dependencies: result.dependencies,
+    }
+  }
+
+  return generateComponent
+}

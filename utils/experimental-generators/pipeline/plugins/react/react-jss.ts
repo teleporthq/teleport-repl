@@ -77,6 +77,7 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
       type: 'library',
       meta: {
         path: 'react-jss',
+        version: '8.6.1',
       },
     })
 

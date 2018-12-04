@@ -1,90 +1,38 @@
 // tslint:disable:no-console
+import chalk from 'chalk'
+import inquirer from 'inquirer'
+
+import path from 'path'
 
 import componentWithStates from '../../inputs/component-states'
 
-import ComponentAsemblyLine from '../../utils/experimental-generators/pipeline/asembly-line'
-
-import Builder from '../../utils/experimental-generators/pipeline/builder'
-
-import { createPlugin as importStatements } from '../../utils/experimental-generators/pipeline/plugins/common/import-statements'
-
-import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
+import { configureRouterAsemblyLine } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
+
+import {
+  tsEnumToArray,
+  copyDirRec,
+  removeDir,
+  writeTextFile,
+  mkdir,
+  readJSON,
+} from './utils'
 
 const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.JSS,
 })
 
-const configureRouterAsemblyLine = () => {
-  const configureAppRouterComponent = appComponentPlugin({
-    componentChunkName: 'app-router-component',
-    domRenderChunkName: 'app-router-export',
-    importChunkName: 'import',
-  })
-
-  const configureImportStatements = importStatements({
-    importChunkName: 'import',
-  })
-
-  const generateComponent = async (jsDoc: any) => {
-    const asemblyLine = new ComponentAsemblyLine('react', [
-      configureAppRouterComponent,
-      configureImportStatements,
-    ])
-
-    const result = await asemblyLine.run(jsDoc)
-
-    const chunksLinker = new Builder()
-
-    return {
-      code: chunksLinker.link(result.chunks),
-      dependencies: result.dependencies,
-    }
-  }
-
-  return generateComponent
-}
-
 const routingComponentGenerator = configureRouterAsemblyLine()
 
-interface FileDescriptor {
-  type: 'file' | 'dir'
-  content: { [key: string]: FileDescriptor } | null | FileContent
-}
-
-interface FileContent {
-  code: null | string
-}
-
 const processProjectUIDL = async (jsDoc: any) => {
-  console.log('processing', jsDoc)
-
-  const fileTree: any = {
-    type: 'dir',
-    content: {
-      src: {
-        type: 'dir',
-        content: {
-          components: {
-            type: 'dir',
-            content: {},
-          },
-        },
-      },
-      'package.json': {
-        type: 'file',
-        content: {},
-      },
-    },
-  }
   // pick root name/id
 
   const { components, root } = jsDoc
   const keys = Object.keys(components)
 
-  const srcDir = fileTree.content && fileTree.content.src && fileTree.content.src.content
+  const srcDir: any = []
 
-  const compoenntsDir = srcDir && srcDir.components.content
+  const compoenntsDir: any = []
   let allDependencies = {}
   // tslint:disable-next-line:forin
   for (const i in keys) {
@@ -93,13 +41,13 @@ const processProjectUIDL = async (jsDoc: any) => {
       try {
         const compiledComponent = await routingComponentGenerator(components[key])
         console.log(compiledComponent.code)
-        srcDir.index = {
+        srcDir.push({
           type: 'file',
           name: `index.js`,
           content: {
             code: compiledComponent.code,
           },
-        }
+        })
 
         allDependencies = {
           ...allDependencies,
@@ -111,15 +59,13 @@ const processProjectUIDL = async (jsDoc: any) => {
     } else {
       try {
         const compiledComponent = await componentGenerator(components[key])
-        compoenntsDir[components[key].name] = {
+        compoenntsDir.push({
           type: 'file',
           name: `${components[key].name}.js`,
-          content: {
-            code: compiledComponent.code,
-          },
-        }
+          content: compiledComponent,
+        })
 
-        console.log(compiledComponent.code)
+        console.log(compiledComponent)
 
         allDependencies = {
           ...allDependencies,
@@ -131,7 +77,102 @@ const processProjectUIDL = async (jsDoc: any) => {
     }
   }
 
-  console.log(fileTree, allDependencies)
+  return { fileTree: { srcDir, compoenntsDir }, allDependencies }
 }
 
-processProjectUIDL(componentWithStates)
+interface GeneratorInputParams {
+  inputPath: string
+  distPath: string
+  uidlInput: any
+}
+
+const init = () => {
+  console.log(chalk.green('Generating React Project'))
+}
+
+const pickOptions = () => {
+  Object.keys(ReactComponentFlavors).forEach((v) => {
+    console.log(v, typeof v, Number(v))
+  })
+  const questions = [
+    // {
+    //   name: "FILENAME",
+    //   type: "input",
+    //   message: "What is the name of the file without extension?"
+    // },
+    {
+      type: 'list',
+      name: 'CSSFLAVOR',
+      message: 'What css flavor do you want?',
+      choices: tsEnumToArray(ReactComponentFlavors),
+    },
+  ]
+  return inquirer.prompt(questions)
+}
+
+const run = async (params: GeneratorInputParams) => {
+  const { inputPath, distPath, uidlInput } = params
+  init()
+  const options = await pickOptions()
+  console.log(options)
+  await removeDir(distPath)
+  await copyDirRec(inputPath, distPath)
+
+  const { fileTree, allDependencies } = await processProjectUIDL(uidlInput)
+
+  const filesInSrc = fileTree.srcDir
+  const srcFilesLength = filesInSrc.length
+
+  let fileInfo
+
+  for (let i = 0; i < srcFilesLength; i++) {
+    fileInfo = filesInSrc[i]
+    await writeTextFile(`${distPath}/src`, fileInfo.name, fileInfo.content.code)
+  }
+
+  const filesInComponents = fileTree.compoenntsDir
+  const componentsFilesLength = filesInComponents.length
+
+  await mkdir(`${distPath}/src/components`)
+
+  for (let i = 0; i < componentsFilesLength; i++) {
+    fileInfo = filesInComponents[i]
+    await writeTextFile(
+      `${distPath}/src/components`,
+      fileInfo.name,
+      fileInfo.content.code
+    )
+  }
+
+  const extraDeps = Object.keys(allDependencies)
+    .filter((key) => {
+      return allDependencies[key].type !== 'local'
+    })
+    .reduce((acc: any, key) => {
+      const depInfo = allDependencies[key]
+      acc[depInfo.meta.path] = depInfo.meta.version
+
+      return acc
+    }, {})
+
+  const packageJSON = await readJSON(`${inputPath}/package.json`)
+  if (!packageJSON) {
+    throw new Error('could not reach package json')
+  }
+
+  packageJSON.dependencies = {
+    ...packageJSON.dependencies,
+    ...extraDeps,
+  }
+
+  writeTextFile(distPath, 'package.json', JSON.stringify(packageJSON, null, 2))
+}
+
+const boilerpaltePath = path.resolve(__dirname, './project-boilerplate')
+const distGeneratorPath = path.resolve(__dirname, './dist')
+
+run({
+  uidlInput: componentWithStates,
+  inputPath: boilerpaltePath,
+  distPath: distGeneratorPath,
+}).catch((err) => console.error(err))
