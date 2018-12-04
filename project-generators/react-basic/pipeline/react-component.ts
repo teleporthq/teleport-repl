@@ -7,7 +7,7 @@ import { createPlugin as reactJSS } from '../../../utils/experimental-generators
 import { createPlugin as reactInlineStyles } from '../../../utils/experimental-generators/pipeline/plugins/react/react-inline-styles'
 import { createPlugin as reactPropTypes } from '../../../utils/experimental-generators/pipeline/plugins/react/react-proptypes'
 import { createPlugin as importStatements } from '../../../utils/experimental-generators/pipeline/plugins/common/import-statements'
-import { ComponentPlugin } from '../../../utils/experimental-generators/pipeline/types'
+// import { ComponentPlugin } from '../../../utils/experimental-generators/pipeline/types'
 
 export enum ReactComponentFlavors {
   InlineStyles,
@@ -67,36 +67,36 @@ const configureAsemlyLine = (params: FactoryParams) => {
     },
   }
 
-  const configureLocalDependencies: ComponentPlugin = async (structure, operations) => {
-    const dependencies = operations.getDependencies()
-    Object.keys(dependencies).forEach((key) => {
-      if (dependencies[key].type === 'local') {
-        dependencies[key].meta.path = `./components/${key}`
-      }
-    })
-    return structure
-  }
+  // const configureLocalDependencies: ComponentPlugin = async (structure, operations) => {
+  //   const dependencies = operations.getDependencies()
+  //   Object.keys(dependencies).forEach((key) => {
+  //     if (dependencies[key].type === 'local') {
+  //       dependencies[key].meta.path = `./components/${key}`
+  //     }
+  //   })
+  //   return structure
+  // }
 
   const Options: { [key: string]: any } = {
     [ReactComponentFlavors.InlineStyles]: [
       configuredReactJSX,
       configuredReactInlineStyles,
       configuredPropTypes,
-      configureLocalDependencies,
+      // configureLocalDependencies,
       configureImportStatements,
     ],
     [ReactComponentFlavors.StyledJSX]: [
       configuredReactJSX,
       configuredReactStyledJSX,
       configuredPropTypes,
-      configureLocalDependencies,
+      // configureLocalDependencies,
       configureImportStatements,
     ],
     [ReactComponentFlavors.JSS]: [
       configuredReactJSX,
       configuredReactJSS,
       configuredPropTypes,
-      configureLocalDependencies,
+      // configureLocalDependencies,
       configureImportStatements,
     ],
   }

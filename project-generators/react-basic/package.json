@@ -13,12 +13,12 @@
     "@babel/generator": "^7.1.6",
     "@types/node": "^10.12.11",
     "@types/prettier": "^1.15.2",
-    "rimraf": "^2.6.2",
     "ts-node": "^7.0.1",
     "tslib": "^1.9.3",
     "typescript": "^3.2.1"
   },
   "dependencies": {
+    "rimraf": "^2.6.2",
     "@babel/types": "^7.1.6",
     "jss": "^9.8.7",
     "jss-preset-default": "^4.5.0",

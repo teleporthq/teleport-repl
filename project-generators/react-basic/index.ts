@@ -11,7 +11,7 @@ import { createPlugin as importStatements } from '../../utils/experimental-gener
 
 import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
-import { copyDirRec } from './utils'
+import { copyDirRec, removeDir, writeTextFile, mkdir } from './utils'
 
 const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.JSS,
@@ -49,44 +49,17 @@ const configureRouterAsemblyLine = () => {
 
 const routingComponentGenerator = configureRouterAsemblyLine()
 
-// interface FileDescriptor {
-//   type: 'file' | 'dir'
-//   content: { [key: string]: FileDescriptor } | null | FileContent
-// }
-
-// interface FileContent {
-//   code: null | string
-// }
-
 const processProjectUIDL = async (jsDoc: any) => {
   console.log('processing', jsDoc)
 
-  const fileTree: any = {
-    type: 'dir',
-    content: {
-      src: {
-        type: 'dir',
-        content: {
-          components: {
-            type: 'dir',
-            content: {},
-          },
-        },
-      },
-      'package.json': {
-        type: 'file',
-        content: {},
-      },
-    },
-  }
   // pick root name/id
 
   const { components, root } = jsDoc
   const keys = Object.keys(components)
 
-  const srcDir = fileTree.content && fileTree.content.src && fileTree.content.src.content
+  const srcDir: any = []
 
-  const compoenntsDir = srcDir && srcDir.components.content
+  const compoenntsDir: any = []
   let allDependencies = {}
   // tslint:disable-next-line:forin
   for (const i in keys) {
@@ -95,13 +68,13 @@ const processProjectUIDL = async (jsDoc: any) => {
       try {
         const compiledComponent = await routingComponentGenerator(components[key])
         console.log(compiledComponent.code)
-        srcDir.index = {
+        srcDir.push({
           type: 'file',
           name: `index.js`,
           content: {
             code: compiledComponent.code,
           },
-        }
+        })
 
         allDependencies = {
           ...allDependencies,
@@ -113,11 +86,11 @@ const processProjectUIDL = async (jsDoc: any) => {
     } else {
       try {
         const compiledComponent = await componentGenerator(components[key])
-        compoenntsDir[components[key].name] = {
+        compoenntsDir.push({
           type: 'file',
           name: `${components[key].name}.js`,
           content: compiledComponent,
-        }
+        })
 
         console.log(compiledComponent)
 
@@ -131,9 +104,55 @@ const processProjectUIDL = async (jsDoc: any) => {
     }
   }
 
-  console.log(fileTree, allDependencies)
+  return { fileTree: { srcDir, compoenntsDir }, allDependencies }
 }
 
-processProjectUIDL(componentWithStates)
+interface GeneratorInputParams {
+  inputPath: string
+  distPath: string
+  uidlInput: any
+}
+const run = async (params: GeneratorInputParams) => {
+  const { inputPath, distPath, uidlInput } = params
 
-copyDirRec(path.resolve(__dirname, './project-boilerplate'), 'null')
+  await removeDir(distPath)
+
+  await copyDirRec(inputPath, distPath)
+
+  const { fileTree, allDependencies } = await processProjectUIDL(uidlInput)
+
+  console.log(allDependencies)
+
+  const filesInSrc = fileTree.srcDir
+  const srcFilesLength = filesInSrc.length
+
+  let fileInfo
+
+  for (let i = 0; i < srcFilesLength; i++) {
+    fileInfo = filesInSrc[i]
+    await writeTextFile(`${distPath}/src`, fileInfo.name, fileInfo.content.code)
+  }
+
+  const filesInComponents = fileTree.compoenntsDir
+  const componentsFilesLength = filesInComponents.length
+
+  await mkdir(`${distPath}/src/components`)
+
+  for (let i = 0; i < componentsFilesLength; i++) {
+    fileInfo = filesInComponents[i]
+    await writeTextFile(
+      `${distPath}/src/components`,
+      fileInfo.name,
+      fileInfo.content.code
+    )
+  }
+}
+
+const boilerpaltePath = path.resolve(__dirname, './project-boilerplate')
+const distGeneratorPath = path.resolve(__dirname, './dist')
+
+run({
+  uidlInput: componentWithStates,
+  inputPath: boilerpaltePath,
+  distPath: distGeneratorPath,
+}).catch((err) => console.error(err))
