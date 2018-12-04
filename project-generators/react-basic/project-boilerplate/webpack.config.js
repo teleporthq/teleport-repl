@@ -1,3 +1,4 @@
+/* tslint:disable */
 const path = require('path')
 /**
  * Clean and copy, used for file operations to copy and clean things in the

@@ -47,6 +47,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       type: 'library',
       meta: {
         path: 'react',
+        version: '16.6.1',
       },
     })
 
@@ -54,6 +55,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       type: 'library',
       meta: {
         path: 'react-dom',
+        version: '16.6.1',
       },
     })
 
@@ -63,6 +65,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         path: 'react-router-dom',
         namedImport: true,
         originalName: 'BrowserRouter',
+        version: '4.3.1',
       },
     })
 
@@ -71,6 +74,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       meta: {
         path: 'react-router-dom',
         namedImport: true,
+        version: '4.3.1',
       },
     })
 
@@ -106,7 +110,8 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         })
 
         route.openingElement.attributes.push(
-          t.jsxAttribute(t.jsxIdentifier('url'), t.stringLiteral(urlRoute))
+          t.jsxAttribute(t.jsxIdentifier('exact')),
+          t.jsxAttribute(t.jsxIdentifier('path'), t.stringLiteral(urlRoute))
         )
 
         route.openingElement.attributes.push(
@@ -119,7 +124,12 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         return route
       })
 
-    rootRouterTag.children.push(...routeDefinitions)
+    const divContainer = generateASTDefinitionForJSXTag('div')
+
+    rootRouterTag.children.push(divContainer)
+
+    divContainer.children.push(...routeDefinitions)
+
     mappings.routes = routeDefinitions
 
     const pureComponent = makePureComponent({
@@ -144,7 +154,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       t.callExpression(
         t.memberExpression(t.identifier('ReactDOM'), t.identifier('render')),
         [
-          t.identifier(uidl.name),
+          generateASTDefinitionForJSXTag(uidl.name),
           t.callExpression(
             t.memberExpression(t.identifier('document'), t.identifier('getElementById')),
             [t.stringLiteral('root')]

@@ -11,7 +11,7 @@ import { createPlugin as importStatements } from '../../utils/experimental-gener
 
 import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
-import { copyDirRec, removeDir, writeTextFile, mkdir } from './utils'
+import { copyDirRec, removeDir, writeTextFile, mkdir, readJSON } from './utils'
 
 const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.JSS,
@@ -121,8 +121,6 @@ const run = async (params: GeneratorInputParams) => {
 
   const { fileTree, allDependencies } = await processProjectUIDL(uidlInput)
 
-  console.log(allDependencies)
-
   const filesInSrc = fileTree.srcDir
   const srcFilesLength = filesInSrc.length
 
@@ -146,6 +144,29 @@ const run = async (params: GeneratorInputParams) => {
       fileInfo.content.code
     )
   }
+
+  const extraDeps = Object.keys(allDependencies)
+    .filter((key) => {
+      return allDependencies[key].type !== 'local'
+    })
+    .reduce((acc: any, key) => {
+      const depInfo = allDependencies[key]
+      acc[depInfo.meta.path] = depInfo.meta.version
+
+      return acc
+    }, {})
+
+  const packageJSON = await readJSON(`${inputPath}/package.json`)
+  if (!packageJSON) {
+    throw new Error('could not reach package json')
+  }
+
+  packageJSON.dependencies = {
+    ...packageJSON.dependencies,
+    ...extraDeps,
+  }
+
+  writeTextFile(distPath, 'package.json', JSON.stringify(packageJSON, null, 2))
 }
 
 const boilerpaltePath = path.resolve(__dirname, './project-boilerplate')

@@ -1,3 +1,4 @@
+/* tslint:disable */
 /**
  * Clean and copy, used for file operations to copy and clean things in the
  * destination directory. 
@@ -35,6 +36,7 @@ module.exports = {
    */
   output: {
     path: distFolder,
+    publicPath: '/',
     filename: '[name].js'
   },
 
@@ -48,7 +50,8 @@ module.exports = {
     port: 9000,
     lazy: true,
     // https://webpack.js.org/configuration/dev-server/#devserver-filename-
-    filename: '[name].js'
+    filename: '[name].js',
+    historyApiFallback: true
   },
 
   /**

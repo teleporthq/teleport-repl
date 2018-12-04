@@ -56,19 +56,14 @@ export const copyDirRec = async (sourcePath: string, targetPath: string) => {
     if (stats.isDirectory()) {
       const newFiles = await listDir(`${fileOrDir.dirPath}/${fileOrDir.filename}`)
       filesToCopy.push(...newFiles)
+
       await mkdir(
         `${targetPath}${fileOrDir.dirPath.replace(sourcePath, '')}/${fileOrDir.filename}`
       )
     } else {
-      // TODO VLAD, figure out how to specify target path with regards to
-      // the inner folders of the structure we are in.
-
-      // example, target path is /output, but folder is /src, so it should
-      // copy in /output/src. This might need a new structure in files to copy
-      // copyFile(`${fileOrDir.dirPath}/${fileOrDir.filename}`, `${targetPath}/${fileOrDir.filename}`)
       fs.copyFileSync(
         `${fileOrDir.dirPath}/${fileOrDir.filename}`,
-        `${targetPath}/${fileOrDir.dirPath.replace(sourcePath, '')}${fileOrDir.filename}`
+        `${targetPath}/${fileOrDir.dirPath.replace(sourcePath, '')}/${fileOrDir.filename}`
       )
     }
   }
@@ -112,3 +107,23 @@ export const mkdir = (pathToDir) =>
       resolve()
     })
   })
+
+export const readFile = (pathToFile, encoding = 'utf8'): Promise<string> =>
+  new Promise((resolve, reject) => {
+    fs.readFile(pathToFile, encoding, (err, file) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(file)
+    })
+  })
+
+export const readJSON = async (pathToFile) => {
+  const file = await readFile(pathToFile)
+  try {
+    const jsonFile = JSON.parse(file)
+    return jsonFile
+  } catch (err) {
+    return null
+  }
+}
