@@ -6,6 +6,9 @@ import {
   ComponentPlugin,
   ComponentPluginFactory,
 } from '../../../utils/experimental-generators/pipeline/types'
+import { createPlugin as importStatements } from '../../../utils/experimental-generators/pipeline/plugins/common/import-statements'
+import ComponentAsemblyLine from '../../../utils/experimental-generators/pipeline/asembly-line'
+import Builder from '../../../utils/experimental-generators/pipeline/builder'
 
 const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) => {
   const { name, jsxTagTree } = params
@@ -178,4 +181,32 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
   return reactAppRoutingComponentPlugin
 }
 
-export default createPlugin()
+export const configureRouterAsemblyLine = () => {
+  const configureAppRouterComponent = createPlugin({
+    componentChunkName: 'app-router-component',
+    domRenderChunkName: 'app-router-export',
+    importChunkName: 'import',
+  })
+
+  const configureImportStatements = importStatements({
+    importLibsChunkName: 'import',
+  })
+
+  const generateComponent = async (jsDoc: any) => {
+    const asemblyLine = new ComponentAsemblyLine('react', [
+      configureAppRouterComponent,
+      configureImportStatements,
+    ])
+
+    const result = await asemblyLine.run(jsDoc)
+
+    const chunksLinker = new Builder()
+
+    return {
+      code: chunksLinker.link(result.chunks),
+      dependencies: result.dependencies,
+    }
+  }
+
+  return generateComponent
+}

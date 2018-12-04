@@ -1,15 +1,10 @@
+// tslint:disable:no-console
+
 import path from 'path'
 
-// tslint:disable:no-console
 import componentWithStates from '../../inputs/component-states'
 
-import ComponentAsemblyLine from '../../utils/experimental-generators/pipeline/asembly-line'
-
-import Builder from '../../utils/experimental-generators/pipeline/builder'
-
-import { createPlugin as importStatements } from '../../utils/experimental-generators/pipeline/plugins/common/import-statements'
-
-import { createPlugin as appComponentPlugin } from './pipeline/react-router-app'
+import { configureRouterAsemblyLine } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
 import { copyDirRec, removeDir, writeTextFile, mkdir, readJSON } from './utils'
 
@@ -17,41 +12,9 @@ const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.JSS,
 })
 
-const configureRouterAsemblyLine = () => {
-  const configureAppRouterComponent = appComponentPlugin({
-    componentChunkName: 'app-router-component',
-    domRenderChunkName: 'app-router-export',
-    importChunkName: 'import',
-  })
-
-  const configureImportStatements = importStatements({
-    importLibsChunkName: 'import',
-  })
-
-  const generateComponent = async (jsDoc: any) => {
-    const asemblyLine = new ComponentAsemblyLine('react', [
-      configureAppRouterComponent,
-      configureImportStatements,
-    ])
-
-    const result = await asemblyLine.run(jsDoc)
-
-    const chunksLinker = new Builder()
-
-    return {
-      code: chunksLinker.link(result.chunks),
-      dependencies: result.dependencies,
-    }
-  }
-
-  return generateComponent
-}
-
 const routingComponentGenerator = configureRouterAsemblyLine()
 
 const processProjectUIDL = async (jsDoc: any) => {
-  console.log('processing', jsDoc)
-
   // pick root name/id
 
   const { components, root } = jsDoc
@@ -116,7 +79,6 @@ const run = async (params: GeneratorInputParams) => {
   const { inputPath, distPath, uidlInput } = params
 
   await removeDir(distPath)
-
   await copyDirRec(inputPath, distPath)
 
   const { fileTree, allDependencies } = await processProjectUIDL(uidlInput)
