@@ -18,7 +18,12 @@ const addTextNodeToTag = (tag: Cheerio, text: string) => {
   if (text.startsWith('$props.') && !text.endsWith('$props.')) {
     // For real time, when users are typing we need to make sure there's something after the dot (.)
     const propName = text.replace('$props.', '')
-    tag.append(`{{${propName}}}`)
+    if (propName === 'children') {
+      const slot = generateSingleVueNode({ tagName: 'slot', selfClosing: false })
+      tag.append(slot.root())
+    } else {
+      tag.append(`{{${propName}}}`)
+    }
   } else {
     tag.append(text.toString())
   }

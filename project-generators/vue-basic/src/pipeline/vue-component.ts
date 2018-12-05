@@ -6,35 +6,27 @@ import { createPlugin as vueImportStatements } from '../../../../utils/experimen
 
 import Builder from '../../../../utils/experimental-generators/pipeline/builder'
 
-const customMapping = {
-  Datepicker: {
-    name: 'Datepicker',
+const vueProjectMappings = {
+  NavLink: {
+    name: 'router-link',
     attrs: {
-      'data-attr': 'test',
-    },
-    dependency: {
-      type: 'package',
-      meta: {
-        path: 'vuejs-datepicker',
-        version: '1.5.4',
-        namedImport: false,
-      },
+      to: '$attrs.transitionTo',
     },
   },
 }
 
-const createVuePipeline = () => {
-  const assemblyLine = new ComponentAsemblyLine('vue', [
-    vueBaseComponent(),
-    vueStyleComponent(),
-    vueImportStatements(),
-  ])
+const createVuePipeline = (customMappings) => {
+  const assemblyLine = new ComponentAsemblyLine(
+    'vue',
+    [vueBaseComponent(), vueStyleComponent(), vueImportStatements()],
+    vueProjectMappings
+  )
 
   const chunksLinker = new Builder()
 
   const componentGenerator = async (componentUIDL) => {
     const result = await assemblyLine.run(componentUIDL, {
-      customMappings: customMapping,
+      customMappings,
     })
 
     const code = chunksLinker.link(result.chunks)

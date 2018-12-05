@@ -144,6 +144,8 @@ export const generateVueComponentPropTypes = (uidlPropDefinitions: any) => {
       case 'boolean':
         mappedType = Boolean
         break
+      case 'children': // children is converted to slot and should not be added to props
+        return acc
     }
 
     acc[name] = defaultValue ? { type: mappedType, default: defaultValue } : mappedType

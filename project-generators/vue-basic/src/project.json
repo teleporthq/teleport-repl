@@ -4,19 +4,15 @@
     "root": "App",
     "name": "my-vue-project",
     "components": {
-  
-      "PageTitle": {
-        "name": "PageTitle",
-        "type": "PageHeading",
-        "content": {
-          "name": "Useless",
-          "type": "Text",
-          "children": "$props.children"
-        }
-      },
 
       "Layout": {
+        "version": "v1",
         "name": "Layout",
+        "propDefinitions": {
+          "children": {
+            "type": "children"
+          }
+        },
         "content": {
           "type": "Group",
           "name": "container",
@@ -28,12 +24,18 @@
                 {
                   "type": "NavLink",
                   "name": "HomeLink",
-                  "children": "Go Home"
+                  "children": "Go Home",
+                  "attrs": {
+                    "transitionTo": "/"
+                  }
                 },
                 {
                   "type": "NavLink",
                   "name": "AboutLink",
-                  "children": "About Us"
+                  "children": "About Us",
+                  "attrs": {
+                    "transitionTo": "/about"
+                  }
                 }
               ]
             },
@@ -53,18 +55,18 @@
         "content": {
           "type": "Layout",
           "name": "HomeContent",
+          "dependency": {
+            "type": "local"
+          },
           "style": {
             "textAlign": "center",
             "color": "yellow",
             "border": "1px solid #000"
           },
           "children": [{
-            "type": "PageTitle",
-            "name": "HomeTitleInstance",
-            "children": "Home Page",
-            "dependency": { 
-              "type": "local"
-            } 
+            "type": "Button",
+            "name": "Random Button",
+            "children": "Click Me"
           },{
             "type": "Datepicker",
             "name": "DatePicker"
@@ -82,18 +84,18 @@
         "content": {
           "type": "Layout",
           "name": "AboutContent",
+          "dependency": {
+            "type": "local"
+          },
           "style": {
             "textAlign": "left",
             "color": "red",
             "border": "1px solid #000"
           },
           "children": [{
-            "type": "PageTitle",
-            "name": "AboutTitleInstance",
-            "children": "About Page",
-            "dependency": { 
-              "type": "local"
-            }
+            "type": "View",
+            "name": "about-container",
+            "children": "This is the about page"
           }]
         }
       },
