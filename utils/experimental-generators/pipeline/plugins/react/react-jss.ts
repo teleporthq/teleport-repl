@@ -1,11 +1,37 @@
+import * as t from '@babel/types'
+
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
 import {
+  ParsedASTNode,
   makeConstAssign,
   makeJSSDefaultExport,
   objectToObjectExpression,
 } from '../../utils/js-ast'
+
 import { cammelCaseToDashCase } from '../../utils/helpers'
+
+const prepareDynamicProps = (style: any) => {
+
+  return Object.keys(style).reduce((acc: any, key) => {
+    const value = style[key]
+    if (typeof value === 'string' && value.startsWith('$props.')) {
+      acc[key] = new ParsedASTNode(
+        t.arrowFunctionExpression([
+          t.identifier('props')
+        ],
+        t.memberExpression(
+          t.identifier('props'),
+          t.identifier(value.replace('$props.', ''))
+        )
+        )
+      )
+    } else {
+      acc[key] = style[key]
+    }
+    return acc
+  }, {})
+}
 
 const generateStyleTagStrings = (content: any, nodesLookup: any) => {
   let accumulator: { [key: string]: any } = {}
@@ -15,7 +41,7 @@ const generateStyleTagStrings = (content: any, nodesLookup: any) => {
     if (style) {
       const root = nodesLookup[name]
       const className = cammelCaseToDashCase(name)
-      accumulator[className] = style
+      accumulator[className] = prepareDynamicProps(style)
       // addClassStringOnJSXTag(root.node, className)
       addDynamicPropOnJsxOpeningTag(root, 'className', `classes['${className}']`)
     }
