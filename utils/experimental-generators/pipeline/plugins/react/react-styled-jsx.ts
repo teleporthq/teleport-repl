@@ -63,6 +63,10 @@ export const createPlugin: ComponentPluginFactory<StyledJSXConfig> = (config) =>
 
     const styleJSXString = generateStyledJSXString(content, jsxChunkMappings)
 
+    if (!styleJSXString || !styleJSXString.length) {
+      return structure
+    }
+
     const jsxASTNodeReference = generateStyledJSXTag(styleJSXString.join('\n'))
     const rootJSXNode = jsxChunkMappings[content.name]
 
