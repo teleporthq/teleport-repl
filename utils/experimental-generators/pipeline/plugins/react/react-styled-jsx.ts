@@ -1,3 +1,5 @@
+import * as t from '@babel/types'
+
 import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
@@ -7,6 +9,19 @@ import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { addClassStringOnJSXTag, generateStyledJSXTag } from '../../utils/jsx-ast'
 
 import { cammelCaseToDashCase } from '../../utils/helpers'
+
+const prepareDynamicProps = (style: any) => {
+  return Object.keys(style).reduce((acc: any, key) => {
+    const value = style[key]
+    // tslint:disable-next-line:prefer-conditional-expression
+    if (typeof value === 'string' && value.startsWith('$props.')) {
+      acc[key] = `\$\{${value.replace('$props.', 'props.')}\}`
+    } else {
+      acc[key] = style[key]
+    }
+    return acc
+  }, {})
+}
 
 const generateStyledJSXString = (content: any, nodesLookup: any) => {
   let accumulator: any[] = []
@@ -21,7 +36,7 @@ const generateStyledJSXString = (content: any, nodesLookup: any) => {
         jss
           .createStyleSheet(
             {
-              [`.${className}`]: style,
+              [`.${className}`]: prepareDynamicProps(style),
             },
             {
               generateClassName: () => className,
