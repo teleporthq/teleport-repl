@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+// ts-lint:disable:next-line
 import rimraf from 'rimraf'
 
 interface FileInfo {

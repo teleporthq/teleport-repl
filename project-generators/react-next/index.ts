@@ -1,16 +1,14 @@
 // tslint:disable:no-console
-import chalk from 'chalk'
-import inquirer from 'inquirer'
 
 import path from 'path'
 
 import componentWithStates from '../../inputs/component-states'
 
-import { configureRouterAsemblyLine } from './pipeline/react-router-app'
+import { configureNextPageAsemblyLine } from './pipeline/react-next-page'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
 
 import {
-  tsEnumToArray,
+  // tsEnumToArray,
   copyDirRec,
   removeDir,
   writeTextFile,
@@ -19,65 +17,74 @@ import {
 } from '../utils'
 
 const componentGenerator = configureAsemlyLine({
-  variation: ReactComponentFlavors.JSS,
+  variation: ReactComponentFlavors.StyledJSX,
 })
 
-const routingComponentGenerator = configureRouterAsemblyLine()
+const pageGenerator = configureNextPageAsemblyLine()
 
 const processProjectUIDL = async (jsDoc: any) => {
   // pick root name/id
 
   const { components, root } = jsDoc
-  const keys = Object.keys(components)
 
-  const srcDir: any = []
+  const pagesDir: any = []
 
   const compoenntsDir: any = []
-  let allDependencies = {}
+  let allDependencies: any = {}
+  let comp: any
   // tslint:disable-next-line:forin
-  for (const i in keys) {
-    const key = keys[i]
-    if (components[key].name === root) {
-      try {
-        const compiledComponent = await routingComponentGenerator(components[key])
-        console.log(compiledComponent.code)
-        srcDir.push({
-          type: 'file',
-          name: `index.js`,
-          content: {
-            code: compiledComponent.code,
-          },
-        })
+  for (const componentKey in components) {
+    comp = components[componentKey]
 
-        allDependencies = {
-          ...allDependencies,
-          ...compiledComponent.dependencies,
+    if (comp.name === root) {
+      try {
+        const { states } = comp
+        // tslint:disable-next-line:forin
+        for (const stateKey in states) {
+          if (stateKey === 'default') {
+            continue
+          }
+          const state = states[stateKey]
+
+          const compiledComponent = await pageGenerator(state)
+          pagesDir.push({
+            type: 'file',
+            name:
+              stateKey === states.default ? `index.js` : `${stateKey.toLowerCase()}.js`,
+            content: {
+              code: compiledComponent.code,
+            },
+          })
+
+          allDependencies = {
+            ...allDependencies,
+            ...compiledComponent.dependencies,
+          }
         }
       } catch (err) {
-        console.error(key, err)
+        console.error(componentKey, err)
       }
     } else {
       try {
-        const compiledComponent = await componentGenerator(components[key])
+        console.log('comp', comp)
+        const compiledComponent = await componentGenerator(comp)
         compoenntsDir.push({
           type: 'file',
-          name: `${components[key].name}.js`,
+          name: `${comp.name}.js`,
           content: compiledComponent,
         })
-
-        console.log(compiledComponent)
 
         allDependencies = {
           ...allDependencies,
           ...compiledComponent.dependencies,
         }
       } catch (err) {
-        console.error(key, err)
+        console.error(componentKey, err)
       }
     }
   }
 
-  return { fileTree: { srcDir, compoenntsDir }, allDependencies }
+  return { fileTree: { pagesDir, compoenntsDir }, allDependencies }
 }
 
 interface GeneratorInputParams {
@@ -86,62 +93,32 @@ interface GeneratorInputParams {
   uidlInput: any
 }
 
-const init = () => {
-  console.log(chalk.green('Generating React Project'))
-}
-
-const pickOptions = () => {
-  Object.keys(ReactComponentFlavors).forEach((v) => {
-    console.log(v, typeof v, Number(v))
-  })
-  const questions = [
-    // {
-    //   name: "FILENAME",
-    //   type: "input",
-    //   message: "What is the name of the file without extension?"
-    // },
-    {
-      type: 'list',
-      name: 'CSSFLAVOR',
-      message: 'What css flavor do you want?',
-      choices: tsEnumToArray(ReactComponentFlavors),
-    },
-  ]
-  return inquirer.prompt(questions)
-}
-
 const run = async (params: GeneratorInputParams) => {
   const { inputPath, distPath, uidlInput } = params
-  init()
-  const options = await pickOptions()
-  console.log(options)
   await removeDir(distPath)
   await copyDirRec(inputPath, distPath)
 
   const { fileTree, allDependencies } = await processProjectUIDL(uidlInput)
 
-  const filesInSrc = fileTree.srcDir
-  const srcFilesLength = filesInSrc.length
+  const filesInPages = fileTree.pagesDir
+  const pagesDirLength = filesInPages.length
 
   let fileInfo
 
-  for (let i = 0; i < srcFilesLength; i++) {
-    fileInfo = filesInSrc[i]
-    await writeTextFile(`${distPath}/src`, fileInfo.name, fileInfo.content.code)
+  await mkdir(`${distPath}/pages`)
+  for (let i = 0; i < pagesDirLength; i++) {
+    fileInfo = filesInPages[i]
+    await writeTextFile(`${distPath}/pages`, fileInfo.name, fileInfo.content.code)
   }
 
   const filesInComponents = fileTree.compoenntsDir
   const componentsFilesLength = filesInComponents.length
 
-  await mkdir(`${distPath}/src/components`)
+  await mkdir(`${distPath}/components`)
 
   for (let i = 0; i < componentsFilesLength; i++) {
     fileInfo = filesInComponents[i]
-    await writeTextFile(
-      `${distPath}/src/components`,
-      fileInfo.name,
-      fileInfo.content.code
-    )
+    await writeTextFile(`${distPath}/components`, fileInfo.name, fileInfo.content.code)
   }
 
   const extraDeps = Object.keys(allDependencies)

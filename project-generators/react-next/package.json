@@ -1,0 +1,29 @@
+{
+  "name": "react-next",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/project-generators/react-next/index.js",
+  "scripts": {
+    "build": "rimraf ./dist && tsc --project ./tsconfig.json",
+    "dev": "ts-node --project tsconfig.json ./index.ts"
+  },
+  "author": "TeleportHQ",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/generator": "^7.1.6",
+    "@types/node": "^10.12.11",
+    "@types/prettier": "^1.15.2",
+    "ts-node": "^7.0.1",
+    "tslib": "^1.9.3",
+    "typescript": "^3.2.1"
+  },
+  "dependencies": {
+    "@babel/types": "^7.1.6",
+    "chalk": "^2.4.1",
+    "inquirer": "^6.2.1",
+    "jss": "^9.8.7",
+    "jss-preset-default": "^4.5.0",
+    "prettier": "^1.15.3",
+    "rimraf": "^2.6.2"
+  }
+}
