@@ -6,6 +6,8 @@ import createVueRouterFileGenerator from './pipeline/vue-router'
 import projectJson from './project.json'
 import { ComponentDependency } from '../../../utils/experimental-generators/pipeline/types'
 
+import customMappings from './customMappings'
+
 interface Folder {
   name: string
   files: File[]
@@ -18,7 +20,7 @@ interface File {
   extension: string
 }
 
-const generateComponent = createVueGenerator()
+const generateComponent = createVueGenerator(customMappings)
 const generateRouterFile = createVueRouterFileGenerator()
 
 const distPath = 'dist'
@@ -50,56 +52,32 @@ const generateProject = async (jsDoc: any) => {
 
   let collectedDependencies = {}
 
-  for (const componentName in components) {
+  // tslint:disable:next-line
+  for (const componentName of Object.keys(components)) {
     const component = components[componentName]
     if (component.name === root) {
-      const navChildren = []
-      Object.keys(component.states).forEach((key) => {
-        const state = component.states[key]
-        const path = state.default ? '/' : `/${key.toLowerCase()}`
-        navChildren.push({
-          type: 'router-link',
-          name: key,
-          children: key,
-          attrs: {
-            to: path,
-          },
-        })
-        navChildren.push('|')
-      })
       const appUIDL = {
         name: 'App',
         content: {
-          type: 'View',
-          name: 'app',
-          children: [
-            {
-              type: 'View',
-              name: 'nav',
-              children: navChildren,
-            },
-            {
-              type: 'router-view',
-              name: 'router-view',
-              children: ' ',
-            },
-          ],
+          type: 'router-view',
+          name: 'entry-point',
+          children: ' ',
         },
       }
 
-      const componentResult = await generateComponent(appUIDL)
+      const appResult = await generateComponent(appUIDL)
       collectedDependencies = {
         ...collectedDependencies,
-        ...componentResult.dependencies,
+        ...appResult.dependencies,
       }
 
-      const file: File = {
+      const appFile: File = {
         name: 'App',
         extension: '.vue',
-        content: componentResult.code,
+        content: appResult.code,
       }
 
-      srcFolder.files.push(file)
+      srcFolder.files.push(appFile)
 
       const router = await generateRouterFile(component)
       collectedDependencies = { ...collectedDependencies, ...router.dependencies }
@@ -139,6 +117,7 @@ const runGenerator = async () => {
   await writeFolderToDisk(srcFolder, distPath)
   const externalDep = processExternalDependencies(dependencies)
   await writePackageJson(path.join(templatePath, 'package.json'), distPath, externalDep)
+  // tslint:disable-next-line:no-console
   console.log('Done!')
 }
 
@@ -175,6 +154,7 @@ const writePackageJson = async (sourcePackage, destinationPath, externalDep) => 
     'package.json',
     JSON.stringify(packageJSON, null, 2)
   )
+  // tslint:disable-next-line:no-console
   console.log('Created file: ', path.join(destinationPath, 'package.json'))
 }
 
@@ -184,12 +164,14 @@ const writeFolderToDisk = async (folder: Folder, currentPath: string) => {
   const folderPath = path.join(currentPath, name)
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath)
+    // tslint:disable-next-line:no-console
     console.log('Created folder: ', folderPath)
   }
 
   files.forEach((file) => {
     const filePath = path.join(folderPath, file.name + file.extension)
     fs.writeFileSync(filePath, file.content)
+    // tslint:disable-next-line:no-console
     console.log('Created file: ', filePath)
   })
 

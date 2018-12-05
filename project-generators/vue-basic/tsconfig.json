@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "declaration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "target": "ES6",
