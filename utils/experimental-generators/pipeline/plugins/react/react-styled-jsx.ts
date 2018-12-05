@@ -59,16 +59,16 @@ export const createPlugin: ComponentPluginFactory<StyledJSXConfig> = (config) =>
       return structure
     }
 
-    const jsxChunkMappings = componentChunk.meta.nodesLookup
+    const jsxNodesLookup = componentChunk.meta.nodesLookup
 
-    const styleJSXString = generateStyledJSXString(content, jsxChunkMappings)
+    const styleJSXString = generateStyledJSXString(content, jsxNodesLookup)
 
     if (!styleJSXString || !styleJSXString.length) {
       return structure
     }
 
     const jsxASTNodeReference = generateStyledJSXTag(styleJSXString.join('\n'))
-    const rootJSXNode = jsxChunkMappings[content.name]
+    const rootJSXNode = jsxNodesLookup[content.name]
 
     // We have the ability to insert the tag into the existig JSX structure, or do something else with it.
     // Here we take the JSX <style> tag and we insert it as the last child of the JSX structure

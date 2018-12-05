@@ -145,10 +145,12 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
     )
 
     // todo refactor into pure function
-    scriptLookup.props.value.properties.push(
-      ...objectToObjectExpression(generateVueComponentPropTypes(uidl.propDefinitions))
-        .properties
-    )
+    if (uidl.propDefinitions) {
+      scriptLookup.props.value.properties.push(
+        ...objectToObjectExpression(generateVueComponentPropTypes(uidl.propDefinitions))
+          .properties
+      )
+    }
 
     chunks.push({
       type: 'js',

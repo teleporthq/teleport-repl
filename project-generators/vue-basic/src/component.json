@@ -1,0 +1,9 @@
+{
+    "version": "1",
+    "name": "PageTitle",
+    "content": {
+        "name": "Useless",
+        "type": "Text",
+        "children": "$props.children"
+    }
+}

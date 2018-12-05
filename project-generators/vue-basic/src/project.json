@@ -1,0 +1,130 @@
+{
+    "version": "1.1",
+    "schema": "project",
+    "root": "App",
+    "name": "my-vue-project",
+    "components": {
+  
+      "PageTitle": {
+        "name": "PageTitle",
+        "type": "PageHeading",
+        "content": {
+          "name": "Useless",
+          "type": "Text",
+          "children": "$props.children"
+        }
+      },
+
+      "Layout": {
+        "name": "Layout",
+        "content": {
+          "type": "Group",
+          "name": "container",
+          "children": [
+            {
+              "type": "View",
+              "name": "Navbar",
+              "children": [
+                {
+                  "type": "NavLink",
+                  "name": "HomeLink",
+                  "children": "Go Home"
+                },
+                {
+                  "type": "NavLink",
+                  "name": "AboutLink",
+                  "children": "About Us"
+                }
+              ]
+            },
+            "$props.children",
+            {
+              "type": "View",
+              "name": "Footer",
+              "children": "This is the footer"
+            }
+          ]
+        }
+      },
+  
+      "Home": {
+        "version": "1",
+        "name": "Home",
+        "content": {
+          "type": "Layout",
+          "name": "HomeContent",
+          "style": {
+            "textAlign": "center",
+            "color": "yellow",
+            "border": "1px solid #000"
+          },
+          "children": [{
+            "type": "PageTitle",
+            "name": "HomeTitleInstance",
+            "children": "Home Page",
+            "dependency": { 
+              "type": "local"
+            } 
+          },{
+            "type": "Datepicker",
+            "name": "DatePicker"
+          },{
+            "type": "Text",
+            "name": "a-span",
+            "children": "Welcome!"
+          }]
+        }
+      },
+  
+      "About": {
+        "version": "1",
+        "name": "About",
+        "content": {
+          "type": "Layout",
+          "name": "AboutContent",
+          "style": {
+            "textAlign": "left",
+            "color": "red",
+            "border": "1px solid #000"
+          },
+          "children": [{
+            "type": "PageTitle",
+            "name": "AboutTitleInstance",
+            "children": "About Page",
+            "dependency": { 
+              "type": "local"
+            }
+          }]
+        }
+      },
+  
+      "App": {
+        "version": "1",
+        "name": "App",
+        "states": {  
+          "home": {
+            "content": {
+              "name": "HomeInstance",
+              "type": "Home",
+              "dependency": { 
+                "type": "local"
+              }
+            },
+            "default": true
+          },
+  
+          "about": {
+            "content": {
+              "name": "AboutInstance",
+              "type": "About",
+              "dependency": { 
+                "type": "local"
+              }
+            }
+          }
+  
+        }
+      
+      }
+    }
+  }
