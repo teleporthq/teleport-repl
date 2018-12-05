@@ -3,6 +3,24 @@ import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import * as t from '@babel/types'
 
 import { addJSXTagStyles } from '../../utils/jsx-ast'
+import { ParsedASTNode } from '../../utils/js-ast'
+
+const prepareDynamicProps = (style: any) => {
+  return Object.keys(style).reduce((acc: any, key) => {
+    const value = style[key]
+    if (typeof value === 'string' && value.startsWith('$props.')) {
+      acc[key] = new ParsedASTNode(
+        t.memberExpression(
+          t.identifier('props'),
+          t.identifier(value.replace('$props.', ''))
+        )
+      )
+    } else {
+      acc[key] = style[key]
+    }
+    return acc
+  }, {})
+}
 
 /**
  * Walks the content tree and modify the jsx ast representation by adding new
@@ -22,7 +40,7 @@ const enhanceJSXWithStyles = (content: any, nodesLookup: any) => {
       return
     }
 
-    addJSXTagStyles(jsxASTTag, style, t)
+    addJSXTagStyles(jsxASTTag, prepareDynamicProps(style), t)
   }
 
   if (Array.isArray(children)) {

@@ -12,18 +12,16 @@ import {
 import { cammelCaseToDashCase } from '../../utils/helpers'
 
 const prepareDynamicProps = (style: any) => {
-
   return Object.keys(style).reduce((acc: any, key) => {
     const value = style[key]
     if (typeof value === 'string' && value.startsWith('$props.')) {
       acc[key] = new ParsedASTNode(
-        t.arrowFunctionExpression([
-          t.identifier('props')
-        ],
-        t.memberExpression(
-          t.identifier('props'),
-          t.identifier(value.replace('$props.', ''))
-        )
+        t.arrowFunctionExpression(
+          [t.identifier('props')],
+          t.memberExpression(
+            t.identifier('props'),
+            t.identifier(value.replace('$props.', ''))
+          )
         )
       )
     } else {
