@@ -5,11 +5,30 @@ jss.setup(preset())
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { cammelCaseToDashCase } from '../../utils/helpers'
 
+const filterOutDynamicStyles = (style: any) => {
+  if (!style) {
+    return { staticStyles: null, dynamicStyles: null }
+  }
+  return Object.keys(style).reduce(
+    (acc: any, key) => {
+      const styleValue = style[key].toString()
+      if (styleValue.startsWith('$props.')) {
+        acc.dynamicStyles[key] = styleValue.replace('$props.', '')
+      } else {
+        acc.staticStyles[key] = styleValue
+      }
+      return acc
+    },
+    { staticStyles: {}, dynamicStyles: {} }
+  )
+}
+
 const generateStyleTagStrings = (content: any, templateLookup: any) => {
   let accumulator: any[] = []
   // only do stuff if content is a object
   if (content && typeof content === 'object') {
     const { style, children, name } = content
+    const { staticStyles, dynamicStyles } = filterOutDynamicStyles(style)
     if (style) {
       const root = templateLookup[name]
       const className = cammelCaseToDashCase(name)
@@ -17,7 +36,7 @@ const generateStyleTagStrings = (content: any, templateLookup: any) => {
         jss
           .createStyleSheet(
             {
-              [`.${className}`]: style,
+              [`.${className}`]: staticStyles,
             },
             {
               generateClassName: () => className,
@@ -25,6 +44,17 @@ const generateStyleTagStrings = (content: any, templateLookup: any) => {
           )
           .toString()
       )
+
+      if (Object.keys(dynamicStyles).length) {
+        const vueFriendlyStyleBind = Object.keys(dynamicStyles).reduce(
+          (acc: string[], key) => {
+            acc.push(`${key}: ${dynamicStyles[key]}`)
+            return acc
+          },
+          []
+        )
+        root.attr(':style', `{${vueFriendlyStyleBind.join(', ')}}`)
+      }
 
       root.addClass(className)
     }

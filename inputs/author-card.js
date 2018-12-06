@@ -10,6 +10,10 @@ export default {
     "avatarUrl": {
       "type": "string",
       "defaultValue": "https://picsum.photos/150/150"
+    },
+    "direction": {
+      "type": "string",
+      "defaultValue": "row"
     }
   },
   "content": {
@@ -19,7 +23,7 @@ export default {
       "width": "100%",
       "height": "100%",
       "display": "flex",
-      "flexDirection": "row"
+      "flexDirection": "$props.direction"
     },
     "children": [
       {
