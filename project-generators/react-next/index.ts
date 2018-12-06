@@ -4,7 +4,7 @@ import path from 'path'
 
 import componentWithStates from '../../inputs/component-states'
 
-import { configureNextPageAsemblyLine } from './pipeline/react-next-page'
+// import { configureNextPageAsemblyLine } from './pipeline/react-next-page'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
 
 import {
@@ -20,7 +20,12 @@ const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.StyledJSX,
 })
 
-const pageGenerator = configureNextPageAsemblyLine()
+const pageGenerator = configureAsemlyLine({
+  variation: ReactComponentFlavors.StyledJSX,
+  localImportPath: '../components',
+})
+
+// const pageGenerator = configureNextPageAsemblyLine()
 
 const processProjectUIDL = async (jsDoc: any) => {
   // pick root name/id
@@ -41,16 +46,15 @@ const processProjectUIDL = async (jsDoc: any) => {
         const { states } = comp
         // tslint:disable-next-line:forin
         for (const stateKey in states) {
-          if (stateKey === 'default') {
-            continue
-          }
           const state = states[stateKey]
 
-          const compiledComponent = await pageGenerator(state)
+          const compiledComponent = await componentGenerator({
+            name: `${stateKey.replace(stateKey[0], stateKey[0].toUpperCase())}Page`,
+            ...state,
+          })
           pagesDir.push({
             type: 'file',
-            name:
-              stateKey === states.default ? `index.js` : `${stateKey.toLowerCase()}.js`,
+            name: state.default ? `index.js` : `${stateKey.toLowerCase()}.js`,
             content: {
               code: compiledComponent.code,
             },
@@ -66,7 +70,6 @@ const processProjectUIDL = async (jsDoc: any) => {
       }
     } else {
       try {
-        console.log('comp', comp)
         const compiledComponent = await componentGenerator(comp)
         compoenntsDir.push({
           type: 'file',

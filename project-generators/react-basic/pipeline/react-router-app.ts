@@ -97,13 +97,12 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
     const routeDefinitions = Object.keys(pages)
       .filter((pageKey) => pageKey !== 'default')
       .map((pageKey) => {
-        const { content: stateComponent } = pages[pageKey]
+        const { content: stateComponent, default: isDefault } = pages[pageKey]
         const { type, attrs, dependency } = stateComponent
         const mappedElement = resolver(type, attrs, dependency)
         const route = generateASTDefinitionForJSXTag('Route')
 
-        const urlRoute =
-          pages.default === pageKey ? '/' : `/${pageKey.toLocaleLowerCase()}`
+        const urlRoute = isDefault ? '/' : `/${pageKey.toLocaleLowerCase()}`
 
         registerDependency(mappedElement.nodeName, {
           type: 'local',

@@ -69,9 +69,8 @@ export default {
 
       "states": {
 
-        "default": "home",
-
         "home": {
+          "default": true,
           "content": {
             "name": "HomeInstance",
             "type": "Home",
