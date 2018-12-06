@@ -1,8 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import { removeDir, copyDirRec, readJSON, writeTextFile } from '../../utils'
-import createVueGenerator from './pipeline/vue-component'
-import createVueRouterFileGenerator from './pipeline/vue-router'
+import createVueGenerator from './component-generators/vue-component'
 import projectJson from './project.json'
 import { ComponentDependency } from '../../../utils/experimental-generators/pipeline/types'
 
@@ -21,7 +20,6 @@ interface File {
 }
 
 const generateComponent = createVueGenerator(customMappings)
-const generateRouterFile = createVueRouterFileGenerator()
 
 const distPath = 'dist'
 const templatePath = 'project-template'
@@ -36,8 +34,8 @@ const generateProject = async (jsDoc: any) => {
 
   const { components, root } = jsDoc
 
-  const srcFolder: Folder = {
-    name: 'src',
+  const pagesFolder: Folder = {
+    name: 'pages',
     files: [],
     subFolders: [],
   }
@@ -48,47 +46,37 @@ const generateProject = async (jsDoc: any) => {
     subFolders: [],
   }
 
-  srcFolder.subFolders.push(componentsFolder)
-
   let collectedDependencies = {}
 
+  const rootComponent = components[root]
+  const componentsUsedAsPages = []
+
+  // Handling the route component which specifies which components are pages
+  const { states } = rootComponent
+  for (const key of Object.keys(states)) {
+    const pageStateRef = states[key]
+    const componentReferenceType = pageStateRef.content.type
+    const page = components[componentReferenceType]
+
+    const pageResult = await generateComponent(page, {
+      localDependenciesPrefix: '../components/',
+    })
+
+    collectedDependencies = { ...collectedDependencies, ...pageResult.dependencies }
+
+    pagesFolder.files.push({
+      name: pageStateRef.default ? 'index' : page.name,
+      content: pageResult.code,
+      extension: '.vue',
+    })
+
+    componentsUsedAsPages.push(page.name)
+  }
+
+  // The rest of the components are written in components
   for (const componentName of Object.keys(components)) {
     const component = components[componentName]
-    if (component.name === root) {
-      const appUIDL = {
-        name: 'App',
-        content: {
-          type: 'router-view',
-          name: 'entry-point',
-          children: ' ',
-        },
-      }
-
-      const appResult = await generateComponent(appUIDL)
-      collectedDependencies = {
-        ...collectedDependencies,
-        ...appResult.dependencies,
-      }
-
-      const appFile: File = {
-        name: 'App',
-        extension: '.vue',
-        content: appResult.code,
-      }
-
-      srcFolder.files.push(appFile)
-
-      const router = await generateRouterFile(component)
-      collectedDependencies = { ...collectedDependencies, ...router.dependencies }
-
-      const routerFile: File = {
-        name: 'router',
-        extension: '.js',
-        content: router.code,
-      }
-
-      srcFolder.files.push(routerFile)
-
+    if (component.name === root || componentsUsedAsPages.includes(component.name)) {
       continue
     }
 
@@ -105,15 +93,17 @@ const generateProject = async (jsDoc: any) => {
   }
 
   return {
-    srcFolder,
+    pagesFolder,
+    componentsFolder,
     dependencies: collectedDependencies,
   }
 }
 
 const runGenerator = async () => {
   const result = await generateProject(projectJson)
-  const { srcFolder, dependencies } = result
-  await writeFolderToDisk(srcFolder, distPath)
+  const { pagesFolder, componentsFolder, dependencies } = result
+  await writeFolderToDisk(pagesFolder, distPath)
+  await writeFolderToDisk(componentsFolder, distPath)
   const externalDep = processExternalDependencies(dependencies)
   await writePackageJson(path.join(templatePath, 'package.json'), distPath, externalDep)
   // tslint:disable-next-line:no-console

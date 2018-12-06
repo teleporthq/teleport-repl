@@ -17,6 +17,7 @@ const frameworkMappingsLookup: { [key: string]: any } = {
 }
 
 export interface RuntimeParams {
+  localDependenciesPrefix?: string
   customMappings?: { [key: string]: any }
   initialStructure?: ComponentStructure
 }
@@ -26,6 +27,8 @@ export default class ComponentAsemblyLine {
   private dependencies: {
     [key: string]: ComponentDependency
   }
+
+  private localDependenciesPrefix: string
 
   constructor(
     target: string,
@@ -52,12 +55,14 @@ export default class ComponentAsemblyLine {
         chunks: [],
       },
       customMappings = {},
+      localDependenciesPrefix = './',
     } = params || {}
 
     let structure = initialStructure
 
     // reset dependencies
     this.dependencies = {}
+    this.localDependenciesPrefix = localDependenciesPrefix
 
     const pipelineOperations: PipelineOperations = {
       registerDependency: this.registerDependency,
@@ -83,6 +88,7 @@ export default class ComponentAsemblyLine {
   // The attributes and dependencies specified at the UIDL level have priority over the mappings in the assembly line.
   private resolver: Resolver = (uidlType: string, uidlAttrs, uidlDependency) => {
     let mappedElement = this.elementMappings[uidlType]
+    const localDependenciesPrefix = this.localDependenciesPrefix || './'
 
     // In case the element is not found, we maintain the type as the tag name.
     const identityMapping = {
@@ -142,7 +148,7 @@ export default class ComponentAsemblyLine {
       nodeDependency.meta =
         nodeDependency.meta && nodeDependency.meta.path
           ? nodeDependency.meta
-          : { ...nodeDependency.meta, path: './' + mappedElement.name }
+          : { ...nodeDependency.meta, path: localDependenciesPrefix + mappedElement.name }
     }
 
     return {

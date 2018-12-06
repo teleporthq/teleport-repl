@@ -8,11 +8,16 @@ import Builder from '../../../../utils/experimental-generators/pipeline/builder'
 
 const vueProjectMappings = {
   NavLink: {
-    name: 'router-link',
+    name: 'nuxt-link',
     attrs: {
       to: '$attrs.transitionTo',
     },
   },
+}
+
+interface GeneratorOptions {
+  localDependenciesPrefix?: string
+  customMappings?: any
 }
 
 const createVuePipeline = (customMappings?: any) => {
@@ -24,8 +29,14 @@ const createVuePipeline = (customMappings?: any) => {
 
   const chunksLinker = new Builder()
 
-  const componentGenerator = async (componentUIDL: any) => {
-    const result = await assemblyLine.run(componentUIDL, { customMappings })
+  const componentGenerator = async (
+    componentUIDL: any,
+    generatorOptions: GeneratorOptions = {}
+  ) => {
+    const result = await assemblyLine.run(componentUIDL, {
+      customMappings,
+      ...generatorOptions,
+    })
 
     const code = chunksLinker.link(result.chunks)
 

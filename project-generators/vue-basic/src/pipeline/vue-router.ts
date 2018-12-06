@@ -73,7 +73,7 @@ const vueRouterPlugin: ComponentPluginFactory<VueRouterConfig> = (config) => {
   return vueRouterComponentPlugin
 }
 
-const createVuePipeline = () => {
+const createVuePipeline = (customMappings?: any) => {
   const asemblyLine = new ComponentAsemblyLine('vue', [
     vueRouterPlugin({
       codeChunkName: 'vue-router',
@@ -87,7 +87,7 @@ const createVuePipeline = () => {
   const chunksLinker = new Builder()
 
   const componentGenerator = async (componentUIDL) => {
-    const result = await asemblyLine.run(componentUIDL)
+    const result = await asemblyLine.run(componentUIDL, { customMappings })
     const code = chunksLinker.link(result.chunks)
 
     return {
