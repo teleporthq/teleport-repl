@@ -1,5 +1,3 @@
-import * as t from '@babel/types'
-
 import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
