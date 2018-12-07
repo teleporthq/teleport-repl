@@ -33,17 +33,26 @@ const groupDependenciesByPackage = (dependencies: any, packageType?: string) => 
   return result
 }
 
-const addImportChunk = (chunks: any[], dependencies: any, newChunkName: string) => {
+const addImportChunk = (
+  chunks: any[],
+  dependencies: any,
+  newChunkName: string,
+  fileId: string | null
+) => {
   const importASTs = Object.keys(dependencies).map((key) =>
     makeGenericImportStatement(key, dependencies[key])
   )
-  if (importASTs.length > 0) {
-    chunks.push({
-      type: 'js',
-      name: newChunkName,
-      content: importASTs,
-    })
-  }
+  // must me always generated, even if empty, othwerwise references will not work
+  // if (importASTs.length > 0) {
+  chunks.push({
+    type: 'js',
+    name: newChunkName,
+    meta: {
+      fileId,
+    },
+    content: importASTs,
+  })
+  // }
 }
 
 interface ImportPluginConfig {
@@ -57,6 +66,7 @@ export const createPlugin: ComponentPluginFactory<ImportPluginConfig> = (config)
     importLibsChunkName = 'import-libs',
     importPackagesChunkName = 'import-packages',
     importLocalsChunkName = 'import-local',
+    fileId = null,
   } = config || {}
 
   const importPlugin: ComponentPlugin = async (structure, operations) => {
@@ -66,9 +76,9 @@ export const createPlugin: ComponentPluginFactory<ImportPluginConfig> = (config)
     const packageDependencies = groupDependenciesByPackage(dependencies, 'package')
     const localDependencies = groupDependenciesByPackage(dependencies, 'local')
 
-    addImportChunk(structure.chunks, libraryDependencies, importLibsChunkName)
-    addImportChunk(structure.chunks, packageDependencies, importPackagesChunkName)
-    addImportChunk(structure.chunks, localDependencies, importLocalsChunkName)
+    addImportChunk(structure.chunks, libraryDependencies, importLibsChunkName, fileId)
+    addImportChunk(structure.chunks, packageDependencies, importPackagesChunkName, fileId)
+    addImportChunk(structure.chunks, localDependencies, importLocalsChunkName, fileId)
 
     return structure
   }

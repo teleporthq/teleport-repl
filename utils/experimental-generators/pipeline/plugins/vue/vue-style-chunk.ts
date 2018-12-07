@@ -101,7 +101,7 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
         fileId: styleFileId,
       },
       wrap: styleFileId
-        ? null
+        ? undefined
         : (generatedContent) => {
             return `<style>\n\n${generatedContent}</style>\n`
           },

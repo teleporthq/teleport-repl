@@ -98,6 +98,7 @@ interface VueComponentConfig {
   vueTemplateChunkName: string
   vueJSChunkName: string
   htmlFileId: string
+  jsFileAfter: string[]
   jsFileId: string
 }
 
@@ -107,6 +108,7 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
     vueJSChunkName = 'vue-component-js-chunk',
     htmlFileId = null,
     jsFileId = null,
+    jsFileAfter = [],
   } = config || {}
 
   const vueBasicComponentChunks: ComponentPlugin = async (structure, operations) => {
@@ -134,7 +136,7 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
         fileId: htmlFileId,
       },
       wrap: separateFiles
-        ? null
+        ? undefined
         : (generatedContent) => {
             return `<template>\n\n${generatedContent}\n</template>\n`
           },
@@ -162,12 +164,15 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
     chunks.push({
       type: 'js',
       name: vueJSChunkName,
+      linker: {
+        after: jsFileAfter,
+      },
       meta: {
         lookup: scriptLookup,
         fileId: jsFileId,
       },
       wrap: separateFiles
-        ? null
+        ? undefined
         : (generatedContent) => {
             return `<script>\n\n${generatedContent}\n</script>`
           },

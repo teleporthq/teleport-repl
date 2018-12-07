@@ -2,7 +2,7 @@ import ComponentAsemblyLine from '../../../../utils/experimental-generators/pipe
 
 import { createPlugin as vueBaseComponent } from '../../../../utils/experimental-generators/pipeline/plugins/vue/vue-base-component'
 import { createPlugin as vueStyleComponent } from '../../../../utils/experimental-generators/pipeline/plugins/vue/vue-style-chunk'
-import { createPlugin as vueImportStatements } from '../../../../utils/experimental-generators/pipeline/plugins/vue/vue-import-statements'
+import { createPlugin as importStatements } from '../../../../utils/experimental-generators/pipeline/plugins/common/import-statements'
 
 import Builder from '../../../../utils/experimental-generators/pipeline/builder'
 
@@ -26,12 +26,18 @@ const createVuePipeline = (customMappings?: any) => {
     [
       vueBaseComponent({
         jsFileId: 'vuejs',
+        jsFileAfter: ['libs', 'packs', 'locals'],
         htmlFileId: 'vuehtml',
       }),
       vueStyleComponent({
         styleFileId: 'vuecss',
       }),
-      vueImportStatements(),
+      importStatements({
+        fileId: 'vuejs',
+        importLibsChunkName: 'libs',
+        importPackagesChunkName: 'packs',
+        importLocalsChunkName: 'locals',
+      }),
     ],
     vueProjectMappings
   )

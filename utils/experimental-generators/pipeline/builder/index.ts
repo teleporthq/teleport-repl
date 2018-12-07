@@ -226,7 +226,9 @@ export default class Builder {
         if (wrap) {
           compiledContent = wrap(compiledContent)
         }
-        resultingString.push(compiledContent)
+        if (compiledContent && compiledContent !== '') {
+          resultingString.push(compiledContent)
+        }
       }
     })
 
@@ -234,6 +236,9 @@ export default class Builder {
   }
 
   public generateByType(type: string, content: any): string {
+    if (!content && !content.length) {
+      return ''
+    }
     if (Array.isArray(content)) {
       return content.map((contentItem) => this.generateByType(type, contentItem)).join('')
     }
