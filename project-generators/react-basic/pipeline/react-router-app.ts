@@ -81,13 +81,8 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       },
     })
 
-    const { states, content } = uidl
+    const { states } = uidl
     const pages = states || {}
-
-    if (content) {
-      pages.default = 'index'
-      pages.index = content
-    }
 
     const mappings: any = {
       routes: [],
@@ -97,12 +92,12 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
     const routeDefinitions = Object.keys(pages)
       .filter((pageKey) => pageKey !== 'default')
       .map((pageKey) => {
-        const { content: stateComponent, default: isDefault } = pages[pageKey]
+        const { component: stateComponent, default: isDefault, meta } = pages[pageKey]
         const { type, attrs, dependency } = stateComponent
         const mappedElement = resolver(type, attrs, dependency)
         const route = generateASTDefinitionForJSXTag('Route')
-
-        const urlRoute = isDefault ? '/' : `/${pageKey.toLocaleLowerCase()}`
+        const path = meta && meta.url ? meta.url : pageKey
+        const urlRoute = isDefault ? '/' : `/${path.toLocaleLowerCase()}`
 
         registerDependency(mappedElement.nodeName, {
           type: 'local',
@@ -113,10 +108,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
 
         route.openingElement.attributes.push(
           t.jsxAttribute(t.jsxIdentifier('exact')),
-          t.jsxAttribute(t.jsxIdentifier('path'), t.stringLiteral(urlRoute))
-        )
-
-        route.openingElement.attributes.push(
+          t.jsxAttribute(t.jsxIdentifier('path'), t.stringLiteral(urlRoute)),
           t.jsxAttribute(
             t.jsxIdentifier('component'),
             t.jsxExpressionContainer(t.identifier(mappedElement.nodeName))

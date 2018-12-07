@@ -103,7 +103,7 @@ const configureAsemlyLine = (params: FactoryParams) => {
     ],
   }
 
-  const generateComponentChunks = async (jsDoc: any) => {
+  const generateComponentChunks = async (jsDoc: any, generatorOptions?: any) => {
     const asemblyLine = new ComponentAsemblyLine(
       'react',
       Options[variation],
@@ -111,7 +111,7 @@ const configureAsemlyLine = (params: FactoryParams) => {
     )
 
     const chunksLinker = new Builder()
-    const result = await asemblyLine.run(jsDoc)
+    const result = await asemblyLine.run(jsDoc, generatorOptions)
     const code = chunksLinker.link(result.chunks)
     return {
       ...result,

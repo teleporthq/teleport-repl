@@ -2,7 +2,7 @@
 
 import path from 'path'
 
-import componentWithStates from '../../inputs/component-states'
+import projectJson from '../../inputs/project.json'
 
 import { configureRouterAsemblyLine } from './pipeline/react-router-app'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
@@ -23,50 +23,46 @@ const processProjectUIDL = async (jsDoc: any) => {
 
   const srcDir: any = []
 
-  const compoenntsDir: any = []
+  const componentsDir: any = []
   let allDependencies = {}
+
+  // Handle the router first
+  const routingComponent = await routingComponentGenerator(root)
+
+  srcDir.push({
+    type: 'file',
+    name: `index.js`,
+    content: {
+      code: routingComponent.code,
+    },
+  })
+
+  allDependencies = {
+    ...allDependencies,
+    ...routingComponent.dependencies,
+  }
+
   // tslint:disable-next-line:forin
   for (const i in keys) {
     const key = keys[i]
-    if (components[key].name === root) {
-      try {
-        const compiledComponent = await routingComponentGenerator(components[key])
+    try {
+      const compiledComponent = await componentGenerator(components[key])
+      componentsDir.push({
+        type: 'file',
+        name: `${components[key].name}.js`,
+        content: compiledComponent,
+      })
 
-        srcDir.push({
-          type: 'file',
-          name: `index.js`,
-          content: {
-            code: compiledComponent.code,
-          },
-        })
-
-        allDependencies = {
-          ...allDependencies,
-          ...compiledComponent.dependencies,
-        }
-      } catch (err) {
-        console.error(key, err)
+      allDependencies = {
+        ...allDependencies,
+        ...compiledComponent.dependencies,
       }
-    } else {
-      try {
-        const compiledComponent = await componentGenerator(components[key])
-        compoenntsDir.push({
-          type: 'file',
-          name: `${components[key].name}.js`,
-          content: compiledComponent,
-        })
-
-        allDependencies = {
-          ...allDependencies,
-          ...compiledComponent.dependencies,
-        }
-      } catch (err) {
-        console.error(key, err)
-      }
+    } catch (err) {
+      console.error(key, err)
     }
   }
 
-  return { fileTree: { srcDir, compoenntsDir }, allDependencies }
+  return { fileTree: { srcDir, componentsDir }, allDependencies }
 }
 
 interface GeneratorInputParams {
@@ -92,7 +88,7 @@ const run = async (params: GeneratorInputParams) => {
     await writeTextFile(`${distPath}/src`, fileInfo.name, fileInfo.content.code)
   }
 
-  const filesInComponents = fileTree.compoenntsDir
+  const filesInComponents = fileTree.componentsDir
   const componentsFilesLength = filesInComponents.length
 
   await mkdir(`${distPath}/src/components`)
@@ -134,7 +130,7 @@ const boilerpaltePath = path.resolve(__dirname, './project-boilerplate')
 const distGeneratorPath = path.resolve(__dirname, './dist')
 
 run({
-  uidlInput: componentWithStates,
+  uidlInput: projectJson,
   inputPath: boilerpaltePath,
   distPath: distGeneratorPath,
 }).catch((err) => console.error(err))

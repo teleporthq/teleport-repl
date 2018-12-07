@@ -2,7 +2,8 @@
 
 import path from 'path'
 
-import componentWithStates from '../../inputs/component-states'
+// import componentWithStates from '../../inputs/component-states'
+import projectJson from '../../inputs/project.json'
 
 // import { configureNextPageAsemblyLine } from './pipeline/react-next-page'
 import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
@@ -20,12 +21,12 @@ const componentGenerator = configureAsemlyLine({
   variation: ReactComponentFlavors.StyledJSX,
 })
 
-const pageGenerator = configureAsemlyLine({
-  variation: ReactComponentFlavors.StyledJSX,
-  localImportPath: '../components',
-})
+// const pageGenerator = configureAsemlyLine({
+//   variation: ReactComponentFlavors.StyledJSX,
+//   localImportPath: '../components',
+// })
 
-// const pageGenerator = configureNextPageAsemblyLine()
+// // const pageGenerator = configureNextPageAsemblyLine()
 
 const processProjectUIDL = async (jsDoc: any) => {
   // pick root name/id
@@ -34,60 +35,56 @@ const processProjectUIDL = async (jsDoc: any) => {
 
   const pagesDir: any = []
 
-  const compoenntsDir: any = []
+  const componentsDir: any = []
   let allDependencies: any = {}
+
+  // page compnents first
+  const { states } = root
+  // tslint:disable-next-line:forin
+  for (const stateKey in states) {
+    const state = states[stateKey]
+
+    const compiledComponent = await componentGenerator(state.component, {
+      localDependenciesPrefix: '../components/',
+    })
+    const fileName = state.meta && state.meta.url ? state.meta.url : stateKey
+    pagesDir.push({
+      type: 'file',
+      name: state.default ? `index.js` : `${fileName.toLowerCase()}.js`,
+      content: {
+        code: compiledComponent.code,
+      },
+    })
+
+    allDependencies = {
+      ...allDependencies,
+      ...compiledComponent.dependencies,
+    }
+  }
+
   let comp: any
   // tslint:disable-next-line:forin
   for (const componentKey in components) {
     comp = components[componentKey]
 
-    if (comp.name === root) {
-      try {
-        const { states } = comp
-        // tslint:disable-next-line:forin
-        for (const stateKey in states) {
-          const state = states[stateKey]
+    try {
+      const compiledComponent = await componentGenerator(comp)
+      componentsDir.push({
+        type: 'file',
+        name: `${comp.name}.js`,
+        content: compiledComponent,
+      })
 
-          const compiledComponent = await componentGenerator({
-            name: `${stateKey.replace(stateKey[0], stateKey[0].toUpperCase())}Page`,
-            ...state,
-          })
-          pagesDir.push({
-            type: 'file',
-            name: state.default ? `index.js` : `${stateKey.toLowerCase()}.js`,
-            content: {
-              code: compiledComponent.code,
-            },
-          })
-
-          allDependencies = {
-            ...allDependencies,
-            ...compiledComponent.dependencies,
-          }
-        }
-      } catch (err) {
-        console.error(componentKey, err)
+      allDependencies = {
+        ...allDependencies,
+        ...compiledComponent.dependencies,
       }
-    } else {
-      try {
-        const compiledComponent = await componentGenerator(comp)
-        compoenntsDir.push({
-          type: 'file',
-          name: `${comp.name}.js`,
-          content: compiledComponent,
-        })
-
-        allDependencies = {
-          ...allDependencies,
-          ...compiledComponent.dependencies,
-        }
-      } catch (err) {
-        console.error(componentKey, err)
-      }
+    } catch (err) {
+      console.error(componentKey, err)
     }
   }
 
-  return { fileTree: { pagesDir, compoenntsDir }, allDependencies }
+  return { fileTree: { pagesDir, componentsDir }, allDependencies }
 }
 
 interface GeneratorInputParams {
@@ -114,7 +111,7 @@ const run = async (params: GeneratorInputParams) => {
     await writeTextFile(`${distPath}/pages`, fileInfo.name, fileInfo.content.code)
   }
 
-  const filesInComponents = fileTree.compoenntsDir
+  const filesInComponents = fileTree.componentsDir
   const componentsFilesLength = filesInComponents.length
 
   await mkdir(`${distPath}/components`)
@@ -152,7 +149,7 @@ const boilerpaltePath = path.resolve(__dirname, './project-boilerplate')
 const distGeneratorPath = path.resolve(__dirname, './dist')
 
 run({
-  uidlInput: componentWithStates,
+  uidlInput: projectJson,
   inputPath: boilerpaltePath,
   distPath: distGeneratorPath,
 }).catch((err) => console.error(err))

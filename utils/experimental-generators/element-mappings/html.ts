@@ -26,4 +26,7 @@ export default {
   Link: {
     name: 'a',
   },
+  Button: {
+    name: 'button',
+  },
 }
