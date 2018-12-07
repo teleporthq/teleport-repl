@@ -28,7 +28,7 @@ export default class ComponentAsemblyLine {
     [key: string]: ComponentDependency
   }
 
-  private localDependenciesPrefix: string
+  private localDependenciesPrefix: string = ''
 
   constructor(
     target: string,

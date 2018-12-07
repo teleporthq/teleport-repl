@@ -24,16 +24,47 @@ const customMapping = {
 }
 
 const asemblyLine = new ComponentAsemblyLine('vue', [
-  vueBaseComponent(),
-  vueStyleComponent(),
+  vueBaseComponent({
+    jsFileId: 'vuejs',
+    htmlFileId: 'vuehtml',
+  }),
+  vueStyleComponent({
+    styleFileId: 'vuecss',
+  }),
   vueImportStatements(),
 ])
 
 const generateComponent = async (jsDoc: any) => {
   const chunksLinker = new Builder()
   const result = await asemblyLine.run(jsDoc, { customMappings: customMapping })
+
+  const jsChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuejs')
+  const cssChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuecss')
+  const htmlChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuehtml')
+
+  const jsCode = chunksLinker.link(jsChunks)
+  const cssCode = chunksLinker.link(cssChunks)
+  const htmlCode = chunksLinker.link(htmlChunks)
+
   return {
-    code: chunksLinker.link(result.chunks),
+    code: `
+<template>
+
+${htmlCode}
+</template>
+
+<script>
+
+${jsCode}
+</script>
+
+<style>
+
+${cssCode}
+
+</style>
+`,
+
     dependencies: result.dependencies,
   }
 }

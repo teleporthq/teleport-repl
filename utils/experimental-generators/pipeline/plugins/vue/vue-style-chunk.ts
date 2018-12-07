@@ -74,12 +74,14 @@ interface VueStyleChunkConfig {
   chunkName: string
   vueJSChunk: string
   vueTemplateChunk: string
+  styleFileId: string
 }
 
 export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config) => {
   const {
     chunkName = 'vue-component-style-chunk',
     vueTemplateChunk = 'vue-component-template-chunk',
+    styleFileId = null,
   } = config || {}
 
   const vueComponentStyleChunkPlugin: ComponentPlugin = async (structure) => {
@@ -95,9 +97,14 @@ export const createPlugin: ComponentPluginFactory<VueStyleChunkConfig> = (config
     chunks.push({
       type: 'string',
       name: chunkName,
-      wrap: (generatedContent) => {
-        return `<style>\n\n${generatedContent}</style>\n`
+      meta: {
+        fileId: styleFileId,
       },
+      wrap: styleFileId
+        ? null
+        : (generatedContent) => {
+            return `<style>\n\n${generatedContent}</style>\n`
+          },
       content: jssStylesArray.join('\n'),
     })
 

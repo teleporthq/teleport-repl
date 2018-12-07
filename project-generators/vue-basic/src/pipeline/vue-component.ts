@@ -18,7 +18,16 @@ const vueProjectMappings = {
 const createVuePipeline = (customMappings?: any) => {
   const assemblyLine = new ComponentAsemblyLine(
     'vue',
-    [vueBaseComponent(), vueStyleComponent(), vueImportStatements()],
+    [
+      vueBaseComponent({
+        jsFileId: 'vuejs',
+        htmlFileId: 'vuehtml',
+      }),
+      vueStyleComponent({
+        styleFileId: 'vuecss',
+      }),
+      vueImportStatements(),
+    ],
     vueProjectMappings
   )
 
@@ -27,10 +36,28 @@ const createVuePipeline = (customMappings?: any) => {
   const componentGenerator = async (componentUIDL: any) => {
     const result = await assemblyLine.run(componentUIDL, { customMappings })
 
-    const code = chunksLinker.link(result.chunks)
+    const jsChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuejs')
+    const cssChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuecss')
+    const htmlChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuehtml')
+
+    const jsCode = chunksLinker.link(jsChunks)
+    const cssCode = chunksLinker.link(cssChunks)
+    const htmlCode = chunksLinker.link(htmlChunks)
 
     return {
-      code,
+      code: `
+<template>
+${htmlCode}
+</template>
+
+<script>
+${jsCode}
+</script>
+
+<style>
+${cssCode}
+</style>
+`,
       dependencies: result.dependencies,
     }
   }
