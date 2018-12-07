@@ -97,17 +97,24 @@ const generateVueNodesTree = (
 interface VueComponentConfig {
   vueTemplateChunkName: string
   vueJSChunkName: string
+  htmlFileId: string
+  jsFileId: string
 }
 
 export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config) => {
   const {
     vueTemplateChunkName = 'vue-component-template-chunk',
     vueJSChunkName = 'vue-component-js-chunk',
+    htmlFileId = null,
+    jsFileId = null,
   } = config || {}
 
   const vueBasicComponentChunks: ComponentPlugin = async (structure, operations) => {
     const { uidl, chunks } = structure
     const { resolver, registerDependency, getDependencies } = operations
+
+    // if file ids are not falsy, and different in value
+    const separateFiles = (htmlFileId || jsFileId) && htmlFileId !== jsFileId
 
     const templateLookup: { [key: string]: any } = {}
     const scriptLookup: { [key: string]: any } = {}
@@ -119,27 +126,22 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
       registerDependency
     )
 
-    const accumulatedDependencies = getDependencies()
-
-    // const importStatements: any[] = []
-    // Object.keys(accumulatedDependencies).forEach((key) => {
-    //   const dependency = accumulatedDependencies[key]
-    //   const importContent = resolveImportStatement(key, dependency)
-    //   importStatements.push(importContent)
-    // })
-
     chunks.push({
       type: 'html',
       name: vueTemplateChunkName,
       meta: {
         lookup: templateLookup,
+        fileId: htmlFileId,
       },
-      wrap: (generatedContent) => {
-        return `<template>\n\n${generatedContent}\n</template>\n`
-      },
+      wrap: separateFiles
+        ? null
+        : (generatedContent) => {
+            return `<template>\n\n${generatedContent}\n</template>\n`
+          },
       content: templateContent,
     })
 
+    const accumulatedDependencies = getDependencies()
     const jsContent = generateEmptyVueComponentJS(
       uidl.name,
       {
@@ -162,10 +164,13 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
       name: vueJSChunkName,
       meta: {
         lookup: scriptLookup,
+        fileId: jsFileId,
       },
-      wrap: (generatedContent) => {
-        return `<script>\n\n${generatedContent}\n</script>`
-      },
+      wrap: separateFiles
+        ? null
+        : (generatedContent) => {
+            return `<script>\n\n${generatedContent}\n</script>`
+          },
       content: jsContent,
     })
 

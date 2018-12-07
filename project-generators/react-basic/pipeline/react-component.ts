@@ -79,7 +79,7 @@ const configureAsemlyLine = (params: FactoryParams) => {
   //   return structure
   // }
 
-  const Options: { [key: string]: any } = {
+  const Options: Record<string, any[]> = {
     [ReactComponentFlavors.InlineStyles]: [
       configuredReactJSX,
       configuredReactInlineStyles,

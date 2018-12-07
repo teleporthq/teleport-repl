@@ -22,7 +22,7 @@ interface FactoryParams {
 }
 
 const configureAsemlyLine = (params: FactoryParams) => {
-  const { variation, localImportPath = './' } = params
+  const { variation } = params
 
   const configuredReactJSX = reactComponent({
     componentChunkName: 'react-component',
