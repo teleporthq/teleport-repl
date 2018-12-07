@@ -117,7 +117,7 @@ const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) =
 interface JSXConfig {
   componentChunkName: string
   exportChunkName: string
-  importChunkName?: string
+  importChunkName: string
 }
 
 export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {

@@ -76,7 +76,7 @@ export type ComponentPlugin = (
  * Configure a componnet plugin, specifing names or ids for chunks, to be later
  * used between other plugins and by the linker.
  */
-export type ComponentPluginFactory<T> = (configuration?: T) => ComponentPlugin
+export type ComponentPluginFactory<T> = (configuration?: Partial<T>) => ComponentPlugin
 
 /**
  * The function which resolves element mappings (primitive and custom)
