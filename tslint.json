@@ -13,7 +13,13 @@
   },
   "linterOptions": {
     "exclude": [
-        "project-generators/react-basic/project-boilerplate"
+      "*.html",
+      "**/*.html",
+      "*.json",
+      "**/*.json",
+      "**/dist/**",
+      "libraries/project-generators/vue-basic/project-template",
+      "libraries/project-generators/react-basic/project-boilerplate"
     ]
-}
+  }
 }

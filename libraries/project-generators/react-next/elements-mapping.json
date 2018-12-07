@@ -1,0 +1,14 @@
+{
+    "NavLink": {
+      "name": "Link",
+      "dependency": {
+          "type": "library",
+          "meta": {
+              "path": "next/link"
+          }
+      },
+      "attrs": {
+        "to": "$attrs.transitionTo"
+      }
+    }
+  }
