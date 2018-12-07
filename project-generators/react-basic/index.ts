@@ -24,7 +24,7 @@ const processProjectUIDL = async (jsDoc: any) => {
   const srcDir: any = []
 
   const componentsDir: any = []
-  let allDependencies = {}
+  let allDependencies: Record<string, any> = {}
 
   // Handle the router first
   const routingComponent = await routingComponentGenerator(root)
@@ -75,7 +75,6 @@ const run = async (params: GeneratorInputParams) => {
   const { inputPath, distPath, uidlInput } = params
   await removeDir(distPath)
   await copyDirRec(inputPath, distPath)
-
   const { fileTree, allDependencies } = await processProjectUIDL(uidlInput)
 
   const filesInSrc = fileTree.srcDir

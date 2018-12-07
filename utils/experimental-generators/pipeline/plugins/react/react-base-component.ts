@@ -42,7 +42,7 @@ const addTextElementToTag = (tag: t.JSXElement, text: string) => {
   }
 }
 
-const generateTreeStructure = (
+export const generateTreeStructure = (
   content: any,
   nodesLookup: any = {},
   resolver: Resolver,
