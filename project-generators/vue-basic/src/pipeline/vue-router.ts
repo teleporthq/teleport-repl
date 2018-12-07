@@ -34,18 +34,24 @@ const vueRouterPlugin: ComponentPluginFactory<VueRouterConfig> = (config) => {
       t.callExpression(t.identifier('Vue.use'), [t.identifier('Router')])
     )
 
-    const { states } = uidl
+    const { root } = uidl
+    const { states } = root
     const routesAST = Object.keys(states).map((key) => {
       const state = states[key]
-      const { name, type } = state.content
-      const path = state.default ? '/' : '/' + key.toLowerCase()
+      const routeComponent = state.component
+      const { name } = routeComponent
+      const pageUrl = state.meta && state.meta.url ? state.meta.url : `/${key}`
 
-      registerDependency(type, { type: 'local', meta: { path: `./components/${type}` } })
+      // Should default override the meta / url?
+      // TODO: Extract to function? similar to nuxt filename
+      const routePath = state.default ? '/' : pageUrl
+
+      registerDependency(name, { type: 'local', meta: { path: `./views/${name}` } })
 
       return t.objectExpression([
         t.objectProperty(t.identifier('name'), t.stringLiteral(name)),
-        t.objectProperty(t.identifier('path'), t.stringLiteral(path)),
-        t.objectProperty(t.identifier('component'), t.identifier(type)),
+        t.objectProperty(t.identifier('path'), t.stringLiteral(routePath)),
+        t.objectProperty(t.identifier('component'), t.identifier(name)),
       ])
     })
 
@@ -86,7 +92,7 @@ const createVuePipeline = (customMappings?: any) => {
 
   const chunksLinker = new Builder()
 
-  const componentGenerator = async (componentUIDL) => {
+  const componentGenerator = async (componentUIDL: any) => {
     const result = await asemblyLine.run(componentUIDL, { customMappings })
     const code = chunksLinker.link(result.chunks)
 

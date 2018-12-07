@@ -15,6 +15,11 @@ const vueProjectMappings = {
   },
 }
 
+interface GeneratorOptions {
+  localDependenciesPrefix?: string
+  customMappings?: any
+}
+
 const createVuePipeline = (customMappings?: any) => {
   const assemblyLine = new ComponentAsemblyLine(
     'vue',
@@ -24,8 +29,14 @@ const createVuePipeline = (customMappings?: any) => {
 
   const chunksLinker = new Builder()
 
-  const componentGenerator = async (componentUIDL: any) => {
-    const result = await assemblyLine.run(componentUIDL, { customMappings })
+  const componentGenerator = async (
+    componentUIDL: any,
+    generatorOptions: GeneratorOptions = {}
+  ) => {
+    const result = await assemblyLine.run(componentUIDL, {
+      customMappings,
+      ...generatorOptions,
+    })
 
     const code = chunksLinker.link(result.chunks)
 

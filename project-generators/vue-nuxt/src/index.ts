@@ -48,38 +48,28 @@ const generateProject = async (jsDoc: any) => {
 
   let collectedDependencies = {}
 
-  const rootComponent = components[root]
-  const componentsUsedAsPages = []
-
   // Handling the route component which specifies which components are pages
-  const { states } = rootComponent
+  const { states } = root
   for (const key of Object.keys(states)) {
-    const pageStateRef = states[key]
-    const componentReferenceType = pageStateRef.content.type
-    const page = components[componentReferenceType]
+    const currentState = states[key]
+    const pageComponent = currentState.component
 
-    const pageResult = await generateComponent(page, {
+    const pageResult = await generateComponent(pageComponent, {
       localDependenciesPrefix: '../components/',
     })
 
     collectedDependencies = { ...collectedDependencies, ...pageResult.dependencies }
 
     pagesFolder.files.push({
-      name: pageStateRef.default ? 'index' : page.name,
+      name: computeFileName(key, currentState),
       content: pageResult.code,
       extension: '.vue',
     })
-
-    componentsUsedAsPages.push(page.name)
   }
 
   // The rest of the components are written in components
   for (const componentName of Object.keys(components)) {
     const component = components[componentName]
-    if (component.name === root || componentsUsedAsPages.includes(component.name)) {
-      continue
-    }
-
     const componentResult = await generateComponent(component)
     collectedDependencies = { ...collectedDependencies, ...componentResult.dependencies }
 
@@ -111,6 +101,22 @@ const runGenerator = async () => {
 }
 
 runGenerator()
+
+const computeFileName = (stateKey: string, stateBranch: any) => {
+  if (stateBranch.default) {
+    return 'index'
+  }
+
+  if (!stateBranch.meta || !stateBranch.meta.url) {
+    // tslint:disable-next-line:no-console
+    console.warn(
+      `State node "${stateKey}" did not specify any meta url attribute. Assuming filename: "${stateKey}"`
+    )
+    return stateKey
+  } else {
+    return stateBranch.meta.url
+  }
+}
 
 const processExternalDependencies = (dependencies: {
   [key: string]: ComponentDependency

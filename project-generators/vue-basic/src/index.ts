@@ -42,6 +42,12 @@ const generateProject = async (jsDoc: any) => {
     subFolders: [],
   }
 
+  const pagesFolder: Folder = {
+    name: 'views',
+    files: [],
+    subFolders: [],
+  }
+
   const componentsFolder: Folder = {
     name: 'components',
     files: [],
@@ -49,49 +55,42 @@ const generateProject = async (jsDoc: any) => {
   }
 
   srcFolder.subFolders.push(componentsFolder)
+  srcFolder.subFolders.push(pagesFolder)
 
   let collectedDependencies = {}
 
+  // Router component
+  const router = await generateRouterFile(jsDoc)
+  collectedDependencies = { ...collectedDependencies, ...router.dependencies }
+
+  const routerFile: File = {
+    name: 'router',
+    extension: '.js',
+    content: router.code,
+  }
+
+  srcFolder.files.push(routerFile)
+
+  // pages are written in /views
+  const { states } = root
+  for (const key of Object.keys(states)) {
+    const currentState = states[key]
+    const pageComponent = currentState.component
+    const pageResult = await generateComponent(pageComponent, {
+      localDependenciesPrefix: '../components/',
+    })
+
+    collectedDependencies = { ...collectedDependencies, ...pageResult.dependencies }
+
+    pagesFolder.files.push({
+      name: pageComponent.name,
+      content: pageResult.code,
+      extension: '.vue',
+    })
+  }
+
   for (const componentName of Object.keys(components)) {
     const component = components[componentName]
-    if (component.name === root) {
-      const appUIDL = {
-        name: 'App',
-        content: {
-          type: 'router-view',
-          name: 'entry-point',
-          children: ' ',
-        },
-      }
-
-      const appResult = await generateComponent(appUIDL)
-      collectedDependencies = {
-        ...collectedDependencies,
-        ...appResult.dependencies,
-      }
-
-      const appFile: File = {
-        name: 'App',
-        extension: '.vue',
-        content: appResult.code,
-      }
-
-      srcFolder.files.push(appFile)
-
-      const router = await generateRouterFile(component)
-      collectedDependencies = { ...collectedDependencies, ...router.dependencies }
-
-      const routerFile: File = {
-        name: 'router',
-        extension: '.js',
-        content: router.code,
-      }
-
-      srcFolder.files.push(routerFile)
-
-      continue
-    }
-
     const componentResult = await generateComponent(component)
     collectedDependencies = { ...collectedDependencies, ...componentResult.dependencies }
 
@@ -137,7 +136,11 @@ const processExternalDependencies = (dependencies: {
     }, {})
 }
 
-const writePackageJson = async (sourcePackage, destinationPath, externalDep) => {
+const writePackageJson = async (
+  sourcePackage: string,
+  destinationPath: string,
+  externalDep: { [key: string]: string }
+) => {
   const packageJSON = await readJSON(sourcePackage)
   if (!packageJSON) {
     throw new Error('could not find a package.json in the template folder')
