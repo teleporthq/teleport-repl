@@ -21,7 +21,7 @@ interface FactoryParams {
   variation: ReactComponentFlavors
 }
 
-const configureAsemlyLine = (params: FactoryParams) => {
+const configureAsemblyLine = (params: FactoryParams) => {
   const { variation } = params
 
   const configuredReactJSX = reactComponent({
@@ -64,6 +64,21 @@ const configureAsemlyLine = (params: FactoryParams) => {
           path: 'react-datepicker',
           version: '1.0.2',
           namedImport: false,
+        },
+      },
+    },
+
+    NavLink: {
+      name: 'Link',
+      attrs: {
+        to: '$attrs.transitionTo',
+      },
+      dependency: {
+        type: 'library',
+        meta: {
+          path: 'react-router-dom',
+          version: '4.3.1',
+          namedImport: true,
         },
       },
     },
@@ -122,4 +137,4 @@ const configureAsemlyLine = (params: FactoryParams) => {
   return generateComponentChunks
 }
 
-export { configureAsemlyLine }
+export { configureAsemblyLine }

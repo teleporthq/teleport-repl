@@ -5,11 +5,11 @@ import path from 'path'
 import projectJson from '../../inputs/project.json'
 
 import { configureRouterAsemblyLine } from './pipeline/react-router-app'
-import { configureAsemlyLine, ReactComponentFlavors } from './pipeline/react-component'
+import { configureAsemblyLine, ReactComponentFlavors } from './pipeline/react-component'
 
 import { copyDirRec, removeDir, writeTextFile, mkdir, readJSON } from '../utils'
 
-const componentGenerator = configureAsemlyLine({
+const componentGenerator = configureAsemblyLine({
   variation: ReactComponentFlavors.JSS,
 })
 
