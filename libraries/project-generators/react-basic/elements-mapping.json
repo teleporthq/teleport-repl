@@ -1,0 +1,13 @@
+{
+  "NavLink": {
+    "name": "Link",
+    "dependency": {
+      "type": "library",
+      "meta": {
+        "path": "react-router-dom",
+        "version": "4.3.1",
+        "namedImport": true
+      }
+    }
+  }
+}

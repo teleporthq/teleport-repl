@@ -1,0 +1,8 @@
+{
+  "NavLink": {
+    "name": "nuxt-link",
+    "attrs": {
+      "to": "$attrs.transitionTo"
+    }
+  }
+}

@@ -9,11 +9,13 @@ import { JsonInputChooser } from '../components/JsonInputChooser'
 
 import uildValidator from '../utils/uildValidator'
 
-import { generateComponent as generateReactComponent } from '../utils/experimental-generators/react'
-import { generateComponent as generateVueComponent } from '../utils/experimental-generators/vue'
+import generateReactComponent from '../libraries/component-generators/react/react-all'
+import createVueGenerator from '../libraries/component-generators/vue/vue-component'
 
 import { loadJSONAsync, exmaplesList } from '../inputs'
 import authorCard from '../inputs/author-card'
+
+const generateVueComponent = createVueGenerator()
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
