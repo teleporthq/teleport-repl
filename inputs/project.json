@@ -69,9 +69,6 @@
           "attrs": {
             "className": "$props.className"
           },
-          "style": {
-            "padding": "12px"
-          },
           "children": [
             {
               "type": "View",

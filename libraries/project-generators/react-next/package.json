@@ -5,7 +5,7 @@
   "main": "dist/project-generators/react-next/index.js",
   "scripts": {
     "build": "rimraf ./dist && tsc --project ./tsconfig.json",
-    "dev": "ts-node --project tsconfig.json ./index.ts"
+    "dev": "ts-node --project tsconfig.json ./src/index.ts"
   },
   "author": "TeleportHQ",
   "license": "MIT",

@@ -9,7 +9,8 @@
     "curly": false,
     "no-submodule-imports": false,
     "interface-name": [true, "never-prefix"],
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "no-console": false
   },
   "linterOptions": {
     "exclude": [

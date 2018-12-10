@@ -1,6 +1,9 @@
 import * as fs from 'fs'
+import path from 'path'
 // ts-lint:disable:next-line
 import rimraf from 'rimraf'
+
+import { Folder } from '../types'
 
 interface FileInfo {
   filename: string
@@ -21,9 +24,9 @@ export const listDir = (dirPath: string): Promise<FileInfo[]> =>
     })
   })
 
-export const lstat = (path): Promise<any> =>
+export const lstat = (filePath: string): Promise<any> =>
   new Promise((resolve, reject) => {
-    fs.lstat(path, (err, stats) => {
+    fs.lstat(filePath, (err, stats) => {
       if (err) {
         reject(err)
       }
@@ -31,7 +34,7 @@ export const lstat = (path): Promise<any> =>
     })
   })
 
-export const copyFile = async (inputPath, outputPath) => {
+export const copyFile = async (inputPath: string, outputPath: string) => {
   const rd = fs.createReadStream(inputPath)
   const wr = fs.createWriteStream(outputPath)
   try {
@@ -72,9 +75,9 @@ export const copyDirRec = async (sourcePath: string, targetPath: string) => {
   listDir(sourcePath)
 }
 
-export const removeDir = (pathToRemove) =>
+export const removeDir = (pathToRemove: string) =>
   new Promise((resolve, reject) => {
-    rimraf(pathToRemove, (err) => {
+    rimraf(pathToRemove, (err: any) => {
       if (err) {
         reject(err)
       }
@@ -88,8 +91,9 @@ export const writeTextFile = (
   fileName: string,
   fileContent: string
 ) => {
+  const filePath = path.join(pathToFile, fileName)
   return new Promise((resolve, reject) => {
-    fs.writeFile(`${pathToFile}/${fileName}`, fileContent, 'utf8', (err) => {
+    fs.writeFile(filePath, fileContent, 'utf8', (err) => {
       if (err) {
         reject(err)
       }
@@ -99,7 +103,7 @@ export const writeTextFile = (
   })
 }
 
-export const mkdir = (pathToDir) =>
+export const mkdir = (pathToDir: string) =>
   new Promise((resolve, reject) => {
     fs.mkdir(pathToDir, (err) => {
       if (err) {
@@ -109,7 +113,7 @@ export const mkdir = (pathToDir) =>
     })
   })
 
-export const readFile = (pathToFile, encoding = 'utf8'): Promise<string> =>
+export const readFile = (pathToFile: string, encoding = 'utf8'): Promise<string> =>
   new Promise((resolve, reject) => {
     fs.readFile(pathToFile, encoding, (err, file) => {
       if (err) {
@@ -119,7 +123,7 @@ export const readFile = (pathToFile, encoding = 'utf8'): Promise<string> =>
     })
   })
 
-export const readJSON = async (pathToFile) => {
+export const readJSON = async (pathToFile: string) => {
   const file = await readFile(pathToFile)
   try {
     const jsonFile = JSON.parse(file)
@@ -127,6 +131,26 @@ export const readJSON = async (pathToFile) => {
   } catch (err) {
     return null
   }
+}
+
+export const writeFolder = async (folder: Folder, currentPath: string = './') => {
+  const { name, files, subFolders } = folder
+
+  const folderPath = path.join(currentPath, name)
+  if (!fs.existsSync(folderPath)) {
+    await mkdir(folderPath)
+    // tslint:disable-next-line:no-console
+    console.log('Created folder: ', folderPath)
+  }
+
+  for (const file of files) {
+    const fileName = file.name + file.extension
+    await writeTextFile(folderPath, fileName, file.content)
+    // tslint:disable-next-line:no-console
+    console.log('Created file: ', path.join(folderPath, fileName))
+  }
+
+  subFolders.forEach((child) => writeFolder(child, folderPath))
 }
 
 export const tsEnumToArray = (enumeration: any) =>
