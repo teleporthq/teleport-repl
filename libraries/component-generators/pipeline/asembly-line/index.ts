@@ -36,7 +36,7 @@ export default class ComponentAsemblyLine {
       localDependenciesPrefix = './',
     } = params || {}
 
-    let structure = initialStructure
+    const structure = initialStructure
 
     // reset dependencies
     this.dependencies = {}
@@ -50,13 +50,16 @@ export default class ComponentAsemblyLine {
 
     this.elementsMapping = { ...this.elementsMapping, ...customMapping }
 
-    const len = this.plugins.length
-    for (let i = 0; i < len; i++) {
-      structure = await this.plugins[i](structure, pipelineOperations)
-    }
+    const finalStructure = await this.plugins.reduce(
+      async (previousPluginOperation: Promise<any>, plugin) => {
+        const modifiedStructure = await previousPluginOperation
+        return plugin(modifiedStructure, pipelineOperations)
+      },
+      Promise.resolve(structure)
+    )
 
     return {
-      chunks: structure.chunks,
+      chunks: finalStructure.chunks,
       dependencies: this.dependencies,
     }
   }
