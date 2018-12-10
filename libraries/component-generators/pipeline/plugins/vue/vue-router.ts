@@ -32,11 +32,11 @@ export const createPlugin: ComponentPluginFactory<VueRouterConfig> = (config) =>
       const state = states[key]
       const routeComponent = state.component
       const { name } = routeComponent
-      const pageUrl = state.meta && state.meta.url ? state.meta.url : `/${key}`
+      const pageUrl = state.meta && state.meta.url ? state.meta.url : key
 
       // Should default override the meta / url?
       // TODO: Extract to function? similar to nuxt filename
-      const routePath = state.default ? '/' : pageUrl
+      const routePath = state.default ? '/' : `/${pageUrl}`
 
       registerDependency(name, { type: 'local', meta: { path: `./views/${name}` } })
 

@@ -58,11 +58,20 @@
         "propDefinitions": {
           "children": {
             "type": "children"
+          },
+          "className": {
+            "type": "string"
           }
         },
         "content": {
-          "type": "Group",
+          "type": "View",
           "name": "container",
+          "attrs": {
+            "className": "$props.className"
+          },
+          "style": {
+            "padding": "12px"
+          },
           "children": [
             {
               "type": "View",

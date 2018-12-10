@@ -4,6 +4,9 @@ import path from 'path'
 
 import projectJson from '../../../inputs/project.json'
 
+import reactProjectMapping from './elements-mapping.json'
+import customMapping from './custom-mapping.json'
+
 import { configureRouterAsemblyLine } from '../../component-generators/react/react-router'
 import configureAssemblyLine, {
   ReactComponentFlavors,
@@ -48,7 +51,9 @@ const processProjectUIDL = async (jsDoc: any) => {
   for (const i in keys) {
     const key = keys[i]
     try {
-      const compiledComponent = await componentGenerator(components[key])
+      const compiledComponent = await componentGenerator(components[key], {
+        customMapping: { ...reactProjectMapping, ...customMapping },
+      })
       componentsDir.push({
         type: 'file',
         name: `${components[key].name}.js`,

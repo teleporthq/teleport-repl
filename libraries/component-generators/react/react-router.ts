@@ -11,6 +11,9 @@ import { createPlugin as importStatements } from '../pipeline/plugins/common/imp
 import { ComponentAssemblyLine, Builder } from '../pipeline'
 import { generateTreeStructure } from '../pipeline/plugins/react/react-base-component'
 
+import standardMapping from '../elements-mapping.json'
+import reactMapping from './elements-mapping.json'
+
 const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) => {
   const { name, jsxTagTree } = params
   const returnStatement = t.returnStatement(jsxTagTree)
@@ -232,10 +235,13 @@ export const configureRouterAsemblyLine = () => {
   })
 
   const generateComponent = async (jsDoc: any) => {
-    const asemblyLine = new ComponentAssemblyLine([
-      configureAppRouterComponent,
-      configureImportStatements,
-    ])
+    const asemblyLine = new ComponentAssemblyLine(
+      [configureAppRouterComponent, configureImportStatements],
+      {
+        ...standardMapping,
+        ...reactMapping,
+      }
+    )
 
     const result = await asemblyLine.run(jsDoc)
 
