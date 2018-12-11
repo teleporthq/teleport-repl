@@ -44,6 +44,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@babel/node": "^7.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "@types/babel-generator": "^6.25.2",
     "@types/cheerio": "^0.22.9",
     "@types/jest": "23.3.0",
