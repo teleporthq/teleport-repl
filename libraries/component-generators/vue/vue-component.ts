@@ -4,13 +4,10 @@ import { createPlugin as vueBaseComponent } from '../pipeline/plugins/vue/vue-ba
 import { createPlugin as vueStyleComponent } from '../pipeline/plugins/vue/vue-style-chunk'
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
+import { GeneratorOptions } from '../pipeline/types'
+
 import standardMapping from '../elements-mapping.json'
 import vueMapping from './elements-mapping.json'
-
-interface GeneratorOptions {
-  localDependenciesPrefix?: string
-  customMapping?: any
-}
 
 const createVueGenerator = (
   { customMapping }: GeneratorOptions = { customMapping: {} }
@@ -38,10 +35,7 @@ const createVueGenerator = (
   const chunksLinker = new Builder()
 
   const generateComponent = async (jsDoc: any, options: GeneratorOptions = {}) => {
-    const result = await assemblyLine.run(jsDoc, {
-      customMapping: options.customMapping,
-      localDependenciesPrefix: options.localDependenciesPrefix,
-    })
+    const result = await assemblyLine.run(jsDoc, options)
 
     const jsChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuejs')
     const cssChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuecss')

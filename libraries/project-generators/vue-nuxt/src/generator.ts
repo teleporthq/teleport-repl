@@ -9,12 +9,7 @@ const generateComponent = createVueGenerator({
   customMapping: { ...nuxtMapping, ...customMapping },
 })
 
-export default async (
-  jsDoc: any,
-  { sourcePackageJson, distPath }: ProjectGeneratorOptions = {
-    distPath: 'dist',
-  }
-) => {
+export default async (jsDoc: any, options: ProjectGeneratorOptions = {}) => {
   if (jsDoc.schema !== 'project') {
     // This will be updated to JSON Schema validation
     throw new Error('schema type is not project')
@@ -35,7 +30,7 @@ export default async (
   }
 
   const distFolder: Folder = {
-    name: distPath,
+    name: options.distPath || 'dist',
     files: [],
     subFolders: [pagesFolder, componentsFolder],
   }
@@ -77,6 +72,7 @@ export default async (
   }
 
   // Package.json
+  const { sourcePackageJson } = options
   if (sourcePackageJson) {
     const externalDep = extractExternalDependencies(collectedDependencies)
     sourcePackageJson.dependencies = {
