@@ -12,12 +12,7 @@ const generateComponent = createVueGenerator({
 })
 const generateRouterFile = createVueRouterFileGenerator()
 
-export default async (
-  jsDoc: any,
-  { sourcePackageJson, distPath }: ProjectGeneratorOptions = {
-    distPath: 'dist',
-  }
-) => {
+export default async (jsDoc: any, options: ProjectGeneratorOptions = {}) => {
   if (jsDoc.schema !== 'project') {
     throw new Error('schema type is not project')
   }
@@ -43,7 +38,7 @@ export default async (
   }
 
   const distFolder: Folder = {
-    name: distPath,
+    name: options.distPath || 'dist',
     files: [],
     subFolders: [srcFolder],
   }
@@ -95,6 +90,7 @@ export default async (
   }
 
   // Package.json
+  const { sourcePackageJson } = options
   if (sourcePackageJson) {
     const externalDep = extractExternalDependencies(collectedDependencies)
     sourcePackageJson.dependencies = {

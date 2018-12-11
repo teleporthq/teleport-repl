@@ -1,4 +1,5 @@
 import { Folder, File, ProjectUIDL, ProjectGeneratorOptions } from '../../types'
+import { ComponentDependency } from '../../../component-generators/pipeline/types'
 
 import { extractExternalDependencies } from '../../utils/generator-utils'
 
@@ -41,7 +42,7 @@ export default async (
     subFolders: [pagesFolder, componentsFolder],
   }
 
-  let allDependencies: any = {}
+  let allDependencies: Record<string, ComponentDependency> = {}
 
   // page compnents first
   const { states } = root

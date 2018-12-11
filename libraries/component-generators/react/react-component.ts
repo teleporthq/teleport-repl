@@ -7,7 +7,7 @@ import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/rea
 import { createPlugin as reactPropTypes } from '../pipeline/plugins/react/react-proptypes'
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
-import { ComponentPlugin } from '../pipeline/types'
+import { ComponentPlugin, GeneratorOptions } from '../pipeline/types'
 
 import standardMapping from '../elements-mapping.json'
 import reactMapping from './elements-mapping.json'
@@ -81,7 +81,10 @@ const createReactGenerator = (params: FactoryParams) => {
   })
   const chunksLinker = new Builder()
 
-  const generateComponentChunks = async (jsDoc: any, generatorOptions?: any) => {
+  const generateComponentChunks = async (
+    jsDoc: any,
+    generatorOptions?: GeneratorOptions
+  ) => {
     const result = await asemblyLine.run(jsDoc, generatorOptions)
     const code = chunksLinker.link(result.chunks)
     return {

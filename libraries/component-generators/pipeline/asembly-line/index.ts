@@ -50,7 +50,7 @@ export default class ComponentAsemblyLine {
 
     this.elementsMapping = { ...this.elementsMapping, ...customMapping }
 
-    const finalStructure = await this.plugins.reduce(
+    const finalStructure: ComponentStructure = await this.plugins.reduce(
       async (previousPluginOperation: Promise<any>, plugin) => {
         const modifiedStructure = await previousPluginOperation
         return plugin(modifiedStructure, pipelineOperations)

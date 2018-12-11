@@ -95,4 +95,9 @@ export type Resolver = (
 
 export type RegisterDependency = (name: string, dependency: ComponentDependency) => void
 
+export interface GeneratorOptions {
+  localDependenciesPrefix?: string
+  customMapping?: any
+}
+
 export type GeneratorFunction = (content: any) => string
