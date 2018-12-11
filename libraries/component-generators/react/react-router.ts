@@ -39,7 +39,7 @@ const registerRouterDeps = (registerDependency: RegisterDependency): void => {
     type: 'library',
     meta: {
       path: 'react',
-      version: '16.6.1',
+      version: '16.6.3',
     },
   })
 
@@ -47,7 +47,7 @@ const registerRouterDeps = (registerDependency: RegisterDependency): void => {
     type: 'library',
     meta: {
       path: 'react-dom',
-      version: '16.6.1',
+      version: '16.6.3',
     },
   })
 

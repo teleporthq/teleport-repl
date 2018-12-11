@@ -72,6 +72,17 @@ export const addDynamicPropOnJsxOpeningTag = (
   )
 }
 
+export const addExternalPropOnJsxOpeningTag = (
+  jsxASTNode: types.JSXElement,
+  name: string,
+  memberExpression: any,
+  t = types
+) => {
+  jsxASTNode.openingElement.attributes.push(
+    t.jsxAttribute(t.jsxIdentifier(name), t.jsxExpressionContainer(memberExpression))
+  )
+}
+
 export const stringAsTemplateLiteral = (str: string, t = types) => {
   const formmattedString = `
 ${str}
@@ -197,6 +208,6 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
     t.jsxIdentifier('style'),
     styleObjectExpressionContainer
   )
-
+  console.log('tag', tag)
   tag.openingElement.attributes.push(styleJSXAttr)
 }

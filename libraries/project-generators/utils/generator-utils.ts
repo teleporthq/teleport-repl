@@ -26,8 +26,10 @@ export const extractExternalDependencies = (
     })
     .reduce((acc: any, key) => {
       const depInfo = dependencies[key]
+      console.log(depInfo)
       if (depInfo.meta.path) {
         acc[depInfo.meta.path] = depInfo.meta.version
+        console.log(acc[depInfo.meta.path])
       }
 
       return acc

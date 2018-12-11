@@ -47,7 +47,28 @@ module.exports = {
         use: {
           loader: 'babel-loader',
         } 
-      }
+      },
+
+
+      /**
+       * Support css imports as css modules
+       */
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: "style-loader"
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              camelCase: true,
+              modules: true
+            },
+          }
+        ]
+        
+      },
     ]
   },
 

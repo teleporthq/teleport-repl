@@ -135,6 +135,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
       type: 'library',
       meta: {
         path: 'react',
+        version: '16.6.3',
       },
     })
 

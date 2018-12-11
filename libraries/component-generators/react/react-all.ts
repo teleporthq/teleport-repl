@@ -6,9 +6,12 @@ import { createPlugin as reactJSS } from '../pipeline/plugins/react/react-jss'
 import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/react-inline-styles'
 import { createPlugin as reactPropTypes } from '../pipeline/plugins/react/react-proptypes'
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
+import { createPlugin as reactCSSModules } from '../pipeline/plugins/react/react-css-modules'
 
 import standardMapping from '../elements-mapping.json'
 import reactMapping from './elements-mapping.json'
+import { ComponentPlugin } from '../pipeline/types'
+import { groupChunksByFileId } from './utils'
 
 const configuredReactJSX = reactComponent({
   componentChunkName: 'react-component',
@@ -38,23 +41,36 @@ const configureImportStatements = importStatements({
   importLibsChunkName: 'import-libs',
 })
 
-const Options: { [key: string]: any } = {
+const configuredReactCSSModules = reactCSSModules({
+  componentChunkName: 'react-component',
+})
+
+const Options: Record<string, ComponentPlugin[]> = {
   InlineStyles: [
     configuredReactJSX,
     configuredReactInlineStyles,
     configuredPropTypes,
     configureImportStatements,
   ],
+
   StyledJSX: [
     configuredReactJSX,
     configuredReactStyledJSX,
     configuredPropTypes,
     configureImportStatements,
   ],
+
   JSS: [
     configuredReactJSX,
     configuredReactJSS,
     configuredPropTypes,
+    configureImportStatements,
+  ],
+
+  CSSModules: [
+    configuredReactJSX,
+    configuredPropTypes,
+    configuredReactCSSModules,
     configureImportStatements,
   ],
 }
@@ -73,8 +89,14 @@ const generateComponent = async (
   const chunksLinker = new Builder()
   const result = await asemblyLine.run(jsDoc)
 
+  const chunksByFileId = groupChunksByFileId(result.chunks)
+
+  const code = chunksLinker.link(chunksByFileId.default)
+  const css = chunksLinker.link(chunksByFileId['component-styles'])
+  console.log(css)
+
   return {
-    code: chunksLinker.link(result.chunks),
+    code,
     dependencies: result.dependencies,
   }
 }

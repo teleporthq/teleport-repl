@@ -86,6 +86,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       case 'react.InlineStyles':
       case 'react.StyledJSX':
       case 'react.JSS':
+      case 'react.CSSModules':
         try {
           const { code, dependencies } = await generateReactComponent(
             jsonValue,
@@ -148,6 +149,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       case 'react.InlineStyles':
       case 'react.StyledJSX':
       case 'react.JSS':
+      case 'react.CSSModules':
         return 'http://localhost:3031'
       case 'vue-ast':
         return 'http://localhost:3032'

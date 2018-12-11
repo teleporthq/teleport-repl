@@ -11,7 +11,7 @@ import { extractExternalDependencies } from '../../utils/generator-utils'
 import { File, Folder, ProjectGeneratorOptions } from '../../types'
 
 const componentGenerator = configureAssemblyLine({
-  variation: ReactComponentFlavors.JSS,
+  variation: ReactComponentFlavors.CSSModules,
 })
 
 const routingComponentGenerator = configureRouterAsemblyLine()
@@ -68,6 +68,15 @@ export default async (
       const compiledComponent = await componentGenerator(components[key], {
         customMapping: { ...reactProjectMapping, ...customMapping },
       })
+
+      if (compiledComponent.css) {
+        componentsFolder.files.push({
+          name: components[key].name,
+          extension: '.css',
+          content: compiledComponent.css,
+        })
+      }
+
       componentsFolder.files.push({
         name: components[key].name,
         extension: '.js',
@@ -86,6 +95,7 @@ export default async (
   // Package.json
   if (sourcePackageJson) {
     const externalDep = extractExternalDependencies(allDependencies)
+
     sourcePackageJson.dependencies = {
       ...sourcePackageJson.dependencies,
       ...externalDep,

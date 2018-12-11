@@ -5,12 +5,15 @@ import { createPlugin as reactStyledJSX } from '../pipeline/plugins/react/react-
 import { createPlugin as reactJSS } from '../pipeline/plugins/react/react-jss'
 import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/react-inline-styles'
 import { createPlugin as reactPropTypes } from '../pipeline/plugins/react/react-proptypes'
+import { createPlugin as reactCSSModules } from '../pipeline/plugins/react/react-css-modules'
+
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
 import { ComponentPlugin } from '../pipeline/types'
 
 import standardMapping from '../elements-mapping.json'
 import reactMapping from './elements-mapping.json'
+import { groupChunksByFileId } from './utils'
 
 export enum ReactComponentFlavors {
   InlineStyles,
@@ -26,7 +29,7 @@ interface FactoryParams {
 const createReactGenerator = (params: FactoryParams) => {
   const { variation } = params
 
-  const configuredReactJSX = reactComponent({
+  const configuredReactBaseComponent = reactComponent({
     componentChunkName: 'react-component',
     importChunkName: 'import',
     exportChunkName: 'export',
@@ -54,23 +57,33 @@ const createReactGenerator = (params: FactoryParams) => {
     importLibsChunkName: 'import',
   })
 
+  const configuredReactCSSModules = reactCSSModules({
+    componentChunkName: 'react-component',
+  })
+
   const Options: Record<string, ComponentPlugin[]> = {
     [ReactComponentFlavors.InlineStyles]: [
-      configuredReactJSX,
+      configuredReactBaseComponent,
       configuredReactInlineStyles,
       configuredPropTypes,
       configureImportStatements,
     ],
     [ReactComponentFlavors.StyledJSX]: [
-      configuredReactJSX,
+      configuredReactBaseComponent,
       configuredReactStyledJSX,
       configuredPropTypes,
       configureImportStatements,
     ],
     [ReactComponentFlavors.JSS]: [
-      configuredReactJSX,
+      configuredReactBaseComponent,
       configuredReactJSS,
       configuredPropTypes,
+      configureImportStatements,
+    ],
+    [ReactComponentFlavors.CSSModules]: [
+      configuredReactBaseComponent,
+      configuredPropTypes,
+      configuredReactCSSModules,
       configureImportStatements,
     ],
   }
@@ -83,10 +96,16 @@ const createReactGenerator = (params: FactoryParams) => {
 
   const generateComponentChunks = async (jsDoc: any, generatorOptions?: any) => {
     const result = await asemblyLine.run(jsDoc, generatorOptions)
-    const code = chunksLinker.link(result.chunks)
+
+    const chunksByFileId = groupChunksByFileId(result.chunks)
+
+    const code = chunksLinker.link(chunksByFileId.default)
+    const css = chunksLinker.link(chunksByFileId['component-styles'])
+
     return {
       ...result,
       code,
+      css,
     }
   }
 
