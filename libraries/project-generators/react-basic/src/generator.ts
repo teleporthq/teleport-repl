@@ -16,6 +16,47 @@ const componentGenerator = configureAssemblyLine({
 
 const routingComponentGenerator = configureRouterAsemblyLine()
 
+const extractInlineComponent = (root: Record<string, any>) => {
+  const { components, states } = Object.keys(root.states).reduce(
+    (acc: any, stateKey) => {
+      const state = root.states[stateKey]
+      // if component has content declared in root
+      if (state.component.content.children) {
+        // push new component in
+        acc.components[state.component.name] = {
+          ...state.component,
+          type: state.component.name,
+        }
+
+        // modify state to contain local dependecy
+        acc.states[stateKey] = {
+          ...state,
+          component: {
+            name: state.component.name,
+            content: {
+              type: state.component.name,
+              name: state.component.name,
+              dependency: {
+                type: 'local',
+                meta: {
+                  path: `./${state.component.name}`,
+                },
+              },
+            },
+          },
+        }
+      } else {
+        acc.states[stateKey] = state
+      }
+
+      return acc
+    },
+    { states: {}, components: {} }
+  )
+
+  return { components, states }
+}
+
 export default async (
   jsDoc: any,
   { sourcePackageJson, distPath = 'dist' }: ProjectGeneratorOptions = {
@@ -25,7 +66,6 @@ export default async (
   // pick root name/id
 
   const { components, root } = jsDoc
-  const keys = Object.keys(components)
 
   const componentsFolder: Folder = {
     name: 'components',
@@ -47,8 +87,18 @@ export default async (
 
   let allDependencies: Record<string, any> = {}
 
+  const { components: newComponents, states } = extractInlineComponent(root)
+  const allComponents = {
+    ...components,
+    ...newComponents,
+  }
+  const keys = Object.keys(allComponents)
+
   // Handle the router first
-  const routingComponent = await routingComponentGenerator(root)
+  const routingComponent = await routingComponentGenerator({
+    ...root,
+    states,
+  })
 
   srcFolder.files.push({
     name: 'index',
@@ -65,20 +115,20 @@ export default async (
   for (const i in keys) {
     const key = keys[i]
     try {
-      const compiledComponent = await componentGenerator(components[key], {
+      const compiledComponent = await componentGenerator(allComponents[key], {
         customMapping: { ...reactProjectMapping, ...customMapping },
       })
 
       if (compiledComponent.css) {
         componentsFolder.files.push({
-          name: components[key].name,
+          name: allComponents[key].name,
           extension: '.css',
           content: compiledComponent.css,
         })
       }
 
       componentsFolder.files.push({
-        name: components[key].name,
+        name: allComponents[key].name,
         extension: '.js',
         content: compiledComponent.code,
       })
