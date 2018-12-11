@@ -38,9 +38,7 @@ const extractInlineComponent = (root: Record<string, any>) => {
               name: state.component.name,
               dependency: {
                 type: 'local',
-                meta: {
-                  path: `./${state.component.name}`,
-                },
+                path: `./${state.component.name}`,
               },
             },
           },

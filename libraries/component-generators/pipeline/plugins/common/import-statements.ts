@@ -1,4 +1,4 @@
-import { ComponentPlugin, ComponentPluginFactory } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory, ComponentDependency } from '../../types'
 
 import { makeGenericImportStatement } from '../../utils/js-ast'
 
@@ -8,25 +8,35 @@ interface ImportDependency {
   originalName: string
 }
 
-const groupDependenciesByPackage = (dependencies: any, packageType?: string) => {
-  const result: { [key: string]: ImportDependency[] } = {}
+const groupDependenciesByPackage = (
+  dependencies: Record<string, ComponentDependency>,
+  packageType?: string
+) => {
+  const result: Record<string, ImportDependency[]> = {}
 
   Object.keys(dependencies)
     .filter(
       (key) => (packageType && dependencies[key].type === packageType) || !packageType
     )
-    .map((key) => {
+    .forEach((key) => {
       const dep = dependencies[key]
-      const packagePath = dep.meta.path
 
-      if (!result[packagePath]) {
-        result[packagePath] = [] // Initialize the dependencies from this path
+      // Should not be the case at this point
+      if (!dep.path) {
+        return
       }
 
-      result[packagePath].push({
+      if (!result[dep.path]) {
+        result[dep.path] = [] // Initialize the dependencies from this path
+      }
+
+      const namedImport = !!(dep.meta && dep.meta.namedImport)
+      const originalName = dep.meta && dep.meta.originalName ? dep.meta.originalName : key
+
+      result[dep.path].push({
         identifier: key,
-        namedImport: !!dep.meta.namedImport,
-        originalName: dep.meta.originalName || key,
+        namedImport,
+        originalName,
       })
     })
 
@@ -42,6 +52,7 @@ const addImportChunk = (
   const importASTs = Object.keys(dependencies).map((key) =>
     makeGenericImportStatement(key, dependencies[key])
   )
+
   // must me always generated, even if empty, othwerwise references will not work
   // if (importASTs.length > 0) {
   chunks.push({
@@ -75,11 +86,9 @@ export const createPlugin: ComponentPluginFactory<ImportPluginConfig> = (config)
     const libraryDependencies = groupDependenciesByPackage(dependencies, 'library')
     const packageDependencies = groupDependenciesByPackage(dependencies, 'package')
     const localDependencies = groupDependenciesByPackage(dependencies, 'local')
-
     addImportChunk(structure.chunks, libraryDependencies, importLibsChunkName, fileId)
     addImportChunk(structure.chunks, packageDependencies, importPackagesChunkName, fileId)
     addImportChunk(structure.chunks, localDependencies, importLocalsChunkName, fileId)
-
     return structure
   }
 

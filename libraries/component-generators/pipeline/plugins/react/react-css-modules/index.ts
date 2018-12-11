@@ -61,9 +61,7 @@ export const createPlugin: ComponentPluginFactory<ReactCSSModulesConfig> = (
      */
     registerDependency(styleObjectImportName, {
       type: 'local',
-      meta: {
-        path: `./${name}.css`,
-      },
+      path: `./${name}.css`,
     })
 
     structure.chunks.push({

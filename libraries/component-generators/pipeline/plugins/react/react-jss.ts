@@ -99,10 +99,8 @@ export const createPlugin: ComponentPluginFactory<JSSConfig> = (config) => {
 
     registerDependency('injectSheet', {
       type: 'library',
-      meta: {
-        path: 'react-jss',
-        version: '8.6.1',
-      },
+      path: 'react-jss',
+      version: '8.6.1',
     })
 
     chunks.push({

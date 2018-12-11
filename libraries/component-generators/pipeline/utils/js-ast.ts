@@ -129,7 +129,6 @@ export const makeNamedMappedImportStatement = (
  */
 export const makeGenericImportStatement = (path: string, imports: any[], t = types) => {
   // Only one of the imports can be the default one so this is a fail safe for invalid UIDL data
-
   const defaultImport = imports.find((imp) => !imp.namedImport) // only one import can be default
   let importASTs: any = []
   if (defaultImport) {
@@ -149,7 +148,6 @@ export const makeGenericImportStatement = (path: string, imports: any[], t = typ
       t.importSpecifier(t.identifier(imp.identifier), t.identifier(imp.originalName))
     )
   }
-
   return t.importDeclaration(importASTs, t.stringLiteral(path))
 }
 
@@ -157,17 +155,14 @@ export const makeGenericImportStatement = (path: string, imports: any[], t = typ
  * Generatate a js import statement based a standard UIDL dependency
  */
 export const resolveImportStatement = (componentName: string, dependency: any) => {
-  const details = dependency.meta
+  const { meta, path } = dependency
 
-  if (details.namedImport) {
+  if (meta && meta.namedImport) {
     // if the component is listed under a different originalName, then import is "x as y"
-    return details.originalName
-      ? makeNamedMappedImportStatement(
-          { [details.originalName]: componentName },
-          details.path
-        )
-      : makeNamedImportStatement([componentName], details.path)
+    return meta.originalName
+      ? makeNamedMappedImportStatement({ [meta.originalName]: componentName }, path)
+      : makeNamedImportStatement([componentName], path)
   }
 
-  return makeDefaultImportStatement(componentName, details.path)
+  return makeDefaultImportStatement(componentName, path)
 }

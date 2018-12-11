@@ -37,36 +37,32 @@ interface AppRoutingComponentConfig {
 const registerRouterDeps = (registerDependency: RegisterDependency): void => {
   registerDependency('React', {
     type: 'library',
-    meta: {
-      path: 'react',
-      version: '16.6.3',
-    },
+    path: 'react',
+    version: '16.6.3',
   })
 
   registerDependency('ReactDOM', {
     type: 'library',
-    meta: {
-      path: 'react-dom',
-      version: '16.6.3',
-    },
+    path: 'react-dom',
+    version: '16.6.3',
   })
 
   registerDependency('Router', {
     type: 'library',
+    path: 'react-router-dom',
+    version: '4.3.1',
     meta: {
-      path: 'react-router-dom',
       namedImport: true,
       originalName: 'BrowserRouter',
-      version: '4.3.1',
     },
   })
 
   registerDependency('Route', {
     type: 'library',
+    path: 'react-router-dom',
+    version: '4.3.1',
     meta: {
-      path: 'react-router-dom',
       namedImport: true,
-      version: '4.3.1',
     },
   })
 }
@@ -107,7 +103,6 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       const route = generateASTDefinitionForJSXTag('Route')
       const path = meta && meta.url ? meta.url : pageKey
       const urlRoute = isDefault ? '/' : `/${path.toLocaleLowerCase()}`
-
       const withInlineComponent = children && children.length
       if (withInlineComponent) {
         const nodesLookup = {}
@@ -116,12 +111,12 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
           nodesLookup,
           resolver,
           (a, b) => {
-            const filePath = b.meta.path || ''
+            const filePath = b.path || ''
             b = {
               ...b,
+              path: `./components/${filePath.replace('./', '')}`,
               meta: {
                 ...b.meta,
-                path: `./components/${filePath.replace('./', '')}`,
               },
             }
             return registerDependency(a, b)
@@ -149,9 +144,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       } else {
         registerDependency(mappedElement.nodeName, {
           type: 'local',
-          meta: {
-            path: `./components/${mappedElement.nodeName}`,
-          },
+          path: `./components/${mappedElement.nodeName}`,
         })
       }
 
@@ -244,7 +237,6 @@ export const configureRouterAsemblyLine = () => {
     )
 
     const result = await asemblyLine.run(jsDoc)
-
     const chunksLinker = new Builder()
 
     return {

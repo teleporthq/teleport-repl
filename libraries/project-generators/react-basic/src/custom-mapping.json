@@ -3,9 +3,9 @@
     "name": "ReactDatepicker",
     "dependency": {
       "type": "package",
+      "path": "react-datepicker",
+      "version": "2.0.0",
       "meta": {
-        "path": "react-datepicker",
-        "version": "2.0.0",
         "namedImport": false
       }
     }

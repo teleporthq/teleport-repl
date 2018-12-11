@@ -15,11 +15,13 @@ export const createPlugin: ComponentPluginFactory<VueRouterConfig> = (config) =>
 
     registerDependency('Vue', {
       type: 'library',
-      meta: { path: 'vue', version: '^2.5.17' },
+      path: 'vue',
+      version: '^2.5.17',
     })
     registerDependency('Router', {
       type: 'library',
-      meta: { path: 'vue-router', version: '^3.0.1' },
+      path: 'vue-router',
+      version: '^3.0.1',
     })
 
     const declaration = t.expressionStatement(
@@ -38,7 +40,7 @@ export const createPlugin: ComponentPluginFactory<VueRouterConfig> = (config) =>
       // TODO: Extract to function? similar to nuxt filename
       const routePath = state.default ? '/' : `/${pageUrl}`
 
-      registerDependency(name, { type: 'local', meta: { path: `./views/${name}` } })
+      registerDependency(name, { type: 'local', path: `./views/${name}` })
 
       return t.objectExpression([
         t.objectProperty(t.identifier('name'), t.stringLiteral(name)),

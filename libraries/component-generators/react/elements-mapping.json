@@ -3,8 +3,8 @@
     "name": "Fragment",
     "dependency": {
       "type": "library",
+      "path": "react",
       "meta": {
-        "path": "react",
         "namedImport": true
       }
     }

@@ -67,7 +67,11 @@ export default class ComponentAsemblyLine {
   // This function returns the mapped element (the tag literal) together with its attributes and dependenices.
   // All the parameters come from the UIDL.
   // The attributes and dependencies specified at the UIDL level have priority over the mapping in the assembly line.
-  private resolver: Resolver = (uidlType: string, uidlAttrs, uidlDependency) => {
+  private resolver: Resolver = (
+    uidlType: string,
+    uidlAttrs,
+    uidlDependency?: ComponentDependency
+  ) => {
     let mappedElement = this.elementsMapping[uidlType]
     const localDependenciesPrefix = this.localDependenciesPrefix || './'
 
@@ -123,13 +127,11 @@ export default class ComponentAsemblyLine {
 
     // If dependency is specified at UIDL level it will have priority over the mapping one
     const nodeDependency = uidlDependency || mappedElement.dependency
-    if (nodeDependency) {
+    if (nodeDependency && nodeDependency.type === 'local') {
       // When a dependency is specified without a path, we infer it is a local import.
       // This might be removed at a later point
-      nodeDependency.meta =
-        nodeDependency.meta && nodeDependency.meta.path
-          ? nodeDependency.meta
-          : { ...nodeDependency.meta, path: localDependenciesPrefix + mappedElement.name }
+      nodeDependency.path =
+        nodeDependency.path || localDependenciesPrefix + mappedElement.name
     }
 
     return {

@@ -29,9 +29,9 @@ export interface ChunkDefinition {
  */
 export interface ComponentDependency {
   type: string
-  meta: {
-    path?: string
-    version?: string
+  path?: string
+  version?: string
+  meta?: {
     namedImport?: boolean
     originalName?: string
   }

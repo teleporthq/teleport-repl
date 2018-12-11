@@ -133,10 +133,8 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
 
     registerDependency('React', {
       type: 'library',
-      meta: {
-        path: 'react',
-        version: '16.6.3',
-      },
+      path: 'react',
+      version: '16.6.3',
     })
 
     // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag

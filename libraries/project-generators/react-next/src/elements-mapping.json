@@ -3,9 +3,7 @@
       "name": "Link",
       "dependency": {
           "type": "library",
-          "meta": {
-              "path": "next/link"
-          }
+          "path": "next/link"
       },
       "attrs": {
         "href": "$attrs.transitionTo"
