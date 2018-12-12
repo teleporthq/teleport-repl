@@ -1,131 +1,126 @@
 {
-    "version": "1.1",
-    "schema": "project",
-    "name": "my-vue-project",
-    "root": {
-      "version": "1",
-      "name": "App",
-      "states": {  
-        "home": {
-          "component": {
-            "name": "Index",
-            "content": {
-              "name": "HomeInstance",
-              "type": "Home",
-              "dependency": { 
-                "type": "local"
-              }
+  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/project.json",
+  "name": "my-vue-project",
+  "root": {
+    "states": {  
+      "home": {
+        "component": {
+          "name": "Index",
+          "content": {
+            "name": "HomeInstance",
+            "type": "Home",
+            "dependency": { 
+              "type": "local"
             }
-          },
-          "default": true
-        },
-  
-        "about": {
-          "component": {
-            "version": "1",
-            "name": "About",
-            "content": {
-              "type": "Layout",
-              "name": "AboutContent",
-              "dependency": {
-                "type": "local"
-              },
-              "style": {
-                "textAlign": "left",
-                "color": "red",
-                "border": "1px solid #000"
-              },
-              "children": [{
-                "type": "View",
-                "name": "about-container",
-                "children": "This is the about page"
-              }]
-            }
-          },
-          "meta": {
-            "url": "another-page"
-          }
-        }
-  
-      }
-    
-    },
-    "components": {
-  
-      "Layout": {
-        "version": "v1",
-        "name": "Layout",
-        "propDefinitions": {
-          "children": {
-            "type": "children"
-          },
-          "className": {
-            "type": "string"
           }
         },
-        "content": {
-          "type": "View",
-          "name": "container",
-          "attrs": {
-            "className": "$props.className"
-          },
-          "children": [
-            {
-              "type": "View",
-              "name": "Navbar",
-              "children": [
-                {
-                  "type": "NavLink",
-                  "name": "HomeLink",
-                  "children": "Go Home",
-                  "attrs": {
-                    "transitionTo": "/"
-                  }
-                },
-                {
-                  "type": "NavLink",
-                  "name": "AboutLink",
-                  "children": "About Us",
-                  "attrs": {
-                    "transitionTo": "/another-page"
-                  }
-                }
-              ]
+        "default": true
+      },
+
+      "about": {
+        "component": {
+          "name": "About",
+          "content": {
+            "type": "Layout",
+            "name": "AboutContent",
+            "dependency": {
+              "type": "local"
             },
-            "$props.children",
-            {
+            "style": {
+              "textAlign": "left",
+              "color": "red",
+              "border": "1px solid #000"
+            },
+            "children": [{
               "type": "View",
-              "name": "Footer",
-              "children": "This is the footer"
-            }
-          ]
+              "name": "about-container",
+              "children": "This is the about page"
+            }]
+          }
+        },
+        "meta": {
+          "url": "another-page"
+        }
+      }
+
+    }
+  
+  },
+  "components": {
+
+    "Layout": {
+      "version": "v1",
+      "name": "Layout",
+      "propDefinitions": {
+        "children": {
+          "type": "children"
+        },
+        "className": {
+          "type": "string"
         }
       },
-  
-      "Home": {
-        "version": "1",
-        "name": "Home",
-        "content": {
-          "type": "Layout",
-          "name": "HomeContent",
-          "dependency": {
-            "type": "local"
+      "content": {
+        "type": "View",
+        "name": "container",
+        "attrs": {
+          "className": "$props.className"
+        },
+        "children": [
+          {
+            "type": "View",
+            "name": "Navbar",
+            "children": [
+              {
+                "type": "NavLink",
+                "name": "HomeLink",
+                "children": "Go Home",
+                "attrs": {
+                  "transitionTo": "/"
+                }
+              },
+              {
+                "type": "NavLink",
+                "name": "AboutLink",
+                "children": "About Us",
+                "attrs": {
+                  "transitionTo": "/another-page"
+                }
+              }
+            ]
           },
-          "style": {
-            "textAlign": "center",
-            "color": "yellow",
-            "border": "1px solid #000"
-          },
-          "children": [{
-            "type": "Button",
-            "name": "Random Button",
-            "children": "Click Me"
-          },{
-            "type": "Text",
-            "name": "a-span",
-            "children": "Welcome!"
-          }]
-        }
+          "$props.children",
+          {
+            "type": "View",
+            "name": "Footer",
+            "children": "This is the footer"
+          }
+        ]
+      }
+    },
+
+    "Home": {
+      "name": "Home",
+      "content": {
+        "type": "Layout",
+        "name": "HomeContent",
+        "dependency": {
+          "type": "local"
+        },
+        "style": {
+          "textAlign": "center",
+          "color": "yellow",
+          "border": "1px solid #000"
+        },
+        "children": [{
+          "type": "Button",
+          "name": "Random Button",
+          "children": "Click Me"
+        },{
+          "type": "Text",
+          "name": "a-span",
+          "children": "Welcome!"
+        }]
       }
     }
   }
+}

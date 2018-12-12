@@ -1,7 +1,7 @@
-import { Folder, File, ProjectUIDL, ProjectGeneratorOptions } from '../../types'
-import { ComponentDependency } from '../../../component-generators/pipeline/types'
+import { Folder, File, ProjectGeneratorOptions } from '../../types'
+import { ProjectUIDL, ComponentDependency } from '../../../uidl-definitions/types'
 
-import { extractExternalDependencies } from '../../utils/generator-utils'
+import { extractExternalDependencies, computeFileName } from '../../utils/generator-utils'
 
 import createAssemblyLine, {
   ReactComponentFlavors,
@@ -42,7 +42,7 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
   // page compnents first
   const { states } = root
 
-  const [...generatedPagesFromStates] = await Promise.all(
+  await Promise.all(
     Object.keys(states).map(async (stateName) => {
       const state = states[stateName]
 
@@ -51,10 +51,8 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
           localDependenciesPrefix: '../components/',
         })
 
-        const fileName = state.meta && state.meta.url ? state.meta.url : stateName
-
         const file: File = {
-          name: state.default ? `index` : fileName.toLowerCase(),
+          name: computeFileName(stateName, state),
           extension: '.js',
           content: compiledComponent.code,
         }
@@ -64,46 +62,38 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
           ...compiledComponent.dependencies,
         }
 
-        return file
+        pagesFolder.files.push(file)
       } catch (err) {
         console.error(stateName, err)
-        return null
       }
     })
   )
 
-  pagesFolder.files.push(
-    ...(generatedPagesFromStates.filter((file) => file !== null) as File[])
-  )
+  if (components) {
+    await Promise.all(
+      Object.keys(components).map(async (componentName) => {
+        const component = components[componentName]
 
-  const [...generatedComponentFiles] = await Promise.all(
-    Object.keys(components).map(async (componentName) => {
-      const component = components[componentName]
+        try {
+          const compiledComponent = await componentGenerator(component)
+          const file: File = {
+            name: component.name,
+            extension: '.js',
+            content: compiledComponent.code,
+          }
 
-      try {
-        const compiledComponent = await componentGenerator(component)
-        const file: File = {
-          name: component.name,
-          extension: '.js',
-          content: compiledComponent.code,
+          allDependencies = {
+            ...allDependencies,
+            ...compiledComponent.dependencies,
+          }
+
+          componentsFolder.files.push(file)
+        } catch (err) {
+          console.error(componentName, err)
         }
-
-        allDependencies = {
-          ...allDependencies,
-          ...compiledComponent.dependencies,
-        }
-
-        return file
-      } catch (err) {
-        console.error(componentName, err)
-        return null
-      }
-    })
-  )
-
-  componentsFolder.files.push(
-    ...(generatedComponentFiles.filter((file) => file !== null) as File[])
-  )
+      })
+    )
+  }
 
   // Package.json
   const { sourcePackageJson } = options

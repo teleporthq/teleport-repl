@@ -1,3 +1,5 @@
+import { ProjectUIDL } from '../../uidl-definitions/types'
+
 export interface Folder {
   name: string
   files: File[]
@@ -14,8 +16,6 @@ export interface ProjectGeneratorOptions {
   sourcePackageJson?: Record<string, any>
   distPath?: string
 }
-
-export type ProjectUIDL = Record<string, any>
 
 export type ProjectGeneratorFunction = (
   uidl: ProjectUIDL,

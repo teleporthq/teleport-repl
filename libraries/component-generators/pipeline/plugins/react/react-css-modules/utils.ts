@@ -8,6 +8,8 @@ import { cammelCaseToDashCase, stringToCamelCase } from '../../../utils/helpers'
 import { addJSXTagStyles, addExternalPropOnJsxOpeningTag } from '../../../utils/jsx-ast'
 import { ParsedASTNode } from '../../../utils/js-ast'
 
+import { ComponentContent } from '../../../../../uidl-definitions/types'
+
 export const splitDynamicAndStaticProps = (style: Record<string, any>) => {
   return Object.keys(style).reduce(
     (
@@ -40,63 +42,65 @@ export const prepareDynamicProps = (style: any, t = types) => {
 }
 
 interface ApplyCSSModulesAndGetDeclarationsParams {
-  nodesLookup: any
+  nodesLookup: Record<string, types.JSXElement>
   camelCaseClassNames: boolean
 }
 
 export const applyCSSModulesAndGetDeclarations = (
-  content: any,
+  content: ComponentContent,
   params: ApplyCSSModulesAndGetDeclarationsParams,
   t = types
 ) => {
   let accumulator: any[] = []
   const { nodesLookup = {}, camelCaseClassNames } = params
 
-  // only do stuff if content is a object
-  if (content && typeof content === 'object') {
-    const { style, children, name } = content
-    if (style) {
-      const root = nodesLookup[name]
-      const className = cammelCaseToDashCase(name)
-      const classNameInJS = camelCaseClassNames ? stringToCamelCase(className) : className
-      const { staticStyles, dynamicStyles } = splitDynamicAndStaticProps(style)
+  const { style, children, name } = content
+  if (style) {
+    const root = nodesLookup[name]
+    const className = cammelCaseToDashCase(name)
+    const classNameInJS = camelCaseClassNames ? stringToCamelCase(className) : className
+    const { staticStyles, dynamicStyles } = splitDynamicAndStaticProps(style)
 
-      // TODO Should we build a different plugin for dynamic props as inline styles?
-      const inlineStyle = prepareDynamicProps(dynamicStyles)
-      if (Object.keys(inlineStyle).length) {
-        addJSXTagStyles(root, inlineStyle)
+    // TODO Should we build a different plugin for dynamic props as inline styles?
+    const inlineStyle = prepareDynamicProps(dynamicStyles)
+    if (Object.keys(inlineStyle).length) {
+      addJSXTagStyles(root, inlineStyle)
+    }
+
+    accumulator.push(
+      jss
+        .createStyleSheet(
+          {
+            [`.${className}`]: staticStyles,
+          },
+          {
+            generateClassName: () => className,
+          }
+        )
+        .toString()
+    )
+
+    const cssClassNameFromStylesObject = camelCaseClassNames
+      ? `styles.${classNameInJS}`
+      : `styles['${className}']`
+
+    addExternalPropOnJsxOpeningTag(
+      root,
+      'className',
+      t.identifier(cssClassNameFromStylesObject)
+    )
+  }
+
+  if (children && Array.isArray(children)) {
+    children.forEach((child) => {
+      // Inside the children array we can also encounter text elements
+      if (typeof child === 'string') {
+        return
       }
 
-      accumulator.push(
-        jss
-          .createStyleSheet(
-            {
-              [`.${className}`]: staticStyles,
-            },
-            {
-              generateClassName: () => className,
-            }
-          )
-          .toString()
-      )
-
-      const cssClassNameFromStylesObject = camelCaseClassNames
-        ? `styles.${classNameInJS}`
-        : `styles['${className}']`
-
-      addExternalPropOnJsxOpeningTag(
-        root,
-        'className',
-        t.identifier(cssClassNameFromStylesObject)
-      )
-    }
-
-    if (children && Array.isArray(children)) {
-      children.forEach((child) => {
-        const items = applyCSSModulesAndGetDeclarations(child, params)
-        accumulator = accumulator.concat(...items)
-      })
-    }
+      const items = applyCSSModulesAndGetDeclarations(child, params)
+      accumulator = accumulator.concat(...items)
+    })
   }
 
   return accumulator

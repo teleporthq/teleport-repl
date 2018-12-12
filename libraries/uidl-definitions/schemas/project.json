@@ -1,0 +1,238 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Project UIDL",
+  "required": [
+    "$schema",
+    "name",
+    "root"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "name": {
+      "type": "string",
+      "default": "My-Teleport-Project"
+    },
+    "root": {
+      "type": "object",
+      "required": [
+        "states"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "states": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "required": [
+                "component"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "component": {
+                  "$ref": "#/definitions/component"
+                },
+                "default": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "meta": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "$ref": "#/definitions/component"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "component": {
+      "type": "object",
+      "required": ["name", "content"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "MyComponent"
+        },
+        "content": {
+          "$ref": "#/definitions/content"
+        },
+        "meta": {
+          "type": "object"
+        },
+        "propDefinitions": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type"],
+              "properties": {
+                "type": {"type": "string"},
+                "defaultValue": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "required": [
+        "type",
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "examples": [
+            "Text",
+            "View"
+          ]
+        },
+        "dependency": {
+          "$ref": "#/definitions/dependency"
+        },
+        "name": {
+          "type": "string",
+          "default": "MyComponent",
+          "examples": [
+            "Component",
+            "View"
+          ]
+        },
+        "style": {
+          "$ref": "#/definitions/style"
+        },
+        "attrs": {
+          "type": "object"
+        },
+        "children": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  { "$ref": "#/definitions/content" },
+                  { "type": "string" }
+                ]
+              },
+              "default": []
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "examples": [
+            "100%"
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "examples": [
+            "100%"
+          ]
+        },
+        "flexDirection": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "examples": [
+            "row"
+          ]
+        },
+        "backgroundColor": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "examples": [
+            "magenta"
+          ]
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {"type": "string", "examples": ["package", "local", "library"]},
+        "path": {"type": "string"},
+        "version": {"type": "string", "default": "1.0.0"},
+        "meta": {
+          "type": "object", 
+          "additionalProperties": false,
+          "properties": {
+            "namedImport": {"type": "boolean", "default": false},
+            "originalName": {"type": "string"}
+          }
+        }
+      }
+    }
+  }
+}

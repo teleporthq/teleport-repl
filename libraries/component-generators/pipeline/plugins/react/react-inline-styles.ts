@@ -1,4 +1,5 @@
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
+import { ComponentContent } from '../../../../uidl-definitions/types'
 
 import * as t from '@babel/types'
 
@@ -31,7 +32,10 @@ const prepareDynamicProps = (style: any) => {
  * our content chunk so we can easily see which node from content is describe
  * in which section in the AST representation
  */
-const enhanceJSXWithStyles = (content: any, nodesLookup: any) => {
+const enhanceJSXWithStyles = (
+  content: ComponentContent,
+  nodesLookup: Record<string, t.JSXElement>
+) => {
   const { children, style, name } = content
 
   if (style) {
@@ -44,7 +48,11 @@ const enhanceJSXWithStyles = (content: any, nodesLookup: any) => {
   }
 
   if (Array.isArray(children)) {
-    children.forEach((child) => enhanceJSXWithStyles(child, nodesLookup))
+    children.forEach((child) => {
+      if (typeof child !== 'string') {
+        enhanceJSXWithStyles(child, nodesLookup)
+      }
+    })
   }
 }
 

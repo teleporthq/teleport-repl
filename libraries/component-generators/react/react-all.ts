@@ -12,6 +12,7 @@ import standardMapping from '../elements-mapping.json'
 import reactMapping from './elements-mapping.json'
 import { ComponentPlugin } from '../pipeline/types'
 import { groupChunksByFileId } from './utils'
+import { ComponentUIDL, ElementsMapping } from '../../uidl-definitions/types'
 
 const configuredReactJSX = reactComponent({
   componentChunkName: 'react-component',
@@ -76,9 +77,9 @@ const Options: Record<string, ComponentPlugin[]> = {
 }
 
 const generateComponent = async (
-  jsDoc: any,
+  jsDoc: ComponentUIDL,
   variation: string = 'InlineStyles',
-  customMapping: any
+  customMapping: ElementsMapping = {}
 ) => {
   const asemblyLine = new ComponentAssemblyLine(Options[variation], {
     ...standardMapping,
@@ -93,7 +94,6 @@ const generateComponent = async (
 
   const code = chunksLinker.link(chunksByFileId.default)
   const css = chunksLinker.link(chunksByFileId['component-styles'])
-  console.log(css)
 
   return {
     code,

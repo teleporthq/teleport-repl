@@ -13,6 +13,7 @@ import {
 } from './utils'
 
 import { objectToObjectExpression } from '../../utils/js-ast'
+import { ComponentContent } from '../../../../uidl-definitions/types'
 
 const addTextNodeToTag = (tag: Cheerio, text: string) => {
   if (text.startsWith('$props.') && !text.endsWith('$props.')) {
@@ -30,15 +31,8 @@ const addTextNodeToTag = (tag: Cheerio, text: string) => {
 }
 
 const generateVueNodesTree = (
-  content: {
-    type: string
-    children: any
-    style: any
-    name: string
-    dependency: any
-    attrs: { [key: string]: any }
-  },
-  templateLookup: { [key: string]: any },
+  content: ComponentContent,
+  templateLookup: Record<string, any>,
   resolver: Resolver,
   registerDependency: RegisterDependency
 ): CheerioStatic => {

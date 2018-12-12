@@ -208,6 +208,5 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
     t.jsxIdentifier('style'),
     styleObjectExpressionContainer
   )
-  console.log('tag', tag)
   tag.openingElement.attributes.push(styleJSXAttr)
 }

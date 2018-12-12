@@ -5,6 +5,7 @@ import { createPlugin as vueStyleComponent } from '../pipeline/plugins/vue/vue-s
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
 import { GeneratorOptions } from '../pipeline/types'
+import { ComponentUIDL } from '../../uidl-definitions/types'
 
 import standardMapping from '../elements-mapping.json'
 import vueMapping from './elements-mapping.json'
@@ -34,7 +35,10 @@ const createVueGenerator = (
 
   const chunksLinker = new Builder()
 
-  const generateComponent = async (jsDoc: any, options: GeneratorOptions = {}) => {
+  const generateComponent = async (
+    jsDoc: ComponentUIDL,
+    options: GeneratorOptions = {}
+  ) => {
     const result = await assemblyLine.run(jsDoc, options)
 
     const jsChunks = result.chunks.filter((chunk) => chunk.meta.fileId === 'vuejs')

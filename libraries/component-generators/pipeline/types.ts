@@ -1,3 +1,5 @@
+import { ComponentDependency, ElementsMapping } from '../../uidl-definitions/types'
+
 export interface EmbedDefinition {
   chunkName: string
   slot: string
@@ -20,20 +22,6 @@ export interface ChunkDefinition {
     }
     after?: string[]
     embed?: EmbedDefinition
-  }
-}
-
-/**
- * Each dependency has a type, a path used in the import statement
- * and a flag specifying if a named or a default import should be used
- */
-export interface ComponentDependency {
-  type: string
-  path?: string
-  version?: string
-  meta?: {
-    namedImport?: boolean
-    originalName?: string
   }
 }
 
@@ -97,7 +85,7 @@ export type RegisterDependency = (name: string, dependency: ComponentDependency)
 
 export interface GeneratorOptions {
   localDependenciesPrefix?: string
-  customMapping?: any
+  customMapping?: ElementsMapping
 }
 
 export type GeneratorFunction = (content: any) => string

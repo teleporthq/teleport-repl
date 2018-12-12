@@ -2,6 +2,7 @@ import createVueGenerator from '../../../component-generators/vue/vue-component'
 import createVueRouterFileGenerator from '../../../component-generators/vue/vue-router'
 
 import { Folder, File, ProjectGeneratorOptions } from '../../types'
+import { ProjectUIDL } from '../../../uidl-definitions/types'
 import { extractExternalDependencies } from '../../utils/generator-utils'
 
 import vueProjectMapping from './elements-mapping.json'
@@ -12,11 +13,7 @@ const generateComponent = createVueGenerator({
 })
 const generateRouterFile = createVueRouterFileGenerator()
 
-export default async (jsDoc: any, options: ProjectGeneratorOptions = {}) => {
-  if (jsDoc.schema !== 'project') {
-    throw new Error('schema type is not project')
-  }
-
+export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {}) => {
   const { components, root } = jsDoc
 
   const pagesFolder: Folder = {
@@ -75,25 +72,27 @@ export default async (jsDoc: any, options: ProjectGeneratorOptions = {}) => {
     })
   }
 
-  const [...generatedComponentFiles] = await Promise.all(
-    Object.keys(components).map(async (componentName) => {
-      const component = components[componentName]
-      const componentResult = await generateComponent(component)
-      collectedDependencies = {
-        ...collectedDependencies,
-        ...componentResult.dependencies,
-      }
+  if (components) {
+    const [...generatedComponentFiles] = await Promise.all(
+      Object.keys(components).map(async (componentName) => {
+        const component = components[componentName]
+        const componentResult = await generateComponent(component)
+        collectedDependencies = {
+          ...collectedDependencies,
+          ...componentResult.dependencies,
+        }
 
-      const file: File = {
-        name: component.name,
-        extension: '.vue',
-        content: componentResult.code,
-      }
-      return file
-    })
-  )
+        const file: File = {
+          name: component.name,
+          extension: '.vue',
+          content: componentResult.code,
+        }
+        return file
+      })
+    )
 
-  componentsFolder.files.push(...generatedComponentFiles)
+    componentsFolder.files.push(...generatedComponentFiles)
+  }
 
   // Package.json
   const { sourcePackageJson } = options

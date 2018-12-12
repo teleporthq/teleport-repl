@@ -2,19 +2,25 @@ import {
   ComponentPlugin,
   ComponentStructure,
   Resolver,
-  ComponentDependency,
   PipelineOperations,
   RegisterDependency,
 } from '../types'
 
+import {
+  ComponentUIDL,
+  ProjectUIDL,
+  ComponentDependency,
+  ElementsMapping,
+} from '../../../uidl-definitions/types'
+
 export interface RuntimeParams {
   localDependenciesPrefix?: string
-  customMapping?: { [key: string]: any }
+  customMapping?: ElementsMapping
   initialStructure?: ComponentStructure
 }
 export default class ComponentAsemblyLine {
   private plugins: ComponentPlugin[]
-  private elementsMapping: Record<string, any>
+  private elementsMapping: ElementsMapping
   private dependencies: Record<string, ComponentDependency>
 
   private localDependenciesPrefix: string = ''
@@ -25,7 +31,7 @@ export default class ComponentAsemblyLine {
     this.elementsMapping = elementsMapping
   }
 
-  public async run(uidl: any, params?: RuntimeParams) {
+  public async run(uidl: ComponentUIDL | ProjectUIDL, params?: RuntimeParams) {
     const {
       initialStructure = {
         uidl,

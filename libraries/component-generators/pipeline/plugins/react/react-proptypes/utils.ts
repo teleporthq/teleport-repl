@@ -1,10 +1,10 @@
 import * as types from '@babel/types'
-
+import { PropDefinitions } from '../../../../../uidl-definitions/types'
 import { objectToObjectExpression, ParsedASTNode } from '../../../utils/js-ast'
 
 export const buildDefaultPropsAst = (
   componentName: string,
-  propDefinitions: { [key: string]: { type: string; defaultValue: any } },
+  propDefinitions: PropDefinitions,
   t = types
 ) => {
   if (!propDefinitions) {
@@ -46,7 +46,7 @@ export const buildDefaultPropsAst = (
 export const buildTypesOfPropsAst = (
   componentName: string,
   propTypesNames: string,
-  propDefinitions: { [key: string]: { type: string; defaultValue: any } },
+  propDefinitions: PropDefinitions,
   t = types
 ) => {
   if (!propDefinitions) {

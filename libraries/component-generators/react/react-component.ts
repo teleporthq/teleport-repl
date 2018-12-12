@@ -10,6 +10,7 @@ import { createPlugin as reactCSSModules } from '../pipeline/plugins/react/react
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 
 import { ComponentPlugin, GeneratorOptions } from '../pipeline/types'
+import { ComponentUIDL, ElementsMapping } from '../../uidl-definitions/types'
 
 import standardMapping from '../elements-mapping.json'
 import reactMapping from './elements-mapping.json'
@@ -24,7 +25,7 @@ export enum ReactComponentFlavors {
 
 interface FactoryParams {
   variation: ReactComponentFlavors
-  customMapping?: any
+  customMapping?: ElementsMapping
 }
 
 const createReactGenerator = (params: FactoryParams) => {
@@ -90,7 +91,7 @@ const createReactGenerator = (params: FactoryParams) => {
   }
 
   const generateComponentChunks = async (
-    jsDoc: any,
+    jsDoc: ComponentUIDL,
     generatorOptions?: GeneratorOptions
   ) => {
     const assemblyLine = new ComponentAssemblyLine(Options[variation], {

@@ -1,6 +1,7 @@
-import { ComponentDependency } from '../../component-generators/pipeline/types'
+import { ComponentDependency } from '../../uidl-definitions/types'
 
 // Especially useful for nuxt/next generators where the file name will dictate the url
+// In case the default flag is set, the file is set as index
 export const computeFileName = (stateKey: string, stateBranch: any) => {
   if (stateBranch.default) {
     return 'index'
@@ -17,6 +18,7 @@ export const computeFileName = (stateKey: string, stateBranch: any) => {
   }
 }
 
+// Only package dependencies are needed for the package.json file
 export const extractExternalDependencies = (
   dependencies: Record<string, ComponentDependency>
 ) => {

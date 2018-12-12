@@ -7,7 +7,7 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 import { JsonInputChooser } from '../components/JsonInputChooser'
 
-import uildValidator from '../utils/uildValidator'
+import { validateComponent } from '../libraries/uidl-definitions/validators'
 
 import generateReactComponent from '../libraries/component-generators/react/react-all'
 import createVueGenerator from '../libraries/component-generators/vue/vue-component'
@@ -75,7 +75,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       return
     }
 
-    const validationResult = uildValidator(jsonValue)
+    const validationResult = validateComponent(jsonValue)
     if (validationResult !== true) {
       // tslint:disable-next-line:no-console
       console.error(validationResult)

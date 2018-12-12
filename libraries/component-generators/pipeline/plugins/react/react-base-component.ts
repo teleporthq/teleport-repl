@@ -18,6 +18,8 @@ import {
   RegisterDependency,
 } from '../../types'
 
+import { ComponentContent } from '../../../../uidl-definitions/types'
+
 /**
  *
  * @param tag the ref to the AST tag under construction
@@ -43,8 +45,8 @@ const addTextElementToTag = (tag: t.JSXElement, text: string) => {
 }
 
 export const generateTreeStructure = (
-  content: any,
-  nodesLookup: any = {},
+  content: ComponentContent,
+  nodesLookup: Record<string, t.JSXElement>,
   resolver: Resolver,
   registerDependency: RegisterDependency
 ): t.JSXElement => {

@@ -1,6 +1,7 @@
 import * as t from '@babel/types'
 
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
+import { ComponentContent } from '../../../../uidl-definitions/types'
 import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
 import {
   ParsedASTNode,
@@ -31,28 +32,34 @@ const prepareDynamicProps = (style: any) => {
   }, {})
 }
 
-const generateStyleTagStrings = (content: any, nodesLookup: any) => {
+const generateStyleTagStrings = (
+  content: ComponentContent,
+  nodesLookup: Record<string, t.JSXElement>
+) => {
   let accumulator: { [key: string]: any } = {}
-  // only do stuff if content is a object
-  if (content && typeof content === 'object') {
-    const { style, children, name } = content
-    if (style) {
-      const root = nodesLookup[name]
-      const className = cammelCaseToDashCase(name)
-      accumulator[className] = prepareDynamicProps(style)
-      // addClassStringOnJSXTag(root.node, className)
-      addDynamicPropOnJsxOpeningTag(root, 'className', `classes['${className}']`)
-    }
 
-    if (children && Array.isArray(children)) {
-      children.forEach((child) => {
-        const items = generateStyleTagStrings(child, nodesLookup)
-        accumulator = {
-          ...accumulator,
-          ...items,
-        }
-      })
-    }
+  const { style, children, name } = content
+  if (style) {
+    const root = nodesLookup[name]
+    const className = cammelCaseToDashCase(name)
+    accumulator[className] = prepareDynamicProps(style)
+    // addClassStringOnJSXTag(root.node, className)
+    addDynamicPropOnJsxOpeningTag(root, 'className', `classes['${className}']`)
+  }
+
+  if (children && Array.isArray(children)) {
+    children.forEach((child) => {
+      if (typeof child === 'string') {
+        return
+      }
+
+      // only call on children if they are not strings
+      const items = generateStyleTagStrings(child, nodesLookup)
+      accumulator = {
+        ...accumulator,
+        ...items,
+      }
+    })
   }
 
   return accumulator

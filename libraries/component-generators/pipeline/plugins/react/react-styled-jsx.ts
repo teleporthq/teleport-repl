@@ -2,11 +2,14 @@ import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
 
+import * as t from '@babel/types'
+
 import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 
 import { addClassStringOnJSXTag, generateStyledJSXTag } from '../../utils/jsx-ast'
 
 import { cammelCaseToDashCase } from '../../utils/helpers'
+import { ComponentContent } from '../../../../uidl-definitions/types'
 
 const prepareDynamicProps = (style: any) => {
   return Object.keys(style).reduce((acc: any, key) => {
@@ -21,36 +24,40 @@ const prepareDynamicProps = (style: any) => {
   }, {})
 }
 
-const generateStyledJSXString = (content: any, nodesLookup: any) => {
+const generateStyledJSXString = (
+  content: ComponentContent,
+  nodesLookup: Record<string, t.JSXElement>
+) => {
   let accumulator: any[] = []
 
-  // only do stuff if content is a object
-  if (content && typeof content === 'object') {
-    const { style, children, name } = content
-    if (style) {
-      const root = nodesLookup[name]
-      const className = cammelCaseToDashCase(name)
-      accumulator.push(
-        jss
-          .createStyleSheet(
-            {
-              [`.${className}`]: prepareDynamicProps(style),
-            },
-            {
-              generateClassName: () => className,
-            }
-          )
-          .toString()
-      )
-      addClassStringOnJSXTag(root, className)
-    }
+  const { style, children, name } = content
+  if (style) {
+    const root = nodesLookup[name]
+    const className = cammelCaseToDashCase(name)
+    accumulator.push(
+      jss
+        .createStyleSheet(
+          {
+            [`.${className}`]: prepareDynamicProps(style),
+          },
+          {
+            generateClassName: () => className,
+          }
+        )
+        .toString()
+    )
+    addClassStringOnJSXTag(root, className)
+  }
 
-    if (children && Array.isArray(children)) {
-      children.forEach((child) => {
-        const items = generateStyledJSXString(child, nodesLookup)
-        accumulator = accumulator.concat(...items)
-      })
-    }
+  if (children && Array.isArray(children)) {
+    children.forEach((child) => {
+      // Skip text children
+      if (typeof child === 'string') {
+        return
+      }
+      const items = generateStyledJSXString(child, nodesLookup)
+      accumulator = accumulator.concat(...items)
+    })
   }
 
   return accumulator

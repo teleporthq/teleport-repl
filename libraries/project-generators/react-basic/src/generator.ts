@@ -9,6 +9,7 @@ import configureAssemblyLine, {
 import { extractExternalDependencies } from '../../utils/generator-utils'
 
 import { File, Folder, ProjectGeneratorOptions } from '../../types'
+import { ProjectUIDL } from '../../../uidl-definitions/types'
 
 const componentGenerator = configureAssemblyLine({
   variation: ReactComponentFlavors.CSSModules,
@@ -56,7 +57,7 @@ const extractInlineComponent = (root: Record<string, any>) => {
 }
 
 export default async (
-  jsDoc: any,
+  jsDoc: ProjectUIDL,
   { sourcePackageJson, distPath = 'dist' }: ProjectGeneratorOptions = {
     distPath: 'dist',
   }

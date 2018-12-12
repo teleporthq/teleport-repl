@@ -4,6 +4,7 @@ import { createPlugin as createRouterPlugin } from '../pipeline/plugins/vue/vue-
 import { createPlugin as createImportPlugin } from '../pipeline/plugins/common/import-statements'
 
 import { GeneratorOptions } from '../pipeline/types'
+import { ProjectUIDL } from '../../uidl-definitions/types'
 
 import standardMapping from '../elements-mapping.json'
 import vueMapping from './elements-mapping.json'
@@ -28,8 +29,8 @@ const createVuePipeline = ({ customMapping }: GeneratorOptions = {}) => {
 
   const chunksLinker = new Builder()
 
-  const componentGenerator = async (componentUIDL: any, options?: GeneratorOptions) => {
-    const result = await asemblyLine.run(componentUIDL, options)
+  const componentGenerator = async (uidl: ProjectUIDL, options?: GeneratorOptions) => {
+    const result = await asemblyLine.run(uidl, options)
     const code = chunksLinker.link(result.chunks)
 
     return {

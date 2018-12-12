@@ -1,4 +1,5 @@
-import { ComponentPlugin, ComponentPluginFactory, ComponentDependency } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory, ChunkDefinition } from '../../types'
+import { ComponentDependency } from '../../../../uidl-definitions/types'
 
 import { makeGenericImportStatement } from '../../utils/js-ast'
 
@@ -44,8 +45,8 @@ const groupDependenciesByPackage = (
 }
 
 const addImportChunk = (
-  chunks: any[],
-  dependencies: any,
+  chunks: ChunkDefinition[],
+  dependencies: Record<string, ImportDependency[]>,
   newChunkName: string,
   fileId: string | null
 ) => {
@@ -53,8 +54,6 @@ const addImportChunk = (
     makeGenericImportStatement(key, dependencies[key])
   )
 
-  // must me always generated, even if empty, othwerwise references will not work
-  // if (importASTs.length > 0) {
   chunks.push({
     type: 'js',
     name: newChunkName,
@@ -63,7 +62,6 @@ const addImportChunk = (
     },
     content: importASTs,
   })
-  // }
 }
 
 interface ImportPluginConfig {
