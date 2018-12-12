@@ -46,49 +46,72 @@ export default async (
 
   // page compnents first
   const { states } = root
-  // tslint:disable-next-line:forin
-  for (const stateKey in states) {
-    const state = states[stateKey]
 
-    const compiledComponent = await componentGenerator(state.component, {
-      localDependenciesPrefix: '../components/',
-      customMapping: { ...nextMapping, ...customMapping },
-    })
-    const fileName = state.meta && state.meta.url ? state.meta.url : stateKey
-    pagesFolder.files.push({
-      name: state.default ? `index` : fileName.toLowerCase(),
-      extension: '.js',
-      content: compiledComponent.code,
-    })
+  const [...generatedPagesFromStates] = await Promise.all(
+    Object.keys(states).map(async (stateName) => {
+      const state = states[stateName]
 
-    allDependencies = {
-      ...allDependencies,
-      ...compiledComponent.dependencies,
-    }
-  }
+      try {
+        const compiledComponent = await componentGenerator(state.component, {
+          localDependenciesPrefix: '../components/',
+          customMapping: { ...nextMapping, ...customMapping },
+        })
 
-  // tslint:disable-next-line:forin
-  for (const componentKey in components) {
-    const comp = components[componentKey]
+        const fileName = state.meta && state.meta.url ? state.meta.url : stateName
 
-    try {
-      const compiledComponent = await componentGenerator(comp, {
-        customMapping: { ...nextMapping, ...customMapping },
-      })
-      componentsFolder.files.push({
-        name: comp.name,
-        extension: '.js',
-        content: compiledComponent.code,
-      })
+        const file: File = {
+          name: state.default ? `index` : fileName.toLowerCase(),
+          extension: '.js',
+          content: compiledComponent.code,
+        }
 
-      allDependencies = {
-        ...allDependencies,
-        ...compiledComponent.dependencies,
+        allDependencies = {
+          ...allDependencies,
+          ...compiledComponent.dependencies,
+        }
+
+        return file
+      } catch (err) {
+        console.error(stateName, err)
+        return null
       }
-    } catch (err) {
-      console.error(componentKey, err)
-    }
-  }
+    })
+  )
+
+  pagesFolder.files.push(
+    ...(generatedPagesFromStates.filter((file) => file !== null) as File[])
+  )
+
+  const [...generatedComponentFiles] = await Promise.all(
+    Object.keys(components).map(async (componentName) => {
+      const component = components[componentName]
+
+      try {
+        const compiledComponent = await componentGenerator(component, {
+          customMapping: { ...nextMapping, ...customMapping },
+        })
+        const file: File = {
+          name: component.name,
+          extension: '.js',
+          content: compiledComponent.code,
+        }
+
+        allDependencies = {
+          ...allDependencies,
+          ...compiledComponent.dependencies,
+        }
+
+        return file
+      } catch (err) {
+        console.error(componentName, err)
+        return null
+      }
+    })
+  )
+
+  componentsFolder.files.push(
+    ...(generatedComponentFiles.filter((file) => file !== null) as File[])
+  )
 
   // Package.json
   if (sourcePackageJson) {
