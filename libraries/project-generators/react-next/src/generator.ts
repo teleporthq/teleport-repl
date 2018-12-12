@@ -8,18 +8,13 @@ import createAssemblyLine, {
 } from '../../../component-generators/react/react-component'
 
 import nextMapping from './elements-mapping.json'
-import customMapping from './custom-mapping.json'
 
 const componentGenerator = createAssemblyLine({
   variation: ReactComponentFlavors.StyledJSX,
+  customMapping: nextMapping,
 })
 
-export default async (
-  jsDoc: ProjectUIDL,
-  { sourcePackageJson, distPath = 'dist' }: ProjectGeneratorOptions = {
-    distPath: 'dist',
-  }
-) => {
+export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {}) => {
   // pick root name/id
 
   const { components, root } = jsDoc
@@ -37,7 +32,7 @@ export default async (
   }
 
   const distFolder: Folder = {
-    name: distPath,
+    name: options.distPath || 'dist',
     files: [],
     subFolders: [pagesFolder, componentsFolder],
   }
@@ -54,7 +49,6 @@ export default async (
       try {
         const compiledComponent = await componentGenerator(state.component, {
           localDependenciesPrefix: '../components/',
-          customMapping: { ...nextMapping, ...customMapping },
         })
 
         const fileName = state.meta && state.meta.url ? state.meta.url : stateName
@@ -87,9 +81,7 @@ export default async (
       const component = components[componentName]
 
       try {
-        const compiledComponent = await componentGenerator(component, {
-          customMapping: { ...nextMapping, ...customMapping },
-        })
+        const compiledComponent = await componentGenerator(component)
         const file: File = {
           name: component.name,
           extension: '.js',
@@ -114,6 +106,7 @@ export default async (
   )
 
   // Package.json
+  const { sourcePackageJson } = options
   if (sourcePackageJson) {
     const externalDep = extractExternalDependencies(allDependencies)
     sourcePackageJson.dependencies = {

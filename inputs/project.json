@@ -121,9 +121,6 @@
             "name": "Random Button",
             "children": "Click Me"
           },{
-            "type": "Datepicker",
-            "name": "DatePicker"
-          },{
             "type": "Text",
             "name": "a-span",
             "children": "Welcome!"

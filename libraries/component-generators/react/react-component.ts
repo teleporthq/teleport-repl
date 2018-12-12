@@ -24,10 +24,11 @@ export enum ReactComponentFlavors {
 
 interface FactoryParams {
   variation: ReactComponentFlavors
+  customMapping?: any
 }
 
 const createReactGenerator = (params: FactoryParams) => {
-  const { variation } = params
+  const { variation, customMapping = {} } = params
 
   const configuredReactBaseComponent = reactComponent({
     componentChunkName: 'react-component',
@@ -92,13 +93,14 @@ const createReactGenerator = (params: FactoryParams) => {
     jsDoc: any,
     generatorOptions?: GeneratorOptions
   ) => {
-    const asemblyLine = new ComponentAssemblyLine(Options[variation], {
+    const assemblyLine = new ComponentAssemblyLine(Options[variation], {
       ...standardMapping,
       ...reactMapping,
+      ...customMapping,
     })
     const chunksLinker = new Builder()
 
-    const result = await asemblyLine.run(jsDoc, generatorOptions)
+    const result = await assemblyLine.run(jsDoc, generatorOptions)
 
     const chunksByFileId = groupChunksByFileId(result.chunks)
 
