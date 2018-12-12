@@ -22,7 +22,7 @@ export const extractExternalDependencies = (
 ) => {
   return Object.keys(dependencies)
     .filter((key) => {
-      return dependencies[key].type !== 'local'
+      return dependencies[key].type === 'package'
     })
     .reduce((acc: any, key) => {
       const depInfo = dependencies[key]
