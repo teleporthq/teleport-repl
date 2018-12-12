@@ -90,7 +90,6 @@ export default async (
     ...components,
     ...newComponents,
   }
-  const keys = Object.keys(allComponents)
 
   // Handle the router first
   const routingComponent = await routingComponentGenerator({
@@ -109,36 +108,51 @@ export default async (
     ...routingComponent.dependencies,
   }
 
-  // tslint:disable-next-line:forin
-  for (const i in keys) {
-    const key = keys[i]
-    try {
-      const compiledComponent = await componentGenerator(allComponents[key], {
-        customMapping: { ...reactProjectMapping, ...customMapping },
+  const componentMappings = { ...reactProjectMapping, ...customMapping }
+
+  const generatedComponentFileGroups: File[][] = await Promise.all(
+    Object.keys(allComponents).map(async (componentName) => {
+      const component = allComponents[componentName]
+      const compiledComponent = await componentGenerator(component, {
+        customMapping: componentMappings,
       })
 
+      let cssFile: File | null = null
       if (compiledComponent.css) {
-        componentsFolder.files.push({
-          name: allComponents[key].name,
+        cssFile = {
+          name: component.name,
           extension: '.css',
           content: compiledComponent.css,
-        })
+        }
       }
 
-      componentsFolder.files.push({
-        name: allComponents[key].name,
+      const jsFile: File = {
+        name: component.name,
         extension: '.js',
         content: compiledComponent.code,
-      })
+      }
 
       allDependencies = {
         ...allDependencies,
         ...compiledComponent.dependencies,
       }
-    } catch (err) {
-      console.error(key, err)
-    }
-  }
+
+      if (cssFile) {
+        return [jsFile, cssFile]
+      }
+      return [jsFile]
+    })
+  )
+
+  const generatedComponentsFiles = generatedComponentFileGroups.reduce(
+    (files: File[], fileGroup) => {
+      files.push(...fileGroup)
+      return files
+    },
+    []
+  )
+
+  componentsFolder.files.push(...generatedComponentsFiles)
 
   // Package.json
   if (sourcePackageJson) {

@@ -88,16 +88,16 @@ const createReactGenerator = (params: FactoryParams) => {
     ],
   }
 
-  const asemblyLine = new ComponentAssemblyLine(Options[variation], {
-    ...standardMapping,
-    ...reactMapping,
-  })
-  const chunksLinker = new Builder()
-
   const generateComponentChunks = async (
     jsDoc: any,
     generatorOptions?: GeneratorOptions
   ) => {
+    const asemblyLine = new ComponentAssemblyLine(Options[variation], {
+      ...standardMapping,
+      ...reactMapping,
+    })
+    const chunksLinker = new Builder()
+
     const result = await asemblyLine.run(jsDoc, generatorOptions)
 
     const chunksByFileId = groupChunksByFileId(result.chunks)

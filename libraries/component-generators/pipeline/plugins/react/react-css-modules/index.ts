@@ -43,16 +43,15 @@ export const createPlugin: ComponentPluginFactory<ReactCSSModulesConfig> = (
       )
     }
 
-    const generatedJSSClasses = applyCSSModulesAndGetDeclarations(uidl.content, {
+    const generatedCSSModuleClasses = applyCSSModulesAndGetDeclarations(uidl.content, {
       nodesLookup: componentChunk.meta.nodesLookup,
       camelCaseClassNames,
     })
-
     /**
      * If no classes were added, we don't need to import anything or to alter any
      * code
      */
-    if (!generatedJSSClasses.length) {
+    if (!generatedCSSModuleClasses.length) {
       return structure
     }
 
@@ -67,7 +66,7 @@ export const createPlugin: ComponentPluginFactory<ReactCSSModulesConfig> = (
     structure.chunks.push({
       name: styleChunkName,
       type: 'string',
-      content: generatedJSSClasses.join('\n'),
+      content: generatedCSSModuleClasses.join('\n'),
       meta: {
         fileId,
       },
