@@ -75,19 +75,25 @@ export default async (jsDoc: any, options: ProjectGeneratorOptions = {}) => {
     })
   }
 
-  for (const componentName of Object.keys(components)) {
-    const component = components[componentName]
-    const componentResult = await generateComponent(component)
-    collectedDependencies = { ...collectedDependencies, ...componentResult.dependencies }
+  const [...generatedComponentFiles] = await Promise.all(
+    Object.keys(components).map(async (componentName) => {
+      const component = components[componentName]
+      const componentResult = await generateComponent(component)
+      collectedDependencies = {
+        ...collectedDependencies,
+        ...componentResult.dependencies,
+      }
 
-    const file: File = {
-      name: component.name,
-      extension: '.vue',
-      content: componentResult.code,
-    }
+      const file: File = {
+        name: component.name,
+        extension: '.vue',
+        content: componentResult.code,
+      }
+      return file
+    })
+  )
 
-    componentsFolder.files.push(file)
-  }
+  componentsFolder.files.push(...generatedComponentFiles)
 
   // Package.json
   const { sourcePackageJson } = options

@@ -39,37 +39,48 @@ export default async (jsDoc: any, options: ProjectGeneratorOptions = {}) => {
 
   // Handling the route component which specifies which components are pages
   const { states } = root
-  for (const key of Object.keys(states)) {
-    const currentState = states[key]
-    const pageComponent = currentState.component
+  const [...generatedPageFiles] = await Promise.all(
+    Object.keys(states).map(async (stateKey) => {
+      const currentState = states[stateKey]
+      const pageComponent = currentState.component
 
-    const pageResult = await generateComponent(pageComponent, {
-      localDependenciesPrefix: '../components/',
+      const pageResult = await generateComponent(pageComponent, {
+        localDependenciesPrefix: '../components/',
+      })
+
+      collectedDependencies = { ...collectedDependencies, ...pageResult.dependencies }
+
+      const file: File = {
+        name: computeFileName(stateKey, currentState),
+        content: pageResult.code,
+        extension: '.vue',
+      }
+
+      return file
     })
+  )
 
-    collectedDependencies = { ...collectedDependencies, ...pageResult.dependencies }
+  pagesFolder.files.push(...generatedPageFiles)
 
-    pagesFolder.files.push({
-      name: computeFileName(key, currentState),
-      content: pageResult.code,
-      extension: '.vue',
+  const [...generatedComponentFiles] = await Promise.all(
+    Object.keys(components).map(async (componentName) => {
+      const component = components[componentName]
+      const componentResult = await generateComponent(component)
+      collectedDependencies = {
+        ...collectedDependencies,
+        ...componentResult.dependencies,
+      }
+
+      const file: File = {
+        name: component.name,
+        extension: '.vue',
+        content: componentResult.code,
+      }
+      return file
     })
-  }
+  )
 
-  // The rest of the components are written in components
-  for (const componentName of Object.keys(components)) {
-    const component = components[componentName]
-    const componentResult = await generateComponent(component)
-    collectedDependencies = { ...collectedDependencies, ...componentResult.dependencies }
-
-    const file: File = {
-      name: component.name,
-      extension: '.vue',
-      content: componentResult.code,
-    }
-
-    componentsFolder.files.push(file)
-  }
+  componentsFolder.files.push(...generatedComponentFiles)
 
   // Package.json
   const { sourcePackageJson } = options
