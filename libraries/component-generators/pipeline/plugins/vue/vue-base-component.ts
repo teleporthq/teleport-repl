@@ -48,7 +48,7 @@ const generateVueNodesTree = (
   const mainTag = generateSingleVueNode({
     tagName: mappedType,
     // custom elements cannot be self-enclosing in Vue
-    selfClosing: !mappedElement.dependency && !(children && children.length),
+    selfClosing: false,
   })
   const root = mainTag(mappedType)
 
