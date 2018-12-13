@@ -16,20 +16,17 @@ export const createPlugin: ComponentPluginFactory<VueRouterConfig> = (config) =>
     registerDependency('Vue', {
       type: 'library',
       path: 'vue',
-      version: '^2.5.17',
     })
     registerDependency('Router', {
       type: 'library',
       path: 'vue-router',
-      version: '^3.0.1',
     })
 
     const declaration = t.expressionStatement(
       t.callExpression(t.identifier('Vue.use'), [t.identifier('Router')])
     )
 
-    const { root } = uidl
-    const { states } = root
+    const { states } = uidl
     const routesAST = Object.keys(states).map((key) => {
       const state = states[key]
       const routeComponent = state.component

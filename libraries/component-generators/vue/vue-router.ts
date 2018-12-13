@@ -29,7 +29,7 @@ const createVuePipeline = ({ customMapping }: GeneratorOptions = {}) => {
 
   const chunksLinker = new Builder()
 
-  const componentGenerator = async (uidl: ProjectUIDL, options?: GeneratorOptions) => {
+  const componentGenerator = async (uidl: any, options?: GeneratorOptions) => {
     const result = await asemblyLine.run(uidl, options)
     const code = chunksLinker.link(result.chunks)
 

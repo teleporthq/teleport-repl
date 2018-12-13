@@ -2,6 +2,7 @@ export interface ProjectUIDL {
   $schema?: string
   name: string
   root: {
+    name: string
     states: {
       [k: string]: {
         component: ComponentUIDL

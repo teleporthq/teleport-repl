@@ -20,10 +20,13 @@
     "root": {
       "type": "object",
       "required": [
-        "states"
+        "states", "name"
       ],
       "additionalProperties": false,
       "properties": {
+        "name": {
+          "type": "string"
+        },
         "states": {
           "type": "object",
           "patternProperties": {

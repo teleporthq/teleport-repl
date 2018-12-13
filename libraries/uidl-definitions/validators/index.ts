@@ -9,7 +9,6 @@ const componentValidator = ajv.compile(componentSchema)
 const projectValidator = ajv.compile(projectSchema)
 
 export const validateComponent = (input: ComponentUIDL) => {
-  console.log(componentValidator)
   const valid = componentValidator(input)
   if (!valid && componentValidator.errors) {
     return componentValidator.errors

@@ -43,7 +43,7 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
   let collectedDependencies = {}
 
   // Router component
-  const router = await generateRouterFile(jsDoc)
+  const router = await generateRouterFile(root)
   collectedDependencies = { ...collectedDependencies, ...router.dependencies }
 
   const routerFile: File = {

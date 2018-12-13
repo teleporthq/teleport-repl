@@ -6,12 +6,7 @@ import {
   RegisterDependency,
 } from '../types'
 
-import {
-  ComponentUIDL,
-  ProjectUIDL,
-  ComponentDependency,
-  ElementsMapping,
-} from '../../../uidl-definitions/types'
+import { ComponentDependency, ElementsMapping } from '../../../uidl-definitions/types'
 
 export interface RuntimeParams {
   localDependenciesPrefix?: string
@@ -31,7 +26,7 @@ export default class ComponentAsemblyLine {
     this.elementsMapping = elementsMapping
   }
 
-  public async run(uidl: ComponentUIDL | ProjectUIDL, params?: RuntimeParams) {
+  public async run(uidl: any, params?: RuntimeParams) {
     const {
       initialStructure = {
         uidl,

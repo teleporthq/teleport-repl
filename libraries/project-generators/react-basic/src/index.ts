@@ -4,7 +4,8 @@ import { removeDir, copyDirRec, readJSON, writeFolder } from '../../utils/path-u
 import projectJson from '../../../../inputs/project.json'
 
 import createReactProject from './generator'
-import { ProjectGeneratorFunction, ProjectUIDL } from '../../types'
+import { ProjectGeneratorFunction } from '../../types'
+import { ProjectUIDL } from '../../../uidl-definitions/types'
 
 const writeToDisk = async (
   projectUIDL: ProjectUIDL,

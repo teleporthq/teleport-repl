@@ -1,8 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/project.json",
-  "name": "my-vue-project",
+  "name": "myVueProject",
   "root": {
-    "states": {  
+    "name": "App",
+    "states": {
       "home": {
         "component": {
           "name": "Index",
