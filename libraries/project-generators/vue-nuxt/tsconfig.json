@@ -1,43 +1,37 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "target": "ES6",
-      "module": "CommonJS",
-      "allowJs": true,
-      "moduleResolution": "node",
-      "allowSyntheticDefaultImports": true,
-      "esModuleInterop": true,
-      "noUnusedLocals": false,
-      "noUnusedParameters": false,
-      "removeComments": true,
-      "preserveConstEnums": true,
-      "sourceMap": true,
-      "baseUrl": ".",
-      "noImplicitAny": false,
-      "resolveJsonModule": true,
-      "typeRoots": [
-        "./node_modules/@types",
-        "./@types",
-      ],
-      "lib": ["es2015", "es2017", "dom"],
-      "listEmittedFiles": false,
-      "outDir": "dist"
-    },
-    "exclude": [
-      "node_modules",
-      "out",
-      ".next",
-      "lib",
-      "static",
-      "dist",
-      ".dynamic"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./@types",
     ],
-    "linterOptions": {
-      "exclude": [
-          "dist",
-          "project-template"
-      ]
-  }
-  }
+    "lib": ["es2015", "es2017", "dom"],
+    "alwaysStrict": true,
+    "listEmittedFiles": false,
+    "strict": true,
+    "outDir": "dist"
+  },
+  "exclude": [
+    "node_modules",
+    "out",
+    ".next",
+    "lib",
+    "static",
+    "dist",
+    ".dynamic"
+  ]
+}

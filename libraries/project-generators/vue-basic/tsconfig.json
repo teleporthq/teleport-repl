@@ -1,15 +1,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "target": "ES6",
     "module": "CommonJS",
     "allowJs": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noUnusedParameters": false,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -22,7 +20,9 @@
       "./@types",
     ],
     "lib": ["es2015", "es2017", "dom"],
+    "alwaysStrict": true,
     "listEmittedFiles": false,
+    "strict": true,
     "outDir": "dist"
   },
   "exclude": [

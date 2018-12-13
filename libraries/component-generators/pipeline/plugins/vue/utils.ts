@@ -133,7 +133,7 @@ export const generateEmptyVueComponentJS = (
 
 export const generateVueComponentPropTypes = (uidlPropDefinitions: PropDefinitions) => {
   return Object.keys(uidlPropDefinitions).reduce((acc: { [key: string]: any }, name) => {
-    let mappedType = null
+    let mappedType
     const { type, defaultValue } = uidlPropDefinitions[name]
     switch (type) {
       case 'string':
@@ -147,6 +147,8 @@ export const generateVueComponentPropTypes = (uidlPropDefinitions: PropDefinitio
         break
       case 'children': // children is converted to slot and should not be added to props
         return acc
+      default:
+        mappedType = null
     }
 
     acc[name] = defaultValue ? { type: mappedType, default: defaultValue } : mappedType

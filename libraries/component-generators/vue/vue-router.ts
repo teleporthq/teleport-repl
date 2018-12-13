@@ -4,7 +4,6 @@ import { createPlugin as createRouterPlugin } from '../pipeline/plugins/vue/vue-
 import { createPlugin as createImportPlugin } from '../pipeline/plugins/common/import-statements'
 
 import { GeneratorOptions } from '../pipeline/types'
-import { ProjectUIDL } from '../../uidl-definitions/types'
 
 import standardMapping from '../elements-mapping.json'
 import vueMapping from './elements-mapping.json'

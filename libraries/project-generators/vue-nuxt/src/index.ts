@@ -4,7 +4,8 @@ import { removeDir, copyDirRec, readJSON, writeFolder } from '../../utils/path-u
 import projectJson from '../../../../inputs/project.json'
 
 import createNuxtProject from './generator'
-import { ProjectGeneratorFunction, ProjectUIDL } from '../../types'
+import { ProjectGeneratorFunction } from '../../types'
+import { ProjectUIDL } from '../../../uidl-definitions/types'
 
 const writeToDisk = async (
   projectUIDL: ProjectUIDL,
@@ -27,13 +28,13 @@ const writeToDisk = async (
   await writeFolder(distFolder)
 }
 
-const runInMemory = async (
-  projectUIDL: ProjectUIDL,
-  generatorFunction: ProjectGeneratorFunction
-) => {
-  const result = await generatorFunction(projectUIDL)
-  console.log(JSON.stringify(result, null, 2))
-}
+// const runInMemory = async (
+//   projectUIDL: ProjectUIDL,
+//   generatorFunction: ProjectGeneratorFunction
+// ) => {
+//   const result = await generatorFunction(projectUIDL)
+//   console.log(JSON.stringify(result, null, 2))
+// }
 
 writeToDisk(projectJson, createNuxtProject)
 // runInMemory(projectJson, createNuxtProject)
