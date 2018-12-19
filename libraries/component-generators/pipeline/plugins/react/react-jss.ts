@@ -38,13 +38,13 @@ const generateStyleTagStrings = (
 ) => {
   let accumulator: { [key: string]: any } = {}
 
-  const { style, children, name } = content
+  const { style, children, key } = content
   if (style) {
-    const root = nodesLookup[name]
-    const className = cammelCaseToDashCase(name)
+    const root = nodesLookup[key]
+    const className = cammelCaseToDashCase(key)
     accumulator[className] = prepareDynamicProps(style)
     // addClassStringOnJSXTag(root.node, className)
-    addDynamicPropOnJsxOpeningTag(root, 'className', `classes['${className}']`)
+    addDynamicPropOnJsxOpeningTag(root, 'className', `classes['${className}']`, 'props')
   }
 
   if (children && Array.isArray(children)) {

@@ -30,10 +30,10 @@ const generateStyledJSXString = (
 ) => {
   let accumulator: any[] = []
 
-  const { style, children, name } = content
+  const { style, children, key } = content
   if (style) {
-    const root = nodesLookup[name]
-    const className = cammelCaseToDashCase(name)
+    const root = nodesLookup[key]
+    const className = cammelCaseToDashCase(key)
     accumulator.push(
       jss
         .createStyleSheet(

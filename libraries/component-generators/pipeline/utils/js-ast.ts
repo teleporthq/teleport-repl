@@ -1,5 +1,4 @@
 import * as types from '@babel/types'
-
 /**
  * A tricky way to pass down custom configuration into
  * the objectToObjectExpression values, to allow for member expressions like

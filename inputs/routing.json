@@ -1,0 +1,83 @@
+{
+  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/project.json",
+  "name": "myVueProject",
+  "root": {
+    "name": "App",
+    "stateDefinitions": {
+      "router": {
+        "type": "router",
+        "defaultValue": "home",
+        "values": [
+          {
+            "value": "home",
+            "meta": {
+              "path": "/home",
+              "componentName": "Home"
+            }
+          },
+          {
+            "value": "about",
+            "meta": {
+              "path": "/mask-url",
+              "componentName": "About"
+            }
+          }
+        ]
+      }
+    },
+    "content": {
+      "type": "states",
+      "key": "router",
+      "states": [
+        {
+          "value": "home",
+          "content": {
+            "type": "View",
+            "key": "container",
+            "children": [
+              {
+                "type": "button",
+                "key": "button",
+                "children": ["click-me"]
+              },
+              {
+                "type": "Text",
+                "key": "text",
+                "attrs": {
+                  "data-attr": "random"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "value": "about",
+          "content": {
+            "type": "Group",
+            "key": "around",
+            "children": [
+              {
+                "type": "Text",
+                "key": "aspan",
+                "children": ["Who"]
+              },
+              {
+                "type": "View",
+                "key": "adiv",
+                "children": ["are"]
+              },
+              {
+                "type": "Text",
+                "key": "aspan2",
+                "children": ["you?"],
+                "attrs": {
+                  "data-test": "123"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

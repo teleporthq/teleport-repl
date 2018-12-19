@@ -1,6 +1,30 @@
 import * as types from '@babel/types'
 import { objectToObjectExpression } from './js-ast'
 
+type BinaryOperator =
+  | '==='
+  | '+'
+  | '-'
+  | '/'
+  | '%'
+  | '*'
+  | '**'
+  | '&'
+  | '|'
+  | '>>'
+  | '>>>'
+  | '<<'
+  | '^'
+  | '=='
+  | '!='
+  | '!=='
+  | 'in'
+  | 'instanceof'
+  | '>'
+  | '<'
+  | '>='
+  | '<='
+
 /**
  * Gets the existing className declaration attribute or generates and returns
  * a newly created and assigned one to the given JSXNode
@@ -60,15 +84,16 @@ export const addDynamicPropOnJsxOpeningTag = (
   jsxASTNode: types.JSXElement,
   name: string,
   value: string,
+  prefix: string = '',
   t = types
 ) => {
+  const content =
+    prefix === ''
+      ? t.identifier(value)
+      : t.memberExpression(t.identifier('props'), t.identifier(value))
+
   jsxASTNode.openingElement.attributes.push(
-    t.jsxAttribute(
-      t.jsxIdentifier(name),
-      t.jsxExpressionContainer(
-        t.memberExpression(t.identifier('props'), t.identifier(value))
-      )
-    )
+    t.jsxAttribute(t.jsxIdentifier(name), t.jsxExpressionContainer(content))
   )
 }
 
@@ -192,12 +217,19 @@ export const addChildJSXText = (tag: types.JSXElement, text: string, t = types) 
   tag.children.push(t.jsxText(text))
 }
 
-export const addDynamicChild = (tag: types.JSXElement, value: string, t = types) => {
-  tag.children.push(
-    t.jsxExpressionContainer(
-      t.memberExpression(t.identifier('props'), t.identifier(value))
-    )
-  )
+export const addDynamicChild = (
+  tag: types.JSXElement,
+  value: string,
+  prefix: string = '',
+  t = types
+) => {
+  // if no prefix is provided (ex: props or state) value is added directly inside the node
+  const content =
+    prefix === ''
+      ? t.identifier(value)
+      : t.memberExpression(t.identifier(prefix), t.identifier(value))
+
+  tag.children.push(t.jsxExpressionContainer(content))
 }
 
 export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types) => {
@@ -209,4 +241,38 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
     styleObjectExpressionContainer
   )
   tag.openingElement.attributes.push(styleJSXAttr)
+}
+
+export const createConditionalJSXExpression = (
+  content: types.JSXElement | string,
+  comparedIdentifier: string,
+  comparedValue: any,
+  comparedValueType: string,
+  comparisonOperator: BinaryOperator = '===',
+  t = types
+) => {
+  const contentNode = typeof content === 'string' ? t.stringLiteral(content) : content
+
+  let binaryExpression: types.BinaryExpression | types.UnaryExpression | types.Identifier
+  if (comparedValueType === 'boolean') {
+    binaryExpression = comparedValue
+      ? t.identifier(comparedIdentifier)
+      : t.unaryExpression('!', t.identifier(comparedIdentifier))
+  } else if (comparedValueType === 'number') {
+    binaryExpression = t.binaryExpression(
+      comparisonOperator,
+      t.identifier(comparedIdentifier),
+      t.numericLiteral(comparedValue)
+    )
+  } else {
+    binaryExpression = t.binaryExpression(
+      comparisonOperator,
+      t.identifier(comparedIdentifier),
+      t.stringLiteral(comparedValue)
+    )
+  }
+
+  return t.jsxExpressionContainer(
+    t.logicalExpression('&&', binaryExpression, contentNode)
+  )
 }

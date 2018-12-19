@@ -36,10 +36,10 @@ const enhanceJSXWithStyles = (
   content: ComponentContent,
   nodesLookup: Record<string, t.JSXElement>
 ) => {
-  const { children, style, name } = content
+  const { children, style, key } = content
 
   if (style) {
-    const jsxASTTag = nodesLookup[name]
+    const jsxASTTag = nodesLookup[key]
     if (!jsxASTTag) {
       return
     }

@@ -17,3 +17,5 @@ export const cammelCaseToDashCase = (name: string): string => {
 
 export const stringToCamelCase = (str: string): string =>
   str.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (_, chr) => chr.toUpperCase())
+
+export const capitalize = (str: string): string => str[0].toUpperCase() + str.slice(1)

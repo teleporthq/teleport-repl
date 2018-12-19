@@ -1,7 +1,11 @@
 import { Folder, File, ProjectGeneratorOptions } from '../../types'
-import { ProjectUIDL, ComponentDependency } from '../../../uidl-definitions/types'
+import {
+  ProjectUIDL,
+  ComponentDependency,
+  ComponentUIDL,
+} from '../../../uidl-definitions/types'
 
-import { extractExternalDependencies, computeFileName } from '../../utils/generator-utils'
+import { extractExternalDependencies } from '../../utils/generator-utils'
 
 import createAssemblyLine, {
   ReactComponentFlavors,
@@ -40,19 +44,48 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
   let allDependencies: Record<string, ComponentDependency> = {}
 
   // page compnents first
-  const { states } = root
+  const states = root.content.states
+  const stateDefinitions = root.stateDefinitions
+  if (!states || !stateDefinitions) {
+    return
+  }
+
+  const routerDefinitions = stateDefinitions.router
+  if (!routerDefinitions) {
+    return
+  }
 
   await Promise.all(
-    Object.keys(states).map(async (stateName) => {
-      const state = states[stateName]
+    states.map(async (stateBranch) => {
+      const stateName = stateBranch.value
+      const pageContent = stateBranch.content
+      const pageDefinition = (routerDefinitions.values || []).find(
+        (stateDef) => stateDef.value === stateName
+      )
+
+      if (typeof pageContent === 'string') {
+        return
+      }
+
+      const pageComponent: ComponentUIDL = {
+        content: pageContent,
+        name:
+          (pageDefinition && pageDefinition.meta && pageDefinition.meta.componentName) ||
+          stateName,
+      }
 
       try {
-        const compiledComponent = await componentGenerator(state.component, {
+        const compiledComponent = await componentGenerator(pageComponent, {
           localDependenciesPrefix: '../components/',
         })
 
         const file: File = {
-          name: computeFileName(stateName, state),
+          name:
+            (pageDefinition &&
+              pageDefinition.meta &&
+              pageDefinition.meta.path &&
+              pageDefinition.meta.path.slice(1)) ||
+            stateName,
           extension: '.js',
           content: compiledComponent.code,
         }

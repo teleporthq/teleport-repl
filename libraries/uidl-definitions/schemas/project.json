@@ -18,45 +18,7 @@
       "default": "My-Teleport-Project"
     },
     "root": {
-      "type": "object",
-      "required": [
-        "states", "name"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "states": {
-          "type": "object",
-          "patternProperties": {
-            ".*": {
-              "type": "object",
-              "required": [
-                "component"
-              ],
-              "additionalProperties": false,
-              "properties": {
-                "component": {
-                  "$ref": "#/definitions/component"
-                },
-                "default": {
-                  "type": "boolean",
-                  "default": false
-                },
-                "meta": {
-                  "type": "object",
-                  "properties": {
-                    "url": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      "$ref": "#/definitions/component"
     },
     "components": {
       "type": "object",
@@ -83,31 +45,11 @@
         "meta": {
           "type": "object"
         },
+        "stateDefinitions": {
+          "$ref": "#/definitions/stateDefinitions"
+        },
         "propDefinitions": {
-          "type": "object",
-          "patternProperties": {
-            ".*": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["type"],
-              "properties": {
-                "type": {"type": "string"},
-                "defaultValue": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "boolean"
-                    }
-                  ]
-                }
-              }
-            }
-          }
+          "$ref": "#/definitions/propDefinitions"
         }
       }
     },
@@ -115,27 +57,66 @@
       "type": "object",
       "required": [
         "type",
-        "name"
+        "key"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "type": "string",
           "examples": [
-            "Text",
-            "View"
+            "text",
+            "view",
+            "states"
           ]
         },
-        "dependency": {
-          "$ref": "#/definitions/dependency"
-        },
-        "name": {
+        "key": {
           "type": "string",
           "default": "MyComponent",
           "examples": [
             "Component",
             "View"
           ]
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "content"],
+            "additionalProperties": false,
+            "properties": {
+              "value": {},
+              "operation": { "type": "string" },
+              "content": {
+                "oneOf": [
+                  { "$ref": "#/definitions/content" },
+                  { "type": "string" }
+                ]
+              },
+              "style": {
+                "$ref": "#/definitions/style"
+              }
+            }
+          }
+        },
+        "dependency": {
+          "$ref": "#/definitions/dependency"
+        },
+        "events": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["modifies"],
+                "properties": {
+                  "modifies": { "type": "string" },
+                  "newState": { },
+                  "action": { "type": "string" }
+                }
+              }
+            }
+          }
         },
         "style": {
           "$ref": "#/definitions/style"
@@ -144,21 +125,14 @@
           "type": "object"
         },
         "children": {
-          "oneOf": [
-            {
-              "type": "array",
-              "items": {
-                "oneOf": [
-                  { "$ref": "#/definitions/content" },
-                  { "type": "string" }
-                ]
-              },
-              "default": []
-            },
-            {
-              "type": "string"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/content" },
+              { "type": "string" }
+            ]
+          },
+          "default": []
         }
       }
     },
@@ -233,6 +207,46 @@
           "properties": {
             "namedImport": {"type": "boolean", "default": false},
             "originalName": {"type": "string"}
+          }
+        }
+      }
+    },
+    "propDefinitions": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": {"type": "string"},
+            "defaultValue": {}
+          }
+        }
+      }
+    },
+    "stateDefinitions": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "defaultValue"],
+          "properties": {
+            "type": {"type": "string"},
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {},
+                  "meta": { "type": "object" },
+                  "transitions": { "type": "object" }
+                }
+              }
+            },
+            "defaultValue": {},
+            "actions": {"type": "array"}
           }
         }
       }

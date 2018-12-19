@@ -1,18 +1,7 @@
 export interface ProjectUIDL {
   $schema?: string
   name: string
-  root: {
-    name: string
-    states: {
-      [k: string]: {
-        component: ComponentUIDL
-        default?: boolean
-        meta?: {
-          url?: string
-        }
-      }
-    }
-  }
+  root: ComponentUIDL
   components?: Record<string, ComponentUIDL>
 }
 
@@ -22,6 +11,7 @@ export interface ComponentUIDL {
   content: ComponentContent
   meta?: Record<string, any>
   propDefinitions?: PropDefinitions
+  stateDefinitions?: StateDefinitions
 }
 
 export interface PropDefinitions {
@@ -31,13 +21,36 @@ export interface PropDefinitions {
   }
 }
 
+export interface StateDefinitions {
+  [k: string]: {
+    type: string
+    defaultValue: string | number | boolean
+    values?: Array<{ value: string | number | boolean; meta?: any; transitions?: any }>
+    actions?: string[]
+  }
+}
+
 export interface ComponentContent {
   type: string
+  key: string
+  states?: Array<{
+    value: string | number | boolean
+    operation?: string
+    content: ComponentContent | string
+  }>
   dependency?: ComponentDependency
-  name: string
   style?: Record<string, any>
   attrs?: Record<string, any>
+  events?: EventDefinitions
   children?: Array<ComponentContent | string> | string
+}
+
+export interface EventDefinitions {
+  [k: string]: Array<{
+    modifies: string
+    newState?: string | number | boolean
+    action?: string
+  }>
 }
 
 export interface ComponentDependency {
