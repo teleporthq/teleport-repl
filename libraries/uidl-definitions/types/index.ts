@@ -10,24 +10,28 @@ export interface ComponentUIDL {
   name: string
   content: ComponentContent
   meta?: Record<string, any>
-  propDefinitions?: PropDefinitions
-  stateDefinitions?: StateDefinitions
+  propDefinitions?: Record<string, PropDefinition>
+  stateDefinitions?: Record<string, StateDefinition>
 }
 
-export interface PropDefinitions {
-  [k: string]: {
-    type: string
-    defaultValue?: string | number | boolean
-  }
+export interface PropDefinition {
+  type: string
+  defaultValue?: string | number | boolean
 }
 
-export interface StateDefinitions {
-  [k: string]: {
-    type: string
-    defaultValue: string | number | boolean
-    values?: Array<{ value: string | number | boolean; meta?: any; transitions?: any }>
-    actions?: string[]
-  }
+export interface StateDefinition {
+  type: string
+  defaultValue: string | number | boolean
+  values?: Array<{
+    value: string | number | boolean
+    meta?: {
+      componentName?: string
+      path?: string
+      fileName?: string
+    }
+    transitions?: any
+  }>
+  actions?: string[]
 }
 
 export interface ComponentContent {

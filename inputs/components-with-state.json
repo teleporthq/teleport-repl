@@ -9,7 +9,10 @@
         "defaultValue": "index",
         "values": [
           {
-            "value": "index"
+            "value": "index",
+            "meta": {
+              "componentName": "Home"
+            }
           }
         ]
       }

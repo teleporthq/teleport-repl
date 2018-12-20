@@ -5,7 +5,10 @@ import {
   ComponentUIDL,
 } from '../../../uidl-definitions/types'
 
-import { extractExternalDependencies } from '../../utils/generator-utils'
+import {
+  extractExternalDependencies,
+  extractPageMetadata,
+} from '../../utils/generator-utils'
 
 import createAssemblyLine, {
   ReactComponentFlavors,
@@ -57,21 +60,19 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
 
   await Promise.all(
     states.map(async (stateBranch) => {
-      const stateName = stateBranch.value
+      const stateName = stateBranch.value as string
       const pageContent = stateBranch.content
-      const pageDefinition = (routerDefinitions.values || []).find(
-        (stateDef) => stateDef.value === stateName
-      )
-
       if (typeof pageContent === 'string') {
         return
       }
 
+      const metadata = extractPageMetadata(routerDefinitions, stateName, {
+        usePathAsFileName: true,
+      })
+
       const pageComponent: ComponentUIDL = {
         content: pageContent,
-        name:
-          (pageDefinition && pageDefinition.meta && pageDefinition.meta.componentName) ||
-          stateName,
+        name: metadata.componentName,
       }
 
       try {
@@ -80,12 +81,7 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
         })
 
         const file: File = {
-          name:
-            (pageDefinition &&
-              pageDefinition.meta &&
-              pageDefinition.meta.path &&
-              pageDefinition.meta.path.slice(1)) ||
-            stateName,
+          name: metadata.fileName,
           extension: '.js',
           content: compiledComponent.code,
         }

@@ -240,7 +240,14 @@
                 "type": "object",
                 "properties": {
                   "value": {},
-                  "meta": { "type": "object" },
+                  "meta": { 
+                    "type": "object",
+                    "properties": {
+                      "componentName": { "type": "string" },
+                      "path": { "type": "string" },
+                      "fileName": { "type": "string" }
+                    }
+                  },
                   "transitions": { "type": "object" }
                 }
               }
