@@ -45,6 +45,24 @@ export const objectToObjectExpression = (
   return objectExpression
 }
 
+export const convertValueToLiteral = (
+  value: any,
+  explicitType: string = '',
+  t = types
+) => {
+  const typeToCompare = explicitType ? explicitType : typeof value
+  switch (typeToCompare) {
+    case 'string':
+      return t.stringLiteral(value)
+    case 'boolean':
+      return t.booleanLiteral(value)
+    case 'number':
+      return t.numericLiteral(value)
+    default:
+      return t.identifier(value.toString())
+  }
+}
+
 export const makeConstAssign = (constName: string, asignment: any = null, t = types) => {
   const declarator = t.variableDeclarator(t.identifier(constName), asignment)
   const constAsignment = t.variableDeclaration('const', [declarator])
@@ -70,57 +88,6 @@ export const makeJSSDefaultExport = (
 
 export const makeProgramBody = (statements: any[] = [], t = types) =>
   t.program(statements)
-
-export const makeDefaultImportStatement = (
-  specifier: string,
-  source: string,
-  t = types
-) => {
-  return t.importDeclaration(
-    [t.importDefaultSpecifier(t.identifier(specifier))],
-    t.stringLiteral(source)
-  )
-}
-
-export const makeNamedImportStatement = (
-  specifiers: string[],
-  source: string,
-  t = types
-) => {
-  return t.importDeclaration(
-    specifiers.map((specifier) =>
-      t.importSpecifier(t.identifier(specifier), t.identifier(specifier))
-    ),
-    t.stringLiteral(source)
-  )
-}
-
-/**
- * You pass in a object like { 'a': 'b', 'foo': 'bar' } and get back a AST statement
- * like "import { a as b, foo as bar } from '...'"
- *
- * @param specifiers
- * @param source
- * @param t
- */
-export const makeNamedMappedImportStatement = (
-  specifiers: { [key: string]: string },
-  source: string,
-  t = types
-) => {
-  return t.importDeclaration(
-    Object.keys(specifiers).reduce((acc: any[], specifierKey: string) => {
-      acc.push(
-        t.importSpecifier(
-          t.identifier(specifiers[specifierKey]),
-          t.identifier(specifierKey)
-        )
-      )
-      return acc
-    }, []),
-    t.stringLiteral(source)
-  )
-}
 
 /**
  * You can pass the path of the package which is added at the top of the file and
@@ -148,20 +115,4 @@ export const makeGenericImportStatement = (path: string, imports: any[], t = typ
     )
   }
   return t.importDeclaration(importASTs, t.stringLiteral(path))
-}
-
-/**
- * Generatate a js import statement based a standard UIDL dependency
- */
-export const resolveImportStatement = (componentName: string, dependency: any) => {
-  const { meta, path } = dependency
-
-  if (meta && meta.namedImport) {
-    // if the component is listed under a different originalName, then import is "x as y"
-    return meta.originalName
-      ? makeNamedMappedImportStatement({ [meta.originalName]: componentName }, path)
-      : makeNamedImportStatement([componentName], path)
-  }
-
-  return makeDefaultImportStatement(componentName, path)
 }

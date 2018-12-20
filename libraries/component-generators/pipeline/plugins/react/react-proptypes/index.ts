@@ -28,7 +28,7 @@ export const createPlugin: ComponentPluginFactory<ReactJSPropTypesConfig> = (con
 
     if (!componentChunk) {
       throw new Error(
-        `React component chunk with name ${componentChunkName} was reuired and not found.`
+        `React component chunk with name ${componentChunkName} was required and not found.`
       )
     }
 

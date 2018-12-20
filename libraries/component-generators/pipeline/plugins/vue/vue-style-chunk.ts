@@ -62,7 +62,7 @@ const generateStyleTagStrings = (
     root.addClass(className)
   }
 
-  if (children && Array.isArray(children)) {
+  if (children) {
     children.forEach((child) => {
       // Skip text children
       if (typeof child === 'string') {

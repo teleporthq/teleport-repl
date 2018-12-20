@@ -1,5 +1,6 @@
 import * as types from '@babel/types'
-import { objectToObjectExpression } from './js-ast'
+import { objectToObjectExpression, convertValueToLiteral } from './js-ast'
+import { StateIdentifier } from '../plugins/react/types'
 
 type BinaryOperator =
   | '==='
@@ -74,7 +75,7 @@ export const addClassStringOnJSXTag = (
 }
 
 /**
- * Makes `${name}={props.${value}}` happen in AST
+ * Makes `${name}={${prefix}.${value}}` happen in AST
  *
  * @param jsxASTNode the jsx ast element
  * @param name the name of the prop
@@ -210,7 +211,7 @@ export const generateASTDefinitionForJSXTag = (tagName: string, t = types) => {
 }
 
 export const addChildJSXTag = (tag: types.JSXElement, childNode: types.JSXElement) => {
-  tag.children.push(types.jsxText('\n'), childNode, types.jsxText('\n'))
+  tag.children.push(childNode)
 }
 
 export const addChildJSXText = (tag: types.JSXElement, text: string, t = types) => {
@@ -245,34 +246,44 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
 
 export const createConditionalJSXExpression = (
   content: types.JSXElement | string,
-  comparedIdentifier: string,
-  comparedValue: any,
-  comparedValueType: string,
-  comparisonOperator: BinaryOperator = '===',
+  stateBranch: any,
+  stateIdentifier: StateIdentifier,
   t = types
 ) => {
   const contentNode = typeof content === 'string' ? t.stringLiteral(content) : content
+  const { value, operation } = stateBranch
 
   let binaryExpression: types.BinaryExpression | types.UnaryExpression | types.Identifier
-  if (comparedValueType === 'boolean') {
-    binaryExpression = comparedValue
-      ? t.identifier(comparedIdentifier)
-      : t.unaryExpression('!', t.identifier(comparedIdentifier))
-  } else if (comparedValueType === 'number') {
-    binaryExpression = t.binaryExpression(
-      comparisonOperator,
-      t.identifier(comparedIdentifier),
-      t.numericLiteral(comparedValue)
-    )
+  if (stateIdentifier.type === 'boolean') {
+    binaryExpression = value
+      ? t.identifier(stateIdentifier.key)
+      : t.unaryExpression('!', t.identifier(stateIdentifier.key))
   } else {
+    const stateValueIdentifier = convertValueToLiteral(
+      stateBranch.value,
+      stateIdentifier.type
+    )
     binaryExpression = t.binaryExpression(
-      comparisonOperator,
-      t.identifier(comparedIdentifier),
-      t.stringLiteral(comparedValue)
+      convertToBinaryOperator(operation),
+      t.identifier(stateIdentifier.key),
+      stateValueIdentifier
     )
   }
 
   return t.jsxExpressionContainer(
     t.logicalExpression('&&', binaryExpression, contentNode)
   )
+}
+
+/**
+ * Because of the restrictions of the AST Types we need to have a clear subset of binary operators we can use
+ * @param operation - the operation defined in the UIDL for the current state branch
+ */
+const convertToBinaryOperator = (operation: string): BinaryOperator => {
+  const allowedOperations = ['===', '!==', '>=', '<=', '>', '<']
+  if (allowedOperations.includes(operation)) {
+    return operation as BinaryOperator
+  } else {
+    return '==='
+  }
 }

@@ -42,7 +42,7 @@ export interface ComponentContent {
   style?: Record<string, any>
   attrs?: Record<string, any>
   events?: EventDefinitions
-  children?: Array<ComponentContent | string> | string
+  children?: Array<ComponentContent | string>
 }
 
 export interface EventDefinitions {

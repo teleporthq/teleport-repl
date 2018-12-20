@@ -47,7 +47,7 @@ const enhanceJSXWithStyles = (
     addJSXTagStyles(jsxASTTag, prepareDynamicProps(style), t)
   }
 
-  if (Array.isArray(children)) {
+  if (children) {
     children.forEach((child) => {
       if (typeof child !== 'string') {
         enhanceJSXWithStyles(child, nodesLookup)

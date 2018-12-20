@@ -27,6 +27,10 @@
               {
                 "type": "view",
                 "key": "accordions",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red"
+                },
                 "children": [
                   {
                     "type": "ExpandableArea",
@@ -65,7 +69,11 @@
               },
               {
                 "type": "view",
-                "key": "tab selector",
+                "key": "tab-selector",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red"
+                },
                 "children": [
                   {
                     "type": "TabSelector",
@@ -87,10 +95,12 @@
       "name": "ExpandableArea",
       "propDefinitions": {
         "title": {
-          "type": "string"
+          "type": "string",
+          "defaultValue": "Hello"
         },
         "text": {
-          "type": "string"
+          "type": "string",
+          "defaultValue": "Is it me you're looking for?"
         }
       },
       "stateDefinitions": {

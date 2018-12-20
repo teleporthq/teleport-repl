@@ -1,4 +1,4 @@
-export interface StateHook {
+export interface StateIdentifier {
   key: string
   type: string
   setter: string

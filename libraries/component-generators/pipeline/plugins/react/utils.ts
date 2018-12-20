@@ -1,70 +1,41 @@
 import * as types from '@babel/types'
-import { StateHook } from './types'
+import { StateIdentifier } from './types'
 import { capitalize } from '../../utils/helpers'
+import { convertValueToLiteral } from '../../utils/js-ast'
 
-import { EventDefinitions, StateDefinitions } from '../../../../uidl-definitions/types'
+import { EventDefinitions } from '../../../../uidl-definitions/types'
 
 // Adds all the event handlers and all the instructions for each event handler
 // in case there is more than one specified in the UIDL
 export const addEventsToTag = (
   tag: types.JSXElement,
   events: EventDefinitions,
-  stateDefinitions: StateDefinitions,
-  stateHooksIdentifiers: StateHook[],
+  stateIdentifiers: Record<string, StateIdentifier>,
   t = types
 ) => {
   Object.keys(events).forEach((eventKey) => {
     const eventHandlerActions = events[eventKey]
-    const eventHandlerStatements: Array<
-      types.SwitchStatement | types.ExpressionStatement
-    > = []
+    const eventHandlerStatements: types.ExpressionStatement[] = []
 
     eventHandlerActions.forEach((eventHandlerAction) => {
       const stateKey = eventHandlerAction.modifies
-      const stateDefinition = stateDefinitions[stateKey]
-      const stateHook = stateHooksIdentifiers.find((hook) => hook.key === stateKey)
+      const stateIdentifier = stateIdentifiers[stateKey]
 
-      if (!stateHook) {
+      if (!stateIdentifier) {
         console.log(`No state hook was found for "${stateKey}"`)
         return null
       }
 
-      if (stateDefinition.type === 'string') {
-        if (typeof eventHandlerAction.newState === 'string') {
-          eventHandlerStatements.push(
-            t.expressionStatement(
-              t.callExpression(t.identifier(stateHook.setter), [
-                t.stringLiteral(eventHandlerAction.newState),
-              ])
-            )
-          )
-        }
-      }
+      const stateSetterArgument =
+        eventHandlerAction.newState === '$toggle'
+          ? t.unaryExpression('!', t.identifier(stateIdentifier.key))
+          : convertValueToLiteral(eventHandlerAction.newState, stateIdentifier.type)
 
-      if (stateDefinition.type === 'number') {
-        const numericValue = eventHandlerAction.newState as number
-        eventHandlerStatements.push(
-          t.expressionStatement(
-            t.callExpression(t.identifier(stateHook.setter), [
-              t.numericLiteral(numericValue),
-            ])
-          )
+      eventHandlerStatements.push(
+        t.expressionStatement(
+          t.callExpression(t.identifier(stateIdentifier.setter), [stateSetterArgument])
         )
-      }
-
-      if (stateDefinition.type === 'boolean') {
-        // In case there's a non-boolean value, it will default to true. undefined/null will set it to false
-        const stateSetterArgument =
-          eventHandlerAction.newState === '$toggle'
-            ? t.unaryExpression('!', t.identifier(stateHook.key))
-            : t.booleanLiteral(!!eventHandlerAction.newState)
-
-        eventHandlerStatements.push(
-          t.expressionStatement(
-            t.callExpression(t.identifier(stateHook.setter), [stateSetterArgument])
-          )
-        )
-      }
+      )
     })
 
     const jsxEventKey = convertToReactEventName(eventKey)
@@ -81,13 +52,15 @@ export const addEventsToTag = (
 
 export const makePureComponent = (
   name: string,
-  stateHooksIdentifiers: StateHook[],
+  stateIdentifiers: Record<string, StateIdentifier>,
   jsxTagTree: types.JSXElement,
   t = types
 ) => {
   const returnStatement = t.returnStatement(jsxTagTree)
 
-  const stateHooks = stateHooksIdentifiers.map((stateHook) => makeStateHookAST(stateHook))
+  const stateHooks = Object.keys(stateIdentifiers).map((stateKey) =>
+    makeStateHookAST(stateIdentifiers[stateKey])
+  )
 
   const arrowFunction = t.arrowFunctionExpression(
     [t.identifier('props')],
@@ -100,30 +73,20 @@ export const makePureComponent = (
   return component
 }
 
-export const makeDefaultArgument = (stateHook: StateHook, t = types) => {
-  if (stateHook.type === 'string') {
-    return t.stringLiteral(stateHook.default)
-  }
-
-  if (stateHook.type === 'boolean') {
-    return t.booleanLiteral(stateHook.default)
-  }
-
-  if (stateHook.type === 'number') {
-    return t.numericLiteral(stateHook.default)
-  }
-
-  return t.identifier(stateHook.default)
-}
-
 /**
  * Creates an AST line for defining a single state hook
  */
-export const makeStateHookAST = (stateHook: StateHook, t = types) => {
-  const defaultValueArgument = makeDefaultArgument(stateHook)
+export const makeStateHookAST = (stateIdentifier: StateIdentifier, t = types) => {
+  const defaultValueArgument = convertValueToLiteral(
+    stateIdentifier.default,
+    stateIdentifier.type
+  )
   return t.variableDeclaration('const', [
     t.variableDeclarator(
-      t.arrayPattern([t.identifier(stateHook.key), t.identifier(stateHook.setter)]),
+      t.arrayPattern([
+        t.identifier(stateIdentifier.key),
+        t.identifier(stateIdentifier.setter),
+      ]),
       t.callExpression(t.identifier('useState'), [defaultValueArgument])
     ),
   ])

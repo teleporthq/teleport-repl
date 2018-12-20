@@ -1,5 +1,5 @@
 import path from 'path'
-import { removeDir, copyDirRec, readJSON, writeFolder } from '../../utils/path-utils'
+import { readJSON, writeFolder } from '../../utils/path-utils'
 
 import projectJson from '../../../../inputs/components-with-state.json'
 
@@ -15,8 +15,8 @@ const writeToDisk = async (
   templatePath: string = 'project-boilerplate',
   distPath: string = 'dist'
 ) => {
-  await removeDir(distPath)
-  await copyDirRec(templatePath, distPath)
+  // await removeDir(distPath)
+  // await copyDirRec(templatePath, distPath)
   const packageJsonTemplate = path.join(templatePath, 'package.json')
   const packageJson = await readJSON(packageJsonTemplate)
   if (!packageJson) {

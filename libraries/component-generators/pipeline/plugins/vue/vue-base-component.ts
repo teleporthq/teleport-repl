@@ -53,23 +53,19 @@ const generateVueNodesTree = (
   const root = mainTag(mappedType)
 
   if (children) {
-    if (Array.isArray(children)) {
-      children.forEach((child) => {
-        if (typeof child === 'string') {
-          addTextNodeToTag(root, child)
-          return
-        }
-        const childTag = generateVueNodesTree(
-          child,
-          templateLookup,
-          resolver,
-          registerDependency
-        )
-        root.append(childTag.root())
-      })
-    } else if (typeof children === 'string') {
-      addTextNodeToTag(root, children)
-    }
+    children.forEach((child) => {
+      if (typeof child === 'string') {
+        addTextNodeToTag(root, child)
+        return
+      }
+      const childTag = generateVueNodesTree(
+        child,
+        templateLookup,
+        resolver,
+        registerDependency
+      )
+      root.append(childTag.root())
+    })
   }
 
   const { staticProps, dynamicProps } = splitProps(mappedElement.attrs || {})

@@ -47,7 +47,7 @@ const generateStyleTagStrings = (
     addDynamicPropOnJsxOpeningTag(root, 'className', `classes['${className}']`, 'props')
   }
 
-  if (children && Array.isArray(children)) {
+  if (children) {
     children.forEach((child) => {
       if (typeof child === 'string') {
         return

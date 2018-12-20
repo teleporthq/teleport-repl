@@ -91,7 +91,7 @@ export const applyCSSModulesAndGetDeclarations = (
     )
   }
 
-  if (children && Array.isArray(children)) {
+  if (children) {
     children.forEach((child) => {
       // Inside the children array we can also encounter text elements
       if (typeof child === 'string') {

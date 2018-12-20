@@ -21,9 +21,9 @@ import {
   ComponentPluginFactory,
   RegisterDependency,
 } from '../../types'
-import { StateHook } from './types'
+import { StateIdentifier } from './types'
 
-import { ComponentContent, StateDefinitions } from '../../../../uidl-definitions/types'
+import { ComponentContent } from '../../../../uidl-definitions/types'
 
 /**
  *
@@ -56,11 +56,10 @@ const addTextElementToTag = (tag: t.JSXElement, text: string) => {
 
 export const generateTreeStructure = (
   content: ComponentContent,
+  stateIdentifiers: Record<string, StateIdentifier>,
   nodesLookup: Record<string, t.JSXElement>,
   resolver: Resolver,
-  registerDependency: RegisterDependency,
-  stateDefinitions: StateDefinitions,
-  stateHooksIdentifiers: StateHook[]
+  registerDependency: RegisterDependency
 ): t.JSXElement => {
   const { type, children, key, attrs, dependency, events } = content
 
@@ -74,10 +73,8 @@ export const generateTreeStructure = (
     throw new Error(`mappedType not found for ${type}`)
   }
 
-  addAttributesToTag(mainTag, mappedElement.attrs)
-
-  if (events) {
-    addEventsToTag(mainTag, events, stateDefinitions, stateHooksIdentifiers)
+  if (mappedElement.attrs) {
+    addAttributesToTag(mainTag, mappedElement.attrs)
   }
 
   if (mappedElement.dependency) {
@@ -85,70 +82,68 @@ export const generateTreeStructure = (
     registerDependency(mappedNodeName, { ...mappedElement.dependency })
   }
 
+  if (events) {
+    addEventsToTag(mainTag, events, stateIdentifiers)
+  }
+
   if (children) {
-    if (Array.isArray(children)) {
-      children.forEach((child) => {
-        if (!child) {
-          return
-        }
-        if (typeof child === 'string') {
-          addTextElementToTag(mainTag, child)
-          return
-        }
+    children.forEach((child) => {
+      if (!child) {
+        return
+      }
 
-        if (child.type === 'state') {
-          const { states = [], key: stateKey } = child
-          states.forEach((stateBranch) => {
-            const stateContent = stateBranch.content
-            const valueType = stateDefinitions[stateKey].type
-            if (typeof stateContent === 'string') {
-              const jsxExpression = createConditionalJSXExpression(
-                stateContent,
-                stateKey,
-                stateBranch.value,
-                valueType
-              )
-              mainTag.children.push(jsxExpression)
-            } else {
-              const stateChildSubTree = generateTreeStructure(
-                stateContent,
-                nodesLookup,
-                resolver,
-                registerDependency,
-                stateDefinitions,
-                stateHooksIdentifiers
-              )
+      if (typeof child === 'string') {
+        addTextElementToTag(mainTag, child)
+        return
+      }
 
-              const jsxExpression = createConditionalJSXExpression(
-                stateChildSubTree,
-                stateKey,
-                stateBranch.value,
-                valueType
-              )
-              mainTag.children.push(jsxExpression)
-            }
-          })
+      if (child.type === 'state') {
+        const { states = [], key: stateKey } = child
+        states.forEach((stateBranch) => {
+          const stateContent = stateBranch.content
+          const stateIdentifier = stateIdentifiers[stateKey]
+          if (!stateIdentifier) {
+            return
+          }
 
-          return
-        }
+          if (typeof stateContent === 'string') {
+            const jsxExpression = createConditionalJSXExpression(
+              stateContent,
+              stateBranch,
+              stateIdentifier
+            )
+            mainTag.children.push(jsxExpression)
+          } else {
+            const stateChildSubTree = generateTreeStructure(
+              stateContent,
+              stateIdentifiers,
+              nodesLookup,
+              resolver,
+              registerDependency
+            )
 
-        const childTag = generateTreeStructure(
-          child,
-          nodesLookup,
-          resolver,
-          registerDependency,
-          stateDefinitions,
-          stateHooksIdentifiers
-        )
-        if (!childTag) {
-          return
-        }
-        addChildJSXTag(mainTag, childTag)
-      })
-    } else {
-      const textElement = children.toString()
-      addTextElementToTag(mainTag, textElement)
-    }
+            const jsxExpression = createConditionalJSXExpression(
+              stateChildSubTree,
+              stateBranch,
+              stateIdentifier
+            )
+            mainTag.children.push(jsxExpression)
+          }
+        })
+
+        return
+      }
+
+      const childTag = generateTreeStructure(
+        child,
+        stateIdentifiers,
+        nodesLookup,
+        resolver,
+        registerDependency
+      )
+
+      addChildJSXTag(mainTag, childTag)
+    })
   }
 
   // UIDL name should be unique
@@ -179,7 +174,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
       path: 'react',
     })
 
-    let stateHooksIdentifiers: StateHook[] = []
+    let stateIdentifiers: Record<string, StateIdentifier> = {}
     if (uidl.stateDefinitions) {
       registerDependency('useState', {
         type: 'library',
@@ -189,14 +184,20 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
         },
       })
 
-      const stateKeys = Object.keys(uidl.stateDefinitions)
-      const definitions = uidl.stateDefinitions
-      stateHooksIdentifiers = stateKeys.map((key) => ({
-        key,
-        type: definitions[key].type,
-        default: definitions[key].defaultValue,
-        setter: 'set' + capitalize(key),
-      }))
+      const stateDefinitions = uidl.stateDefinitions
+      stateIdentifiers = Object.keys(stateDefinitions).reduce(
+        (acc: Record<string, StateIdentifier>, stateKey: string) => {
+          acc[stateKey] = {
+            key: stateKey,
+            type: stateDefinitions[stateKey].type,
+            default: stateDefinitions[stateKey].defaultValue,
+            setter: 'set' + capitalize(stateKey),
+          }
+
+          return acc
+        },
+        {}
+      )
     }
 
     // We will keep a flat mapping object from each component identifier (from the UIDL) to its correspoding JSX AST Tag
@@ -205,18 +206,13 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
     const nodesLookup = {}
     const jsxTagStructure = generateTreeStructure(
       uidl.content,
+      stateIdentifiers,
       nodesLookup,
       resolver,
-      registerDependency,
-      uidl.stateDefinitions || {},
-      stateHooksIdentifiers
+      registerDependency
     )
 
-    const pureComponent = makePureComponent(
-      uidl.name,
-      stateHooksIdentifiers,
-      jsxTagStructure
-    )
+    const pureComponent = makePureComponent(uidl.name, stateIdentifiers, jsxTagStructure)
 
     structure.chunks.push({
       type: 'js',
