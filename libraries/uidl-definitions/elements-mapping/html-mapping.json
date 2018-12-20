@@ -1,36 +1,36 @@
 {
-  "View": {
+  "view": {
     "name": "div"
   },
-  "Group": {
+  "group": {
     "name": "div"
   },
-  "Text": {
+  "text": {
     "name": "span"
   },
-  "Heading1": {
+  "heading1": {
     "name": "h1"
   },
-  "Image": {
+  "image": {
     "name": "img",
     "attrs": {
       "src": "$attrs.url"
     }
   },
-  "TextInput": {
+  "textinput": {
     "name": "input",
     "attrs": {
       "type": "text"
     }
   },
-  "Link": {
+  "link": {
     "name": "a",
     "attrs": {
       "href": "$attrs.url",
       "target": "_blank"
     }
   },
-  "Button": {
+  "button": {
     "name": "button"
   }
 }

@@ -11,7 +11,7 @@ import { createPlugin as importStatements } from '../pipeline/plugins/common/imp
 import { ComponentAssemblyLine, Builder } from '../pipeline'
 import { generateTreeStructure } from '../pipeline/plugins/react/react-base-component'
 
-import standardMapping from '../elements-mapping.json'
+import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import reactMapping from './elements-mapping.json'
 
 const makePureComponent = (params: { name: string; jsxTagTree: t.JSXElement }) => {
@@ -108,6 +108,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         const nodesLookup = {}
         const jsxTagStructure = generateTreeStructure(
           content,
+          {}, // TODO: add state definitions here
           nodesLookup,
           resolver,
           (a, b) => {
@@ -231,7 +232,7 @@ export const configureRouterAsemblyLine = () => {
     const asemblyLine = new ComponentAssemblyLine(
       [configureAppRouterComponent, configureImportStatements],
       {
-        ...standardMapping,
+        ...htmlMapping,
         ...reactMapping,
       }
     )
