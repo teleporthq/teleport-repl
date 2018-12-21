@@ -7,7 +7,7 @@ import { createPlugin as importStatements } from '../pipeline/plugins/common/imp
 import { GeneratorOptions } from '../pipeline/types'
 import { ComponentUIDL } from '../../uidl-definitions/types'
 
-import standardMapping from '../elements-mapping.json'
+import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import vueMapping from './elements-mapping.json'
 
 const createVueGenerator = (
@@ -30,7 +30,7 @@ const createVueGenerator = (
         importLocalsChunkName: 'locals',
       }),
     ],
-    { ...standardMapping, ...vueMapping, ...customMapping }
+    { ...htmlMapping, ...vueMapping, ...customMapping }
   )
 
   const chunksLinker = new Builder()

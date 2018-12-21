@@ -5,7 +5,7 @@ import { createPlugin as createImportPlugin } from '../pipeline/plugins/common/i
 
 import { GeneratorOptions } from '../pipeline/types'
 
-import standardMapping from '../elements-mapping.json'
+import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import vueMapping from './elements-mapping.json'
 
 const createVuePipeline = ({ customMapping }: GeneratorOptions = {}) => {
@@ -20,7 +20,7 @@ const createVuePipeline = ({ customMapping }: GeneratorOptions = {}) => {
       }),
     ],
     {
-      ...standardMapping,
+      ...htmlMapping,
       ...vueMapping,
       ...customMapping,
     }

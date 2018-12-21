@@ -12,7 +12,7 @@ import { createPlugin as importStatements } from '../pipeline/plugins/common/imp
 import { ComponentPlugin, GeneratorOptions } from '../pipeline/types'
 import { ComponentUIDL, ElementsMapping } from '../../uidl-definitions/types'
 
-import standardMapping from '../elements-mapping.json'
+import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import reactMapping from './elements-mapping.json'
 import { groupChunksByFileId } from './utils'
 
@@ -95,7 +95,7 @@ const createReactGenerator = (params: FactoryParams) => {
     generatorOptions?: GeneratorOptions
   ) => {
     const assemblyLine = new ComponentAssemblyLine(Options[variation], {
-      ...standardMapping,
+      ...htmlMapping,
       ...reactMapping,
       ...customMapping,
     })

@@ -1,5 +1,30 @@
 import * as types from '@babel/types'
-import { objectToObjectExpression } from './js-ast'
+import { objectToObjectExpression, convertValueToLiteral } from './js-ast'
+import { StateIdentifier } from '../plugins/react/types'
+
+type BinaryOperator =
+  | '==='
+  | '+'
+  | '-'
+  | '/'
+  | '%'
+  | '*'
+  | '**'
+  | '&'
+  | '|'
+  | '>>'
+  | '>>>'
+  | '<<'
+  | '^'
+  | '=='
+  | '!='
+  | '!=='
+  | 'in'
+  | 'instanceof'
+  | '>'
+  | '<'
+  | '>='
+  | '<='
 
 /**
  * Gets the existing className declaration attribute or generates and returns
@@ -50,7 +75,7 @@ export const addClassStringOnJSXTag = (
 }
 
 /**
- * Makes `${name}={props.${value}}` happen in AST
+ * Makes `${name}={${prefix}.${value}}` happen in AST
  *
  * @param jsxASTNode the jsx ast element
  * @param name the name of the prop
@@ -60,15 +85,16 @@ export const addDynamicPropOnJsxOpeningTag = (
   jsxASTNode: types.JSXElement,
   name: string,
   value: string,
+  prefix: string = '',
   t = types
 ) => {
+  const content =
+    prefix === ''
+      ? t.identifier(value)
+      : t.memberExpression(t.identifier('props'), t.identifier(value))
+
   jsxASTNode.openingElement.attributes.push(
-    t.jsxAttribute(
-      t.jsxIdentifier(name),
-      t.jsxExpressionContainer(
-        t.memberExpression(t.identifier('props'), t.identifier(value))
-      )
-    )
+    t.jsxAttribute(t.jsxIdentifier(name), t.jsxExpressionContainer(content))
   )
 }
 
@@ -185,19 +211,26 @@ export const generateASTDefinitionForJSXTag = (tagName: string, t = types) => {
 }
 
 export const addChildJSXTag = (tag: types.JSXElement, childNode: types.JSXElement) => {
-  tag.children.push(types.jsxText('\n'), childNode, types.jsxText('\n'))
+  tag.children.push(childNode)
 }
 
 export const addChildJSXText = (tag: types.JSXElement, text: string, t = types) => {
   tag.children.push(t.jsxText(text))
 }
 
-export const addDynamicChild = (tag: types.JSXElement, value: string, t = types) => {
-  tag.children.push(
-    t.jsxExpressionContainer(
-      t.memberExpression(t.identifier('props'), t.identifier(value))
-    )
-  )
+export const addDynamicChild = (
+  tag: types.JSXElement,
+  value: string,
+  prefix: string = '',
+  t = types
+) => {
+  // if no prefix is provided (ex: props or state) value is added directly inside the node
+  const content =
+    prefix === ''
+      ? t.identifier(value)
+      : t.memberExpression(t.identifier(prefix), t.identifier(value))
+
+  tag.children.push(t.jsxExpressionContainer(content))
 }
 
 export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types) => {
@@ -209,4 +242,48 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
     styleObjectExpressionContainer
   )
   tag.openingElement.attributes.push(styleJSXAttr)
+}
+
+export const createConditionalJSXExpression = (
+  content: types.JSXElement | string,
+  stateBranch: any,
+  stateIdentifier: StateIdentifier,
+  t = types
+) => {
+  const contentNode = typeof content === 'string' ? t.stringLiteral(content) : content
+  const { value, operation } = stateBranch
+
+  let binaryExpression: types.BinaryExpression | types.UnaryExpression | types.Identifier
+  if (stateIdentifier.type === 'boolean') {
+    binaryExpression = value
+      ? t.identifier(stateIdentifier.key)
+      : t.unaryExpression('!', t.identifier(stateIdentifier.key))
+  } else {
+    const stateValueIdentifier = convertValueToLiteral(
+      stateBranch.value,
+      stateIdentifier.type
+    )
+    binaryExpression = t.binaryExpression(
+      convertToBinaryOperator(operation),
+      t.identifier(stateIdentifier.key),
+      stateValueIdentifier
+    )
+  }
+
+  return t.jsxExpressionContainer(
+    t.logicalExpression('&&', binaryExpression, contentNode)
+  )
+}
+
+/**
+ * Because of the restrictions of the AST Types we need to have a clear subset of binary operators we can use
+ * @param operation - the operation defined in the UIDL for the current state branch
+ */
+const convertToBinaryOperator = (operation: string): BinaryOperator => {
+  const allowedOperations = ['===', '!==', '>=', '<=', '>', '<']
+  if (allowedOperations.includes(operation)) {
+    return operation as BinaryOperator
+  } else {
+    return '==='
+  }
 }

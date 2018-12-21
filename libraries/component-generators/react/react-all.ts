@@ -8,7 +8,7 @@ import { createPlugin as reactPropTypes } from '../pipeline/plugins/react/react-
 import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
 import { createPlugin as reactCSSModules } from '../pipeline/plugins/react/react-css-modules'
 
-import standardMapping from '../elements-mapping.json'
+import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import reactMapping from './elements-mapping.json'
 import { ComponentPlugin } from '../pipeline/types'
 import { groupChunksByFileId } from './utils'
@@ -82,7 +82,7 @@ const generateComponent = async (
   customMapping: ElementsMapping = {}
 ) => {
   const asemblyLine = new ComponentAssemblyLine(Options[variation], {
-    ...standardMapping,
+    ...htmlMapping,
     ...reactMapping,
     ...customMapping,
   })

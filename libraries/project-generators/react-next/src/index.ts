@@ -1,15 +1,17 @@
 import path from 'path'
 import { removeDir, copyDirRec, readJSON, writeFolder } from '../../utils/path-utils'
 
-import projectJson from '../../../../inputs/project.json'
+import projectJson from '../../../../inputs/components-with-state.json'
 
 import createNextProject from './generator'
-import { ProjectGeneratorFunction } from '../../types'
+// import { ProjectGeneratorFunction } from '../../types'
 import { ProjectUIDL } from '../../../uidl-definitions/types'
+
+import { validateProjectUIDL } from '../../../uidl-definitions/validators'
 
 const writeToDisk = async (
   projectUIDL: ProjectUIDL,
-  generatorFunction: ProjectGeneratorFunction,
+  generatorFunction: any,
   templatePath: string = 'project-boilerplate',
   distPath: string = 'dist'
 ) => {
@@ -35,6 +37,8 @@ const writeToDisk = async (
 //   const result = await generatorFunction(projectUIDL)
 //   console.log(JSON.stringify(result, null, 2))
 // }
+
+console.log(validateProjectUIDL(projectJson))
 
 writeToDisk(projectJson, createNextProject, 'project-boilerplate')
 // runInMemory(projectJson, createNuxtProject)

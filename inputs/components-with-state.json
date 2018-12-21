@@ -1,0 +1,277 @@
+{
+  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/project.json",
+  "name": "myVueProject",
+  "root": {
+    "name": "App",
+    "stateDefinitions": {
+      "router": {
+        "type": "router",
+        "defaultValue": "index",
+        "values": [
+          {
+            "value": "index",
+            "meta": {
+              "componentName": "Home"
+            }
+          }
+        ]
+      }
+    },
+    "content": {
+      "type": "state",
+      "key": "router",
+      "states": [
+        {
+          "value": "index",
+          "content": {
+            "type": "group",
+            "key": "container",
+            "children": [
+              {
+                "type": "view",
+                "key": "accordions",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red"
+                },
+                "children": [
+                  {
+                    "type": "ExpandableArea",
+                    "key": "area1",
+                    "attrs": {
+                      "title": "First",
+                      "text": "Text"
+                    },
+                    "dependency": {
+                      "type": "local"
+                    }
+                  },
+                  {
+                    "type": "ExpandableArea",
+                    "key": "area2",
+                    "attrs": {
+                      "title": "Second",
+                      "text": "Text"
+                    },
+                    "dependency": {
+                      "type": "local"
+                    }
+                  },
+                  {
+                    "type": "ExpandableArea",
+                    "key": "area3",
+                    "attrs": {
+                      "title": "Third",
+                      "text": "Text"
+                    },
+                    "dependency": {
+                      "type": "local"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "view",
+                "key": "tab-selector",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red"
+                },
+                "children": [
+                  {
+                    "type": "TabSelector",
+                    "key": "tabs",
+                    "dependency": {
+                      "type": "local"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "components": {
+    "ExpandableArea": {
+      "name": "ExpandableArea",
+      "propDefinitions": {
+        "title": {
+          "type": "string",
+          "defaultValue": "Hello"
+        },
+        "text": {
+          "type": "string",
+          "defaultValue": "Is it me you're looking for?"
+        }
+      },
+      "stateDefinitions": {
+        "isExpanded": {
+          "type": "boolean",
+          "defaultValue": false
+        }
+      },
+      "content": {
+        "type": "view",
+        "key": "container",
+        "children": [
+          {
+            "type": "text",
+            "key": "title",
+            "children": ["$props.title"]
+          },
+          {
+            "type": "button",
+            "key": "button",
+            "children": [{
+              "type": "state",
+              "key": "isExpanded",
+              "states": [
+                {
+                  "value": true,
+                  "content": "Collapse"
+                },
+                {
+                  "value": false,
+                  "content": "Expand"
+                }
+              ]
+            }],
+            "events": {
+              "click": [
+                {
+                  "modifies": "isExpanded",
+                  "newState": "$toggle"
+                }
+              ]
+            }
+          },
+          {
+            "type": "state",
+            "key": "isExpanded",
+            "states": [
+              {
+                "value": true,
+                "content": {
+                  "type": "view",
+                  "key": "expanded-area",
+                  "children": ["$props.text"]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "TabSelector": {
+      "name": "TabSelector",
+      "stateDefinitions": {
+        "activeTab": {
+          "type": "number",
+          "defaultValue": 0
+        }
+      },
+      "content": {
+        "type": "view",
+        "key": "container",
+        "children": [
+          {
+            "type": "view",
+            "key": "tabs",
+            "children": [
+              {
+                "type": "button",
+                "key": "tab1",
+                "children": ["Click"],
+                "events": {
+                  "click": [{
+                    "modifies": "activeTab",
+                    "newState": 0
+                  }]
+                }
+              },
+              {
+                "type": "button",
+                "key": "tab2",
+                "children": ["any"],
+                "events": {
+                  "click": [{
+                    "modifies": "activeTab",
+                    "newState": 1
+                  }]
+                }
+              },
+              {
+                "type": "button",
+                "key": "tab3",
+                "children": ["of"],
+                "events": {
+                  "click": [{
+                    "modifies": "activeTab",
+                    "newState": 2
+                  }]
+                }
+              },
+              {
+                "type": "button",
+                "key": "tab4",
+                "children": ["these"],
+                "events": {
+                  "click": [{
+                    "modifies": "activeTab",
+                    "newState": 3
+                  }]
+                }
+              }
+            ]
+          },
+          {
+            "type": "view",
+            "key": "text",
+            "children": [
+              "Active tab: ",
+              "$state.activeTab"
+            ]
+          },
+          {
+            "type": "state",
+            "key": "activeTab",
+            "states": [
+              {
+                "value": 0,
+                "content": {
+                  "type": "text",
+                  "key": "text1",
+                  "children": ["This is the first tab"]
+                }
+              },{
+                "value": 1,
+                "operation": ">=",
+                "content": {
+                  "type": "text",
+                  "key": "text2",
+                  "children": ["This is the second tab"]
+                }
+              },{
+                "value": 2,
+                "content": {
+                  "type": "text",
+                  "key": "text3",
+                  "children": ["This is the third tab"]
+                }
+              },{
+                "value": 3,
+                "content": {
+                  "type": "text",
+                  "key": "text4",
+                  "children": ["This is the fourth tab"]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

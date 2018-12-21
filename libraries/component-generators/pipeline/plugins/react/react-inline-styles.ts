@@ -36,10 +36,10 @@ const enhanceJSXWithStyles = (
   content: ComponentContent,
   nodesLookup: Record<string, t.JSXElement>
 ) => {
-  const { children, style, name } = content
+  const { children, style, key } = content
 
   if (style) {
-    const jsxASTTag = nodesLookup[name]
+    const jsxASTTag = nodesLookup[key]
     if (!jsxASTTag) {
       return
     }
@@ -47,7 +47,7 @@ const enhanceJSXWithStyles = (
     addJSXTagStyles(jsxASTTag, prepareDynamicProps(style), t)
   }
 
-  if (Array.isArray(children)) {
+  if (children) {
     children.forEach((child) => {
       if (typeof child !== 'string') {
         enhanceJSXWithStyles(child, nodesLookup)

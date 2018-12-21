@@ -30,10 +30,10 @@ const generateStyledJSXString = (
 ) => {
   let accumulator: any[] = []
 
-  const { style, children, name } = content
+  const { style, children, key } = content
   if (style) {
-    const root = nodesLookup[name]
-    const className = cammelCaseToDashCase(name)
+    const root = nodesLookup[key]
+    const className = cammelCaseToDashCase(key)
     accumulator.push(
       jss
         .createStyleSheet(
@@ -49,7 +49,7 @@ const generateStyledJSXString = (
     addClassStringOnJSXTag(root, className)
   }
 
-  if (children && Array.isArray(children)) {
+  if (children) {
     children.forEach((child) => {
       // Skip text children
       if (typeof child === 'string') {
@@ -88,7 +88,7 @@ export const createPlugin: ComponentPluginFactory<StyledJSXConfig> = (config) =>
     }
 
     const jsxASTNodeReference = generateStyledJSXTag(styleJSXString.join('\n'))
-    const rootJSXNode = jsxNodesLookup[content.name]
+    const rootJSXNode = jsxNodesLookup[content.key]
 
     // We have the ability to insert the tag into the existig JSX structure, or do something else with it.
     // Here we take the JSX <style> tag and we insert it as the last child of the JSX structure

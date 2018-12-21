@@ -1,6 +1,6 @@
 import * as types from '@babel/types'
 import cheerio from 'cheerio'
-import { PropDefinitions } from '../../../../uidl-definitions/types'
+import { PropDefinition } from '../../../../uidl-definitions/types'
 
 /**
  * Generate the AST version of
@@ -131,7 +131,9 @@ export const generateEmptyVueComponentJS = (
   return astFile
 }
 
-export const generateVueComponentPropTypes = (uidlPropDefinitions: PropDefinitions) => {
+export const generateVueComponentPropTypes = (
+  uidlPropDefinitions: Record<string, PropDefinition>
+) => {
   return Object.keys(uidlPropDefinitions).reduce((acc: { [key: string]: any }, name) => {
     let mappedType
     const { type, defaultValue } = uidlPropDefinitions[name]

@@ -54,10 +54,10 @@ export const applyCSSModulesAndGetDeclarations = (
   let accumulator: any[] = []
   const { nodesLookup = {}, camelCaseClassNames } = params
 
-  const { style, children, name } = content
+  const { style, children, key } = content
   if (style) {
-    const root = nodesLookup[name]
-    const className = cammelCaseToDashCase(name)
+    const root = nodesLookup[key]
+    const className = cammelCaseToDashCase(key)
     const classNameInJS = camelCaseClassNames ? stringToCamelCase(className) : className
     const { staticStyles, dynamicStyles } = splitDynamicAndStaticProps(style)
 
@@ -91,7 +91,7 @@ export const applyCSSModulesAndGetDeclarations = (
     )
   }
 
-  if (children && Array.isArray(children)) {
+  if (children) {
     children.forEach((child) => {
       // Inside the children array we can also encounter text elements
       if (typeof child === 'string') {
