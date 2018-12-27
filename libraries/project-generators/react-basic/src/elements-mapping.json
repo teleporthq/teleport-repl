@@ -1,6 +1,6 @@
 {
   "NavLink": {
-    "name": "Link",
+    "type": "Link",
     "dependency": {
       "type": "library",
       "path": "react-router-dom",
