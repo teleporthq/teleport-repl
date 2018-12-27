@@ -1,6 +1,6 @@
 {
   "Datepicker": {
-    "name": "Datepicker",
+    "type": "Datepicker",
     "dependency": {
       "type": "package",
       "path": "vuejs-datepicker",

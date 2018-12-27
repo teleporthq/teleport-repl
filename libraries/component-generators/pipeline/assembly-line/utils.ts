@@ -62,7 +62,7 @@ export const resolveDependency = (
     // When a dependency is specified without a path, we infer it is a local import.
     // This might be removed at a later point
     nodeDependency.path =
-      nodeDependency.path || localDependenciesPrefix + mappedElement.name
+      nodeDependency.path || localDependenciesPrefix + mappedElement.type
   }
 
   return nodeDependency
@@ -103,9 +103,9 @@ export const resolveUIDLNode = (
   elementsMapping: ElementsMapping,
   localDependenciesPrefix: string
 ) => {
-  const mappedElement = elementsMapping[node.type] || { name: node.type }
+  const mappedElement = elementsMapping[node.type] || { type: node.type }
 
-  node.type = mappedElement.name
+  node.type = mappedElement.type
 
   // Resolve dependency with the UIDL having priority
   if (node.dependency || mappedElement.dependency) {

@@ -70,7 +70,7 @@ export interface ComponentDependency {
 /* element mapping interfaces */
 
 export interface ElementMapping {
-  name: string
+  type: string
   dependency?: ComponentDependency
   attrs?: Record<string, any>
   children?: ComponentContent[]

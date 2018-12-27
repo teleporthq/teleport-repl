@@ -1,9 +1,9 @@
 {
   "Slot": {
-    "name": "slot"
+    "type": "slot"
   },
   "View": {
-    "name": "div",
+    "type": "div",
     "attrs": {
       "class": "$attrs.className"
     }

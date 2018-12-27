@@ -1,6 +1,6 @@
 {
   "Datepicker": {
-    "name": "Datepicker",
+    "type": "Datepicker",
     "attrs": {
       "data-attr": "test"
     },

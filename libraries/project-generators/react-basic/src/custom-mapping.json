@@ -1,6 +1,6 @@
 {
   "Datepicker": {
-    "name": "ReactDatepicker",
+    "type": "ReactDatepicker",
     "dependency": {
       "type": "package",
       "path": "react-datepicker",

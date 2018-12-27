@@ -1,37 +1,37 @@
 {
   "view": {
-    "name": "div"
+    "type": "div"
   },
   "group": {
-    "name": "div"
+    "type": "div"
   },
   "text": {
-    "name": "span"
+    "type": "span"
   },
   "heading1": {
-    "name": "h1"
+    "type": "h1"
   },
   "image": {
-    "name": "img",
+    "type": "img",
     "attrs": {
       "src": "$attrs.url"
     }
   },
   "textinput": {
-    "name": "input",
+    "type": "input",
     "attrs": {
       "type": "text"
     }
   },
   "link": {
-    "name": "a",
+    "type": "a",
     "attrs": {
       "href": "$attrs.url",
       "target": "_blank"
     }
   },
   "button": {
-    "name": "button"
+    "type": "button"
   },
   "list": {
     "type": "ul",

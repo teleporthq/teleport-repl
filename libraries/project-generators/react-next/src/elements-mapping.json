@@ -1,6 +1,6 @@
 {
     "navlink": {
-      "name": "Link",
+      "type": "Link",
       "dependency": {
           "type": "library",
           "path": "next/link"
