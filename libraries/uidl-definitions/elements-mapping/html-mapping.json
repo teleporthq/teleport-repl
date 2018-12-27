@@ -32,5 +32,21 @@
   },
   "button": {
     "name": "button"
+  },
+  "list": {
+    "type": "ul",
+    "childrenSource": "$attrs.items",
+    "childStructure": {
+      "type": "li",
+      "children": ["$source"]
+    }
+  },
+  "dropdown": {
+    "type": "select",
+    "childrenSource": "$attrs.options",
+    "childStructure": {
+      "type": "option",
+      "children": ["$source"]
+    }
   }
 }

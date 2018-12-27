@@ -73,6 +73,9 @@ export interface ElementMapping {
   name: string
   dependency?: ComponentDependency
   attrs?: Record<string, any>
+  children?: ComponentContent[]
+  childrenSource?: string
+  childStructure?: ComponentContent
 }
 
 export type ElementsMapping = Record<string, ElementMapping>

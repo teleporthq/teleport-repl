@@ -81,7 +81,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
     operations
   ) => {
     const { uidl } = structure
-    const { resolver, registerDependency } = operations
+    const { registerDependency } = operations
 
     registerRouterDeps(registerDependency)
 
@@ -98,8 +98,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
     const routeDefinitions = Object.keys(pages).map((pageKey) => {
       const { component: stateComponent, default: isDefault, meta } = pages[pageKey]
       const { name, content } = stateComponent
-      const { type, attrs, dependency, children } = content
-      const mappedElement = resolver(type, attrs, dependency)
+      const { type, children } = content
       const route = generateASTDefinitionForJSXTag('Route')
       const path = meta && meta.url ? meta.url : pageKey
       const urlRoute = isDefault ? '/' : `/${path.toLocaleLowerCase()}`
@@ -110,7 +109,6 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
           content,
           {}, // TODO: add state definitions here
           nodesLookup,
-          resolver,
           (a, b) => {
             const filePath = b.path || ''
             b = {
@@ -143,9 +141,9 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         })
         componentChunkNamesBeforeRouteChunk.push(inlinePageComponentChunkName)
       } else {
-        registerDependency(mappedElement.nodeName, {
+        registerDependency(type, {
           type: 'local',
-          path: `./components/${mappedElement.nodeName}`,
+          path: `./components/${type}`,
         })
       }
 
@@ -155,7 +153,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         t.jsxAttribute(
           t.jsxIdentifier('component'),
           t.jsxExpressionContainer(
-            t.identifier(withInlineComponent ? `${name}Page` : mappedElement.nodeName)
+            t.identifier(withInlineComponent ? `${name}Page` : type)
           )
         )
       )

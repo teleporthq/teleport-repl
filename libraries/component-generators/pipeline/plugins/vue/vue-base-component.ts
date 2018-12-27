@@ -1,9 +1,4 @@
-import {
-  ComponentPlugin,
-  Resolver,
-  ComponentPluginFactory,
-  RegisterDependency,
-} from '../../types'
+import { ComponentPlugin, ComponentPluginFactory, RegisterDependency } from '../../types'
 
 import {
   generateSingleVueNode,
@@ -33,24 +28,20 @@ const addTextNodeToTag = (tag: Cheerio, text: string) => {
 const generateVueNodesTree = (
   content: ComponentContent,
   templateLookup: Record<string, any>,
-  resolver: Resolver,
   registerDependency: RegisterDependency
 ): CheerioStatic => {
-  const { name, type, children, attrs, dependency } = content
+  const { type, children, attrs, dependency } = content
 
-  const mappedElement = resolver(type, attrs, dependency)
-  const mappedType = mappedElement.nodeName
-
-  if (mappedElement.dependency) {
-    registerDependency(mappedType, { ...mappedElement.dependency })
+  if (dependency) {
+    registerDependency(type, { ...dependency })
   }
 
   const mainTag = generateSingleVueNode({
-    tagName: mappedType,
+    tagName: type,
     // custom elements cannot be self-enclosing in Vue
     selfClosing: false,
   })
-  const root = mainTag(mappedType)
+  const root = mainTag(type)
 
   if (children) {
     children.forEach((child) => {
@@ -58,17 +49,12 @@ const generateVueNodesTree = (
         addTextNodeToTag(root, child)
         return
       }
-      const childTag = generateVueNodesTree(
-        child,
-        templateLookup,
-        resolver,
-        registerDependency
-      )
+      const childTag = generateVueNodesTree(child, templateLookup, registerDependency)
       root.append(childTag.root())
     })
   }
 
-  const { staticProps, dynamicProps } = splitProps(mappedElement.attrs || {})
+  const { staticProps, dynamicProps } = splitProps(attrs || {})
 
   Object.keys(staticProps).forEach((key) => {
     root.attr(key, staticProps[key])
@@ -103,7 +89,7 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
 
   const vueBasicComponentChunks: ComponentPlugin = async (structure, operations) => {
     const { uidl, chunks } = structure
-    const { resolver, registerDependency, getDependencies } = operations
+    const { registerDependency, getDependencies } = operations
 
     // if file ids are not falsy, and different in value
     const separateFiles = (htmlFileId || jsFileId) && htmlFileId !== jsFileId
@@ -114,7 +100,6 @@ export const createPlugin: ComponentPluginFactory<VueComponentConfig> = (config)
     const templateContent = generateVueNodesTree(
       uidl.content,
       templateLookup,
-      resolver,
       registerDependency
     )
 

@@ -15,12 +15,7 @@ import { addEventsToTag, makePureComponent } from './utils'
 
 import { capitalize } from '../../utils/helpers'
 
-import {
-  ComponentPlugin,
-  Resolver,
-  ComponentPluginFactory,
-  RegisterDependency,
-} from '../../types'
+import { ComponentPlugin, ComponentPluginFactory, RegisterDependency } from '../../types'
 import { StateIdentifier } from './types'
 
 import { ComponentContent } from '../../../../uidl-definitions/types'
@@ -58,28 +53,19 @@ export const generateTreeStructure = (
   content: ComponentContent,
   stateIdentifiers: Record<string, StateIdentifier>,
   nodesLookup: Record<string, t.JSXElement>,
-  resolver: Resolver,
   registerDependency: RegisterDependency
 ): t.JSXElement => {
   const { type, children, key, attrs, dependency, events } = content
 
-  const mappedElement = resolver(type, attrs, dependency)
-  const mappedNodeName = mappedElement.nodeName
-  const mainTag = generateASTDefinitionForJSXTag(mappedNodeName)
+  const mainTag = generateASTDefinitionForJSXTag(type)
 
-  if (mappedNodeName === undefined) {
-    // tslint:disable-next-line:no-console
-    console.error('mappedType erorr for uidl content', content)
-    throw new Error(`mappedType not found for ${type}`)
+  if (attrs) {
+    addAttributesToTag(mainTag, attrs)
   }
 
-  if (mappedElement.attrs) {
-    addAttributesToTag(mainTag, mappedElement.attrs)
-  }
-
-  if (mappedElement.dependency) {
+  if (dependency) {
     // Make a copy to avoid reference leaking
-    registerDependency(mappedNodeName, { ...mappedElement.dependency })
+    registerDependency(type, { ...dependency })
   }
 
   if (events) {
@@ -118,7 +104,6 @@ export const generateTreeStructure = (
               stateContent,
               stateIdentifiers,
               nodesLookup,
-              resolver,
               registerDependency
             )
 
@@ -138,7 +123,6 @@ export const generateTreeStructure = (
         child,
         stateIdentifiers,
         nodesLookup,
-        resolver,
         registerDependency
       )
 
@@ -167,7 +151,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
 
   const reactComponentPlugin: ComponentPlugin = async (structure, operations) => {
     const { uidl } = structure
-    const { resolver, registerDependency } = operations
+    const { registerDependency } = operations
 
     registerDependency('React', {
       type: 'library',
@@ -208,7 +192,6 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
       uidl.content,
       stateIdentifiers,
       nodesLookup,
-      resolver,
       registerDependency
     )
 

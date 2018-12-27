@@ -37,7 +37,6 @@ export interface ComponentStructure {
 
 export interface PipelineOperations {
   registerDependency: RegisterDependency
-  resolver: Resolver
   getDependencies: () => {
     [key: string]: ComponentDependency
   }
@@ -70,16 +69,6 @@ interface ComponentDefaultPluginParams {
 export type ComponentPluginFactory<T> = (
   configuration?: Partial<T & ComponentDefaultPluginParams>
 ) => ComponentPlugin
-
-/**
- * The function which resolves element mappings (primitive and custom)
- * @param type - uidl node which is converted
- */
-export type Resolver = (
-  uidlType: string,
-  uidlAttrs?: any,
-  uidlDependency?: ComponentDependency
-) => MappedElement
 
 export type RegisterDependency = (name: string, dependency: ComponentDependency) => void
 

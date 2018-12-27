@@ -32,7 +32,7 @@
         {
           "value": "home",
           "content": {
-            "type": "View",
+            "type": "view",
             "key": "container",
             "children": [
               {
@@ -41,11 +41,19 @@
                 "children": ["click-me"]
               },
               {
-                "type": "Text",
+                "type": "text",
                 "key": "text",
                 "attrs": {
                   "data-attr": "random"
                 }
+              },
+              {
+                "type": "navlink",
+                "key": "navlink",
+                "attrs": {
+                  "transitionTo": "/mask-url"
+                },
+                "children": ["About page"]
               }
             ]
           }
@@ -53,21 +61,21 @@
         {
           "value": "about",
           "content": {
-            "type": "Group",
+            "type": "group",
             "key": "around",
             "children": [
               {
-                "type": "Text",
+                "type": "text",
                 "key": "aspan",
                 "children": ["Who"]
               },
               {
-                "type": "View",
+                "type": "view",
                 "key": "adiv",
                 "children": ["are"]
               },
               {
-                "type": "Text",
+                "type": "text",
                 "key": "aspan2",
                 "children": ["you?"],
                 "attrs": {

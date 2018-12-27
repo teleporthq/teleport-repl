@@ -1,5 +1,5 @@
 {
-    "NavLink": {
+    "navlink": {
       "name": "Link",
       "dependency": {
           "type": "library",
@@ -7,6 +7,13 @@
       },
       "attrs": {
         "href": "$attrs.transitionTo"
-      }
+      },
+      "children": [
+        {
+          "type": "a",
+          "key": "link-anchor",
+          "children": ["$children"]
+        }
+      ]
     }
   }

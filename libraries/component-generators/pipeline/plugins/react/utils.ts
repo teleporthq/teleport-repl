@@ -39,6 +39,17 @@ export const addEventsToTag = (
     })
 
     const jsxEventKey = convertToReactEventName(eventKey)
+    if (eventHandlerStatements.length === 1) {
+      const expression = eventHandlerStatements[0].expression
+      tag.openingElement.attributes.push(
+        t.jsxAttribute(
+          t.jsxIdentifier(jsxEventKey),
+          t.jsxExpressionContainer(t.arrowFunctionExpression([], expression))
+        )
+      )
+      return
+    }
+
     tag.openingElement.attributes.push(
       t.jsxAttribute(
         t.jsxIdentifier(jsxEventKey),

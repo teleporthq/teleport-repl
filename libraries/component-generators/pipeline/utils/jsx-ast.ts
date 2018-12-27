@@ -211,11 +211,11 @@ export const generateASTDefinitionForJSXTag = (tagName: string, t = types) => {
 }
 
 export const addChildJSXTag = (tag: types.JSXElement, childNode: types.JSXElement) => {
-  tag.children.push(childNode)
+  tag.children.push(childNode, types.jsxText('\n'))
 }
 
 export const addChildJSXText = (tag: types.JSXElement, text: string, t = types) => {
-  tag.children.push(t.jsxText(text))
+  tag.children.push(t.jsxText(text), types.jsxText('\n'))
 }
 
 export const addDynamicChild = (
