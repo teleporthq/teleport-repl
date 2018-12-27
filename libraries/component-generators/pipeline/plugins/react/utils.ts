@@ -2,8 +2,65 @@ import * as types from '@babel/types'
 import { StateIdentifier } from './types'
 import { capitalize } from '../../utils/helpers'
 import { convertValueToLiteral } from '../../utils/js-ast'
+import {
+  EventDefinitions,
+  EventHandlerStatement,
+  PropDefinition,
+} from '../../../../uidl-definitions/types'
 
-import { EventDefinitions } from '../../../../uidl-definitions/types'
+const createStateChangeStatement = (
+  eventHandlerStatement: EventHandlerStatement,
+  stateIdentifiers: Record<string, StateIdentifier>,
+  t = types
+) => {
+  if (!eventHandlerStatement.modifies) {
+    console.log(`No state identifier referenced under the "modifies" field`)
+    return null
+  }
+
+  const stateKey = eventHandlerStatement.modifies
+  const stateIdentifier = stateIdentifiers[stateKey]
+
+  if (!stateIdentifier) {
+    console.log(`No state hook was found for "${stateKey}"`)
+    return null
+  }
+
+  const stateSetterArgument =
+    eventHandlerStatement.newState === '$toggle'
+      ? t.unaryExpression('!', t.identifier(stateIdentifier.key))
+      : convertValueToLiteral(eventHandlerStatement.newState, stateIdentifier.type)
+
+  return t.expressionStatement(
+    t.callExpression(t.identifier(stateIdentifier.setter), [stateSetterArgument])
+  )
+}
+
+const createPropCallStatement = (
+  eventHandlerStatement: EventHandlerStatement,
+  propDefinitions: Record<string, PropDefinition>,
+  t = types
+) => {
+  const { calls: propFunctionKey, args = [] } = eventHandlerStatement
+
+  if (!propFunctionKey) {
+    console.log(`No prop definition referenced under the "calls" field`)
+    return null
+  }
+
+  const propDefinition = propDefinitions[propFunctionKey]
+
+  if (!propDefinition || propDefinition.type !== 'func') {
+    console.log(`No prop definition was found for "${propFunctionKey}"`)
+    return null
+  }
+
+  return t.expressionStatement(
+    t.callExpression(t.identifier('props.' + propFunctionKey), [
+      ...args.map((arg) => convertValueToLiteral(arg)),
+    ])
+  )
+}
 
 // Adds all the event handlers and all the instructions for each event handler
 // in case there is more than one specified in the UIDL
@@ -11,6 +68,7 @@ export const addEventsToTag = (
   tag: types.JSXElement,
   events: EventDefinitions,
   stateIdentifiers: Record<string, StateIdentifier>,
+  propDefinitions: Record<string, PropDefinition> = {},
   t = types
 ) => {
   Object.keys(events).forEach((eventKey) => {
@@ -18,44 +76,40 @@ export const addEventsToTag = (
     const eventHandlerStatements: types.ExpressionStatement[] = []
 
     eventHandlerActions.forEach((eventHandlerAction) => {
-      const stateKey = eventHandlerAction.modifies
-      const stateIdentifier = stateIdentifiers[stateKey]
-
-      if (!stateIdentifier) {
-        console.log(`No state hook was found for "${stateKey}"`)
-        return null
+      if (eventHandlerAction.type === 'stateChange') {
+        const handler = createStateChangeStatement(eventHandlerAction, stateIdentifiers)
+        if (handler) {
+          eventHandlerStatements.push(handler)
+        }
       }
 
-      const stateSetterArgument =
-        eventHandlerAction.newState === '$toggle'
-          ? t.unaryExpression('!', t.identifier(stateIdentifier.key))
-          : convertValueToLiteral(eventHandlerAction.newState, stateIdentifier.type)
-
-      eventHandlerStatements.push(
-        t.expressionStatement(
-          t.callExpression(t.identifier(stateIdentifier.setter), [stateSetterArgument])
-        )
-      )
+      if (eventHandlerAction.type === 'propCall') {
+        const handler = createPropCallStatement(eventHandlerAction, propDefinitions)
+        if (handler) {
+          eventHandlerStatements.push(handler)
+        }
+      }
     })
 
-    const jsxEventKey = convertToReactEventName(eventKey)
+    let expressionContent: types.ArrowFunctionExpression | types.Expression
     if (eventHandlerStatements.length === 1) {
       const expression = eventHandlerStatements[0].expression
-      tag.openingElement.attributes.push(
-        t.jsxAttribute(
-          t.jsxIdentifier(jsxEventKey),
-          t.jsxExpressionContainer(t.arrowFunctionExpression([], expression))
-        )
+
+      expressionContent =
+        expression.type === 'CallExpression' && expression.arguments.length === 0
+          ? expression.callee
+          : t.arrowFunctionExpression([], expression)
+    } else {
+      expressionContent = t.arrowFunctionExpression(
+        [],
+        t.blockStatement(eventHandlerStatements)
       )
-      return
     }
 
     tag.openingElement.attributes.push(
       t.jsxAttribute(
-        t.jsxIdentifier(jsxEventKey),
-        t.jsxExpressionContainer(
-          t.arrowFunctionExpression([], t.blockStatement(eventHandlerStatements))
-        )
+        t.jsxIdentifier(eventKey),
+        t.jsxExpressionContainer(expressionContent)
       )
     )
   })

@@ -86,6 +86,23 @@
                     }
                   }
                 ]
+              },
+              {
+                "type": "view",
+                "key": "modal-window",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red"
+                },
+                "children": [
+                  {
+                    "type": "Modal",
+                    "key": "modal",
+                    "dependency": {
+                      "type": "local"
+                    }
+                  }
+                ]
               }
             ]
           }
@@ -139,8 +156,9 @@
               ]
             }],
             "events": {
-              "click": [
+              "onClick": [
                 {
+                  "type": "stateChange",
                   "modifies": "isExpanded",
                   "newState": "$toggle"
                 }
@@ -185,7 +203,8 @@
                 "key": "tab1",
                 "children": ["Click"],
                 "events": {
-                  "click": [{
+                  "onClick": [{
+                    "type": "stateChange",
                     "modifies": "activeTab",
                     "newState": 0
                   }]
@@ -196,7 +215,8 @@
                 "key": "tab2",
                 "children": ["any"],
                 "events": {
-                  "click": [{
+                  "onClick": [{
+                    "type": "stateChange",
                     "modifies": "activeTab",
                     "newState": 1
                   }]
@@ -207,7 +227,8 @@
                 "key": "tab3",
                 "children": ["of"],
                 "events": {
-                  "click": [{
+                  "onClick": [{
+                    "type": "stateChange",
                     "modifies": "activeTab",
                     "newState": 2
                   }]
@@ -218,7 +239,8 @@
                 "key": "tab4",
                 "children": ["these"],
                 "events": {
-                  "click": [{
+                  "onClick": [{
+                    "type": "stateChange",
                     "modifies": "activeTab",
                     "newState": 3
                   }]
@@ -269,6 +291,91 @@
                 }
               }
             ]
+          }
+        ]
+      }
+    },
+    "Modal": {
+      "name": "Modal",
+      "stateDefinitions": {
+        "isOpen": {
+          "type": "boolean",
+          "defaultValue": false
+        }
+      },
+      "content": {
+        "type": "group",
+        "key": "container",
+        "children": [
+          {
+            "type": "button",
+            "key": "openmodal",
+            "children": ["Show Popup"],
+            "events": {
+              "onClick": [{
+                "type": "stateChange",
+                "modifies": "isOpen",
+                "newState": true
+              }]
+            }
+          },
+          {
+            "type": "state",
+            "key": "isOpen",
+            "states": [
+              {
+                "value": true,
+                "content": {
+                  "type": "ModalWindow",
+                  "key": "window",
+                  "dependency": {
+                    "type": "local"
+                  },
+                  "events": {
+                    "onClose": [{
+                      "type": "stateChange",
+                      "modifies": "isOpen",
+                      "newState": false
+                    }]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "ModalWindow": {
+      "name": "ModalWindow",
+      "propDefinitions": {
+        "message": {
+          "type": "string",
+          "defaultValue": "Hello"
+        },
+        "onClose": {
+          "type": "func",
+          "defaultValue": "() => {}"
+        }
+      },
+      "content": {
+        "type": "view",
+        "key": "container",
+        "children": [
+          {
+            "type": "text",
+            "key": "text",
+            "children": ["$props.message"]
+          },
+          {
+            "type": "button",
+            "key": "close",
+            "children": ["Close me"],
+            "events": {
+              "onClick": [{
+                "type": "propCall",
+                "calls": "onClose"
+              }]
+            }
           }
         ]
       }

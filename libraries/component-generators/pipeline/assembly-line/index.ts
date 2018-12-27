@@ -18,7 +18,7 @@ export default class ComponentAsemblyLine {
   private elementsMapping: ElementsMapping
   private dependencies: Record<string, ComponentDependency>
 
-  constructor(pipeline: ComponentPlugin[], elementsMapping: Record<string, any> = {}) {
+  constructor(pipeline: ComponentPlugin[], elementsMapping: ElementsMapping = {}) {
     this.plugins = pipeline
     this.dependencies = {}
     this.elementsMapping = elementsMapping

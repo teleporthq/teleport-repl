@@ -49,12 +49,16 @@ export interface ComponentContent {
   children?: Array<ComponentContent | string>
 }
 
+export interface EventHandlerStatement {
+  type: string
+  modifies?: string
+  newState?: string | number | boolean
+  calls?: string
+  args?: Array<string | number | boolean>
+}
+
 export interface EventDefinitions {
-  [k: string]: Array<{
-    modifies: string
-    newState?: string | number | boolean
-    action?: string
-  }>
+  [k: string]: EventHandlerStatement[]
 }
 
 export interface ComponentDependency {

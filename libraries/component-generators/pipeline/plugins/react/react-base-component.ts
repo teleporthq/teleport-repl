@@ -18,7 +18,7 @@ import { capitalize } from '../../utils/helpers'
 import { ComponentPlugin, ComponentPluginFactory, RegisterDependency } from '../../types'
 import { StateIdentifier } from './types'
 
-import { ComponentContent } from '../../../../uidl-definitions/types'
+import { ComponentContent, PropDefinition } from '../../../../uidl-definitions/types'
 
 /**
  *
@@ -51,6 +51,7 @@ const addTextElementToTag = (tag: t.JSXElement, text: string) => {
 
 export const generateTreeStructure = (
   content: ComponentContent,
+  propDefinitions: Record<string, PropDefinition>,
   stateIdentifiers: Record<string, StateIdentifier>,
   nodesLookup: Record<string, t.JSXElement>,
   registerDependency: RegisterDependency
@@ -69,7 +70,7 @@ export const generateTreeStructure = (
   }
 
   if (events) {
-    addEventsToTag(mainTag, events, stateIdentifiers)
+    addEventsToTag(mainTag, events, stateIdentifiers, propDefinitions)
   }
 
   if (children) {
@@ -102,6 +103,7 @@ export const generateTreeStructure = (
           } else {
             const stateChildSubTree = generateTreeStructure(
               stateContent,
+              propDefinitions,
               stateIdentifiers,
               nodesLookup,
               registerDependency
@@ -121,6 +123,7 @@ export const generateTreeStructure = (
 
       const childTag = generateTreeStructure(
         child,
+        propDefinitions,
         stateIdentifiers,
         nodesLookup,
         registerDependency
@@ -190,6 +193,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
     const nodesLookup = {}
     const jsxTagStructure = generateTreeStructure(
       uidl.content,
+      uidl.propDefinitions,
       stateIdentifiers,
       nodesLookup,
       registerDependency

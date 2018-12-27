@@ -108,11 +108,14 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["modifies"],
+                "required": ["type"],
+                "additionalProperties": false,
                 "properties": {
+                  "type": { "type": "string", "enum": ["stateChange", "propCall"] },
                   "modifies": { "type": "string" },
                   "newState": { },
-                  "action": { "type": "string" }
+                  "calls": { "type": "string" },
+                  "args": { "type": "array" }
                 }
               }
             }
