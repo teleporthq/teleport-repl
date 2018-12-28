@@ -35,18 +35,24 @@
   },
   "list": {
     "type": "ul",
-    "childrenSource": "$attrs.items",
-    "childStructure": {
-      "type": "li",
-      "children": ["$source"]
+    "repeat": {
+      "content": {
+        "type": "li",
+        "key": "item-$source",
+        "children": ["$source"]
+      },
+      "dataSource": "$attrs.items"
     }
   },
   "dropdown": {
     "type": "select",
-    "childrenSource": "$attrs.options",
-    "childStructure": {
-      "type": "option",
-      "children": ["$source"]
+    "repeat": {
+      "content": {
+        "type": "option",
+        "key": "option-$source",
+        "children": ["$source"]
+      },
+      "dataSource": "$attrs.options"
     }
   }
 }

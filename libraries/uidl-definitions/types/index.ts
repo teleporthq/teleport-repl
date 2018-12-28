@@ -78,8 +78,10 @@ export interface ElementMapping {
   dependency?: ComponentDependency
   attrs?: Record<string, any>
   children?: ComponentContent[]
-  childrenSource?: string
-  childStructure?: ComponentContent
+  repeat: {
+    content: ComponentContent
+    dataSource: string
+  }
 }
 
 export type ElementsMapping = Record<string, ElementMapping>

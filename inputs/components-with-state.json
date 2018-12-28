@@ -103,6 +103,31 @@
                     }
                   }
                 ]
+              },
+              {
+                "type": "view",
+                "key": "lists",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red"
+                },
+                "children": [
+                  {
+                    "type": "dropdown",
+                    "key": "dropdown",
+                    "attrs": {
+                      "options": ["angular", "react", "vue"],
+                      "defaultValue": "react"
+                    }
+                  },
+                  {
+                    "type": "list",
+                    "key": "list",
+                    "attrs": {
+                      "items": ["angular", "react", "vue"]
+                    }
+                  }
+                ]
               }
             ]
           }

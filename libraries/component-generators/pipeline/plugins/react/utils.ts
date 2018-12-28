@@ -2,11 +2,7 @@ import * as types from '@babel/types'
 import { StateIdentifier } from './types'
 import { capitalize } from '../../utils/helpers'
 import { convertValueToLiteral } from '../../utils/js-ast'
-import {
-  EventDefinitions,
-  EventHandlerStatement,
-  PropDefinition,
-} from '../../../../uidl-definitions/types'
+import { EventHandlerStatement, PropDefinition } from '../../../../uidl-definitions/types'
 
 const createStateChangeStatement = (
   eventHandlerStatement: EventHandlerStatement,
@@ -64,55 +60,50 @@ const createPropCallStatement = (
 
 // Adds all the event handlers and all the instructions for each event handler
 // in case there is more than one specified in the UIDL
-export const addEventsToTag = (
+export const addEventHandlerToTag = (
   tag: types.JSXElement,
-  events: EventDefinitions,
+  eventKey: string,
+  eventHandlerStatements: EventHandlerStatement[],
   stateIdentifiers: Record<string, StateIdentifier>,
   propDefinitions: Record<string, PropDefinition> = {},
   t = types
 ) => {
-  Object.keys(events).forEach((eventKey) => {
-    const eventHandlerActions = events[eventKey]
-    const eventHandlerStatements: types.ExpressionStatement[] = []
+  const eventHandlerASTStatements: types.ExpressionStatement[] = []
 
-    eventHandlerActions.forEach((eventHandlerAction) => {
-      if (eventHandlerAction.type === 'stateChange') {
-        const handler = createStateChangeStatement(eventHandlerAction, stateIdentifiers)
-        if (handler) {
-          eventHandlerStatements.push(handler)
-        }
+  eventHandlerStatements.forEach((eventHandlerAction) => {
+    if (eventHandlerAction.type === 'stateChange') {
+      const handler = createStateChangeStatement(eventHandlerAction, stateIdentifiers)
+      if (handler) {
+        eventHandlerASTStatements.push(handler)
       }
-
-      if (eventHandlerAction.type === 'propCall') {
-        const handler = createPropCallStatement(eventHandlerAction, propDefinitions)
-        if (handler) {
-          eventHandlerStatements.push(handler)
-        }
-      }
-    })
-
-    let expressionContent: types.ArrowFunctionExpression | types.Expression
-    if (eventHandlerStatements.length === 1) {
-      const expression = eventHandlerStatements[0].expression
-
-      expressionContent =
-        expression.type === 'CallExpression' && expression.arguments.length === 0
-          ? expression.callee
-          : t.arrowFunctionExpression([], expression)
-    } else {
-      expressionContent = t.arrowFunctionExpression(
-        [],
-        t.blockStatement(eventHandlerStatements)
-      )
     }
 
-    tag.openingElement.attributes.push(
-      t.jsxAttribute(
-        t.jsxIdentifier(eventKey),
-        t.jsxExpressionContainer(expressionContent)
-      )
-    )
+    if (eventHandlerAction.type === 'propCall') {
+      const handler = createPropCallStatement(eventHandlerAction, propDefinitions)
+      if (handler) {
+        eventHandlerASTStatements.push(handler)
+      }
+    }
   })
+
+  let expressionContent: types.ArrowFunctionExpression | types.Expression
+  if (eventHandlerASTStatements.length === 1) {
+    const expression = eventHandlerASTStatements[0].expression
+
+    expressionContent =
+      expression.type === 'CallExpression' && expression.arguments.length === 0
+        ? expression.callee
+        : t.arrowFunctionExpression([], expression)
+  } else {
+    expressionContent = t.arrowFunctionExpression(
+      [],
+      t.blockStatement(eventHandlerASTStatements)
+    )
+  }
+
+  tag.openingElement.attributes.push(
+    t.jsxAttribute(t.jsxIdentifier(eventKey), t.jsxExpressionContainer(expressionContent))
+  )
 }
 
 export const makePureComponent = (

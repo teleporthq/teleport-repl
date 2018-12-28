@@ -5,7 +5,7 @@ import {
   ElementMapping,
 } from '../../../uidl-definitions/types'
 
-export const mergeAttributes = (mappedElement: ElementMapping, uidlAttrs: any) => {
+const mergeAttributes = (mappedElement: ElementMapping, uidlAttrs: any) => {
   // We gather the results here uniting the mapped attributes and the uidl attributes.
   const resolvedAttrs: { [key: string]: any } = {}
 
@@ -51,7 +51,7 @@ export const mergeAttributes = (mappedElement: ElementMapping, uidlAttrs: any) =
   return resolvedAttrs
 }
 
-export const resolveDependency = (
+const resolveDependency = (
   mappedElement: ElementMapping,
   uidlDependency?: ComponentDependency,
   localDependenciesPrefix = './'
@@ -69,7 +69,7 @@ export const resolveDependency = (
 }
 
 // Traverses the mapped elements children and inserts the original children of the node being mapped.
-export const insertChildrenIntoNode = (
+const insertChildrenIntoNode = (
   node: ComponentContent,
   originalChildren: Array<ComponentContent | string>
 ) => {
@@ -96,6 +96,23 @@ export const insertChildrenIntoNode = (
     acc.push(child)
     return acc
   }, initialValue)
+}
+
+const createChildNodeFromContent = (node: ComponentContent | string, source: string) => {
+  if (typeof node === 'string') {
+    if (node === '$source') {
+      return source
+    }
+
+    return node
+  }
+
+  // For now we rely on string templates until we figure out if the use case is correct
+  return JSON.parse(
+    JSON.stringify(node)
+      .split('$source')
+      .join(source)
+  )
 }
 
 export const resolveUIDLNode = (
@@ -131,6 +148,16 @@ export const resolveUIDLNode = (
 
     insertChildrenIntoNode(replacingNode, originalNodeChildren)
     node.children = replacingNode.children
+  }
+
+  if (mappedElement.repeat && node.attrs) {
+    const { dataSource, content } = mappedElement.repeat
+    const uidlDataSourceKey = dataSource.replace('$attrs.', '')
+    const dataSourceArray = node.attrs[uidlDataSourceKey]
+
+    node.children = dataSourceArray.map((source: any) =>
+      createChildNodeFromContent(content, source)
+    )
   }
 
   // If the node has multiple state branches, each content needs to be resolved

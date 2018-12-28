@@ -11,7 +11,7 @@ import {
 } from '../../utils/jsx-ast'
 
 import { makeDefaultExport } from '../../utils/js-ast'
-import { addEventsToTag, makePureComponent } from './utils'
+import { addEventHandlerToTag, makePureComponent } from './utils'
 
 import { capitalize } from '../../utils/helpers'
 
@@ -23,20 +23,33 @@ import { ComponentContent, PropDefinition } from '../../../../uidl-definitions/t
 /**
  *
  * @param tag the ref to the AST tag under construction
- * @param attrs the attributes that should be added on the current AST node
+ * @param key the key of the attribute that should be added on the current AST node
+ * @param value the value(string, number, bool) of the attribute that should be added on the current AST node
  */
-const addAttributesToTag = (tag: t.JSXElement, attrs: any) => {
-  Object.keys(attrs).forEach((key) => {
-    if (attrs[key].startsWith('$props.')) {
-      const dynamicPropValue = attrs[key].replace('$props.', '')
-      addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue, 'props')
-    } else if (attrs[key].startsWith('$state.')) {
-      const dynamicPropValue = attrs[key].replace('$state.', '')
-      addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue)
-    } else {
-      addASTAttributeToJSXTag(tag, { name: key, value: attrs[key] })
-    }
-  })
+const addAttributeToTag = (tag: t.JSXElement, key: string, value: any) => {
+  // TODO: remove this check when we know how to handle array attributes
+  if (
+    typeof value !== 'number' &&
+    typeof value !== 'boolean' &&
+    typeof value !== 'string'
+  ) {
+    return
+  }
+
+  if (typeof value !== 'string') {
+    addASTAttributeToJSXTag(tag, { name: key, value })
+    return
+  }
+
+  if (value.startsWith('$props.')) {
+    const dynamicPropValue = value.replace('$props.', '')
+    addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue, 'props')
+  } else if (value.startsWith('$state.')) {
+    const dynamicPropValue = value.replace('$state.', '')
+    addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue)
+  } else {
+    addASTAttributeToJSXTag(tag, { name: key, value })
+  }
 }
 
 const addTextElementToTag = (tag: t.JSXElement, text: string) => {
@@ -61,7 +74,9 @@ export const generateTreeStructure = (
   const mainTag = generateASTDefinitionForJSXTag(type)
 
   if (attrs) {
-    addAttributesToTag(mainTag, attrs)
+    Object.keys(attrs).forEach((attrKey) => {
+      addAttributeToTag(mainTag, attrKey, attrs[attrKey])
+    })
   }
 
   if (dependency) {
@@ -70,7 +85,15 @@ export const generateTreeStructure = (
   }
 
   if (events) {
-    addEventsToTag(mainTag, events, stateIdentifiers, propDefinitions)
+    Object.keys(events).forEach((eventKey) => {
+      addEventHandlerToTag(
+        mainTag,
+        eventKey,
+        events[eventKey],
+        stateIdentifiers,
+        propDefinitions
+      )
+    })
   }
 
   if (children) {
