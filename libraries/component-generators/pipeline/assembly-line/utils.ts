@@ -150,14 +150,22 @@ export const resolveUIDLNode = (
     node.children = replacingNode.children
   }
 
-  if (mappedElement.repeat && node.attrs) {
-    const { dataSource, content } = mappedElement.repeat
-    const uidlDataSourceKey = dataSource.replace('$attrs.', '')
-    const dataSourceArray = node.attrs[uidlDataSourceKey]
-
-    node.children = dataSourceArray.map((source: any) =>
-      createChildNodeFromContent(content, source)
-    )
+  const repeatStructure = node.repeat || mappedElement.repeat
+  if (repeatStructure) {
+    const { dataSource, content } = repeatStructure
+    if (typeof dataSource === 'string') {
+      if (dataSource.startsWith('$attrs.') && node.attrs) {
+        const uidlDataSourceKey = dataSource.replace('$attrs.', '')
+        const dataSourceArray = node.attrs[uidlDataSourceKey]
+        node.children = dataSourceArray.map((source: any) =>
+          createChildNodeFromContent(content, source)
+        )
+      }
+    } else {
+      node.children = dataSource.map((source: any) =>
+        createChildNodeFromContent(content, source)
+      )
+    }
   }
 
   // If the node has multiple state branches, each content needs to be resolved

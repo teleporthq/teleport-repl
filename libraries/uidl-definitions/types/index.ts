@@ -42,6 +42,10 @@ export interface ComponentContent {
     operation?: string
     content: ComponentContent | string
   }>
+  repeat?: {
+    content: ComponentContent
+    dataSource: string | any[]
+  }
   dependency?: ComponentDependency
   style?: Record<string, any>
   attrs?: Record<string, any>

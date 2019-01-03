@@ -98,6 +98,20 @@
             }
           }
         },
+        "repeat": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["content", "dataSource"],
+          "properties": {
+            "content": { "$ref": "#/definitions/content" },
+            "dataSource": {
+              "oneOf": [
+                { "type": "string" },
+                { "type": "array" }
+              ]
+            }
+          }
+        },
         "dependency": {
           "$ref": "#/definitions/dependency"
         },

@@ -128,6 +128,28 @@
                     }
                   }
                 ]
+              },
+              {
+                "type": "view",
+                "key": "cards-container",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red",
+                  "display": "flex"
+                },
+                "repeat": {
+                  "content": {
+                    "type": "Card",
+                    "key": "card",
+                    "attrs": {
+                      "item": "$source"
+                    },
+                    "dependency": {
+                      "type": "local"
+                    }
+                  },
+                  "dataSource": ["hello", "world", "!", "how", "are", "you", "?"]
+                }
               }
             ]
           }
@@ -403,6 +425,24 @@
             }
           }
         ]
+      }
+    },
+    "Card": {
+      "name": "Card",
+      "propDefinitions": {
+        "item": {
+          "type": "string"
+        }
+      },
+      "content": {
+        "type": "view",
+        "key": "card",
+        "style": {
+          "margin": "10px",
+          "padding": "10px",
+          "border": "1px solid black"
+        },
+        "children": ["$props.item"]
       }
     }
   }
