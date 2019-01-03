@@ -55,6 +55,23 @@ const generateStyledJSXString = (
       if (typeof child === 'string') {
         return
       }
+
+      if (child.type === 'state') {
+        const { states = [] } = child
+        states.forEach((stateBranch) => {
+          const stateContent = stateBranch.content
+          if (typeof stateContent === 'string') {
+            return
+          }
+
+          accumulator = accumulator.concat(
+            generateStyledJSXString(stateContent, nodesLookup)
+          )
+        })
+
+        return
+      }
+
       const items = generateStyledJSXString(child, nodesLookup)
       accumulator = accumulator.concat(...items)
     })

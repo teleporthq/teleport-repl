@@ -78,7 +78,7 @@ export interface ElementMapping {
   dependency?: ComponentDependency
   attrs?: Record<string, any>
   children?: ComponentContent[]
-  repeat: {
+  repeat?: {
     content: ComponentContent
     dataSource: string
   }
