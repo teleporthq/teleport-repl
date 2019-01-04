@@ -84,8 +84,33 @@
             "required": ["value", "content"],
             "additionalProperties": false,
             "properties": {
-              "value": {},
-              "operation": { "type": "string" },
+              "value": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["matchingCriteria", "conditions"],
+                    "properties": {
+                      "conditions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["operation"],
+                          "additionalProperties": false,
+                          "properties": {
+                            "operation": { "type": "string" },
+                            "operand": { }
+                          }
+                        }
+                      },
+                      "matchingCriteria": { "type": "string" }
+                    }
+                  },
+                  { "type": "boolean" },
+                  { "type": "number" },
+                  { "type": "string" }
+                ]
+              },
               "content": {
                 "oneOf": [
                   { "$ref": "#/definitions/content" },

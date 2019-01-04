@@ -119,7 +119,7 @@ export const generateTreeStructure = (
           if (typeof stateContent === 'string') {
             const jsxExpression = createConditionalJSXExpression(
               stateContent,
-              stateBranch,
+              stateBranch.value,
               stateIdentifier
             )
             mainTag.children.push(jsxExpression)
@@ -134,7 +134,7 @@ export const generateTreeStructure = (
 
             const jsxExpression = createConditionalJSXExpression(
               stateChildSubTree,
-              stateBranch,
+              stateBranch.value,
               stateIdentifier
             )
             mainTag.children.push(jsxExpression)

@@ -316,7 +316,6 @@
                 }
               },{
                 "value": 1,
-                "operation": ">=",
                 "content": {
                   "type": "text",
                   "key": "text2",

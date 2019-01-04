@@ -38,8 +38,7 @@ export interface ComponentContent {
   type: string
   key: string
   states?: Array<{
-    value: string | number | boolean
-    operation?: string
+    value: string | number | boolean | ConditionalExpression
     content: ComponentContent | string
   }>
   repeat?: {
@@ -73,6 +72,14 @@ export interface ComponentDependency {
     namedImport?: boolean
     originalName?: string
   }
+}
+
+export interface ConditionalExpression {
+  conditions: Array<{
+    operation: string
+    operand?: string | boolean | number
+  }>
+  matchingCriteria: string
 }
 
 /* element mapping interfaces */

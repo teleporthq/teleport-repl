@@ -1,6 +1,7 @@
 import * as types from '@babel/types'
 import { objectToObjectExpression, convertValueToLiteral } from './js-ast'
 import { StateIdentifier } from '../plugins/react/types'
+import { ConditionalExpression } from '../../../uidl-definitions/types'
 
 type BinaryOperator =
   | '==='
@@ -25,6 +26,8 @@ type BinaryOperator =
   | '<'
   | '>='
   | '<='
+
+type UnaryOperation = '+' | '-' | 'void' | 'throw' | 'delete' | '!' | '~' | 'typeof'
 
 /**
  * Gets the existing className declaration attribute or generates and returns
@@ -246,33 +249,90 @@ export const addJSXTagStyles = (tag: types.JSXElement, styleMap: any, t = types)
 
 export const createConditionalJSXExpression = (
   content: types.JSXElement | string,
-  stateBranch: any,
+  stateValue: string | number | boolean | ConditionalExpression,
   stateIdentifier: StateIdentifier,
   t = types
 ) => {
   const contentNode = typeof content === 'string' ? t.stringLiteral(content) : content
-  const { value, operation } = stateBranch
 
-  let binaryExpression: types.BinaryExpression | types.UnaryExpression | types.Identifier
-  if (stateIdentifier.type === 'boolean') {
-    binaryExpression = value
-      ? t.identifier(stateIdentifier.key)
-      : t.unaryExpression('!', t.identifier(stateIdentifier.key))
+  let binaryExpression:
+    | types.LogicalExpression
+    | types.BinaryExpression
+    | types.UnaryExpression
+    | types.Identifier
+
+  // When the stateValue is an object we will compute a logical/binary expression on the left side
+  if (typeof stateValue === 'object') {
+    const { conditions, matchingCriteria } = stateValue
+    const binaryExpressions = conditions.map((condition) =>
+      createBinaryExpression(condition, stateIdentifier)
+    )
+
+    if (binaryExpressions.length === 1) {
+      binaryExpression = binaryExpressions[0]
+    }
+
+    // the first two binary expressions are put together as a logical expression
+    const [firstExp, secondExp] = binaryExpressions
+    const operation = matchingCriteria === 'all' ? '&&' : '||'
+    let expression: types.LogicalExpression = t.logicalExpression(
+      operation,
+      firstExp,
+      secondExp
+    )
+
+    // accumulate the rest of the expressions to the logical expression
+    for (let index = 2; index < binaryExpressions.length; index++) {
+      expression = t.logicalExpression(operation, expression, binaryExpressions[index])
+    }
+
+    binaryExpression = expression
   } else {
-    const stateValueIdentifier = convertValueToLiteral(
-      stateBranch.value,
-      stateIdentifier.type
-    )
-    binaryExpression = t.binaryExpression(
-      convertToBinaryOperator(operation),
-      t.identifier(stateIdentifier.key),
-      stateValueIdentifier
-    )
+    // For regular values we use an === operation to compare the values or an unary expression for booleans
+    if (typeof stateValue === 'boolean') {
+      binaryExpression = stateValue
+        ? t.identifier(stateIdentifier.key)
+        : t.unaryExpression('!', t.identifier(stateIdentifier.key))
+    } else {
+      const stateValueIdentifier = convertValueToLiteral(stateValue, stateIdentifier.type)
+      binaryExpression = t.binaryExpression(
+        '===',
+        t.identifier(stateIdentifier.key),
+        stateValueIdentifier
+      )
+    }
   }
 
   return t.jsxExpressionContainer(
     t.logicalExpression('&&', binaryExpression, contentNode)
   )
+}
+
+const createBinaryExpression = (
+  condition: {
+    operation: string
+    operand?: string | number | boolean
+  },
+  stateIdentifier: StateIdentifier,
+  t = types
+) => {
+  const { operand, operation } = condition
+  if (operand !== undefined) {
+    const stateValueIdentifier = convertValueToLiteral(operand, stateIdentifier.type)
+
+    return t.binaryExpression(
+      convertToBinaryOperator(operation),
+      t.identifier(stateIdentifier.key),
+      stateValueIdentifier
+    )
+  } else {
+    return operation
+      ? t.unaryExpression(
+          convertToUnaryOperator(operation),
+          t.identifier(stateIdentifier.key)
+        )
+      : t.identifier(stateIdentifier.key)
+  }
 }
 
 /**
@@ -285,5 +345,14 @@ const convertToBinaryOperator = (operation: string): BinaryOperator => {
     return operation as BinaryOperator
   } else {
     return '==='
+  }
+}
+
+const convertToUnaryOperator = (operation: string): UnaryOperation => {
+  const allowedOperations = ['!']
+  if (allowedOperations.includes(operation)) {
+    return operation as UnaryOperation
+  } else {
+    return '!'
   }
 }
