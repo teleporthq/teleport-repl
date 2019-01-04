@@ -1,6 +1,5 @@
-/* tslint:disable */
-export default {
-  "version": "v1",
+{
+  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
   "name": "AuthorCard",
   "propDefinitions": {
     "authorName": {
@@ -18,7 +17,7 @@ export default {
   },
   "content": {
     "type": "View",
-    "name": "View",
+    "key": "View",
     "style": {
       "width": "100%",
       "height": "100%",
@@ -28,7 +27,7 @@ export default {
     "children": [
       {
         "type": "View",
-        "name": "image-container",
+        "key": "image-container",
         "style": {
           "backgroundColor": "#333",
           "borderRadius": "50%",
@@ -41,7 +40,7 @@ export default {
         "children": [
           {
             "type": "Image",
-            "name": "img",
+            "key": "img",
             "attrs": {
               "src": "$props.avatarUrl",
               "alt": "$props.authorName"
@@ -51,7 +50,7 @@ export default {
       },
       {
         "type": "View",
-        "name": "details-container",
+        "key": "details-container",
         "style": {
           "flexDirection": "column",
           "flex": 1,
@@ -60,13 +59,13 @@ export default {
         "children": [
           {
             "type": "h3",
-            "name": "autor-name",
-            "children": "$props.authorName"
+            "key": "autor-name",
+            "children": ["$props.authorName"]
           },
           {
             "type": "View",
-            "name": "autor-desription",
-            "children": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla laoreet metus a nulla rhoncus, et aliquet turpis lacinia."
+            "key": "autor-desription",
+            "children": ["Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla laoreet metus a nulla rhoncus, et aliquet turpis lacinia."]
           }
         ]
       }

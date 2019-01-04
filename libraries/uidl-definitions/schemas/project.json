@@ -71,11 +71,7 @@
         },
         "key": {
           "type": "string",
-          "default": "MyComponent",
-          "examples": [
-            "Component",
-            "View"
-          ]
+          "default": "node-key"
         },
         "states": {
           "type": "array",
@@ -116,9 +112,6 @@
                   { "$ref": "#/definitions/content" },
                   { "type": "string" }
                 ]
-              },
-              "style": {
-                "$ref": "#/definitions/style"
               }
             }
           }

@@ -249,6 +249,10 @@
                 "type": "button",
                 "key": "tab1",
                 "children": ["Click"],
+                "style": {
+                  "border": "1px solid black",
+                  "padding": "5px 10px"
+                },
                 "events": {
                   "onClick": [{
                     "type": "stateChange",
@@ -261,6 +265,10 @@
                 "type": "button",
                 "key": "tab2",
                 "children": ["any"],
+                "style": {
+                  "border": "1px solid black",
+                  "padding": "5px 10px"
+                },
                 "events": {
                   "onClick": [{
                     "type": "stateChange",
@@ -273,6 +281,10 @@
                 "type": "button",
                 "key": "tab3",
                 "children": ["of"],
+                "style": {
+                  "border": "1px solid black",
+                  "padding": "5px 10px"
+                },
                 "events": {
                   "onClick": [{
                     "type": "stateChange",
@@ -285,6 +297,10 @@
                 "type": "button",
                 "key": "tab4",
                 "children": ["these"],
+                "style": {
+                  "border": "1px solid black",
+                  "padding": "5px 10px"
+                },
                 "events": {
                   "onClick": [{
                     "type": "stateChange",

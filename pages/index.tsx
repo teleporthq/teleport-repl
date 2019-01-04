@@ -12,8 +12,14 @@ import { validateComponent } from '../libraries/uidl-definitions/validators'
 import generateReactComponent from '../libraries/component-generators/react/react-all'
 import createVueGenerator from '../libraries/component-generators/vue/vue-component'
 
-import { loadJSONAsync, exmaplesList } from '../inputs'
-import authorCard from '../inputs/author-card'
+import authorCardUIDL from '../inputs/component-author-card.json'
+import tabSelectorUIDL from '../inputs/component-tab-selector.json'
+import { ComponentUIDL } from '../libraries/uidl-definitions/types'
+
+const uidlSamples: Record<string, ComponentUIDL> = {
+  'author-card': authorCardUIDL,
+  'tab-selector': tabSelectorUIDL,
+}
 
 const generateVueComponent = createVueGenerator()
 
@@ -48,7 +54,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     generatedCode: '',
     inputJson: '',
     targetLibrary: 'react.InlineStyles',
-    sourceJSON: exmaplesList[0],
+    sourceJSON: 'author-card.json',
   }
 
   public codeEditorRef = React.createRef<MonacoEditor>()
@@ -133,15 +139,12 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
 
   public handleJSONChoose = (ev: { target: { value: string } }) => {
     const newValue = ev.target.value
-    loadJSONAsync(newValue)
-      .then((value) => {
-        if (this.codeEditorRef && this.codeEditorRef.current) {
-          this.codeEditorRef.current.setValue(JSON.stringify(value, null, 2))
-          this.setState({ sourceJSON: newValue })
-        }
-      })
-      // tslint:disable-next-line:no-console
-      .catch((err) => console.error(err))
+    const uidl = uidlSamples[newValue]
+
+    if (this.codeEditorRef && this.codeEditorRef.current) {
+      this.codeEditorRef.current.setValue(JSON.stringify(uidl, null, 2))
+      this.setState({ sourceJSON: newValue })
+    }
   }
 
   public getPreviewerUrl() {
@@ -199,7 +202,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             <PannelTitle>
               Input json:
               <JsonInputChooser
-                options={exmaplesList}
+                options={Object.keys(uidlSamples)}
                 value={this.state.sourceJSON}
                 onChoose={this.handleJSONChoose}
               />
@@ -207,7 +210,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             <MonacoEditor
               ref={this.codeEditorRef}
               name="json-editor"
-              value={JSON.stringify(authorCard, null, 2)}
+              value={JSON.stringify(authorCardUIDL, null, 2)}
               onMessage={this.handleJSONUpdate}
             />
           </div>

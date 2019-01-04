@@ -1,12 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
   "title": "Component UIDL",
-  "required": [
-    "$schema",
-    "name",
-    "content"
-  ],
+  "type": "object",
+  "required": ["name", "content"],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -23,31 +19,11 @@
     "meta": {
       "type": "object"
     },
+    "stateDefinitions": {
+      "$ref": "#/definitions/stateDefinitions"
+    },
     "propDefinitions": {
-      "type": "object",
-      "patternProperties": {
-        ".*": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["type"],
-          "properties": {
-            "type": {"type": "string"},
-            "defaultValue": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "boolean"
-                }
-              ]
-            }
-          }
-        }
-      }
+      "$ref": "#/definitions/propDefinitions"
     }
   },
   "definitions": {
@@ -55,27 +31,101 @@
       "type": "object",
       "required": [
         "type",
-        "name"
+        "key"
       ],
       "additionalProperties": false,
       "properties": {
         "type": {
           "type": "string",
           "examples": [
-            "Text",
-            "View"
+            "text",
+            "view",
+            "states"
           ]
+        },
+        "key": {
+          "type": "string",
+          "default": "node-key"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "content"],
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["matchingCriteria", "conditions"],
+                    "properties": {
+                      "conditions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["operation"],
+                          "additionalProperties": false,
+                          "properties": {
+                            "operation": { "type": "string" },
+                            "operand": { }
+                          }
+                        }
+                      },
+                      "matchingCriteria": { "type": "string" }
+                    }
+                  },
+                  { "type": "boolean" },
+                  { "type": "number" },
+                  { "type": "string" }
+                ]
+              },
+              "content": {
+                "oneOf": [
+                  { "$ref": "#/definitions/content" },
+                  { "type": "string" }
+                ]
+              }
+            }
+          }
+        },
+        "repeat": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["content", "dataSource"],
+          "properties": {
+            "content": { "$ref": "#/definitions/content" },
+            "dataSource": {
+              "oneOf": [
+                { "type": "string" },
+                { "type": "array" }
+              ]
+            }
+          }
         },
         "dependency": {
           "$ref": "#/definitions/dependency"
         },
-        "name": {
-          "type": "string",
-          "default": "MyComponent",
-          "examples": [
-            "Component",
-            "View"
-          ]
+        "events": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["type"],
+                "additionalProperties": false,
+                "properties": {
+                  "type": { "type": "string", "enum": ["stateChange", "propCall"] },
+                  "modifies": { "type": "string" },
+                  "newState": { },
+                  "calls": { "type": "string" },
+                  "args": { "type": "array" }
+                }
+              }
+            }
+          }
         },
         "style": {
           "$ref": "#/definitions/style"
@@ -84,21 +134,14 @@
           "type": "object"
         },
         "children": {
-          "oneOf": [
-            {
-              "type": "array",
-              "items": {
-                "oneOf": [
-                  { "$ref": "#/definitions/content" },
-                  { "type": "string" }
-                ]
-              },
-              "default": []
-            },
-            {
-              "type": "string"
-            }
-          ]
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/definitions/content" },
+              { "type": "string" }
+            ]
+          },
+          "default": []
         }
       }
     },
@@ -173,6 +216,53 @@
           "properties": {
             "namedImport": {"type": "boolean", "default": false},
             "originalName": {"type": "string"}
+          }
+        }
+      }
+    },
+    "propDefinitions": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": {"type": "string"},
+            "defaultValue": {}
+          }
+        }
+      }
+    },
+    "stateDefinitions": {
+      "type": "object",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "defaultValue"],
+          "properties": {
+            "type": {"type": "string"},
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {},
+                  "meta": { 
+                    "type": "object",
+                    "properties": {
+                      "componentName": { "type": "string" },
+                      "path": { "type": "string" },
+                      "fileName": { "type": "string" }
+                    }
+                  },
+                  "transitions": { "type": "object" }
+                }
+              }
+            },
+            "defaultValue": {},
+            "actions": {"type": "array"}
           }
         }
       }

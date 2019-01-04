@@ -1,6 +1,0 @@
-export const exmaplesList = [`author-card`, `test`, `test2`, `blog-auto-scale-image`]
-
-export const loadJSONAsync = async (name: string) => {
-  const content = await import(`./${name}`)
-  return content.default
-}
