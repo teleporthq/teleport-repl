@@ -1,0 +1,129 @@
+{
+  "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/component.json",
+  "name": "TabSelector",
+  "stateDefinitions": {
+    "activeTab": {
+      "type": "number",
+      "defaultValue": 0
+    }
+  },
+  "content": {
+    "type": "view",
+    "key": "container",
+    "children": [
+      {
+        "type": "view",
+        "key": "tabs",
+        "children": [
+          {
+            "type": "button",
+            "key": "tab1",
+            "children": ["Click"],
+            "style": {
+              "border": "1px solid black",
+              "padding": "5px 10px"
+            },
+            "events": {
+              "onClick": [{
+                "type": "stateChange",
+                "modifies": "activeTab",
+                "newState": 0
+              }]
+            }
+          },
+          {
+            "type": "button",
+            "key": "tab2",
+            "children": ["any"],
+            "style": {
+              "border": "1px solid black",
+              "padding": "5px 10px"
+            },
+            "events": {
+              "onClick": [{
+                "type": "stateChange",
+                "modifies": "activeTab",
+                "newState": 1
+              }]
+            }
+          },
+          {
+            "type": "button",
+            "key": "tab3",
+            "children": ["of"],
+            "style": {
+              "border": "1px solid black",
+              "padding": "5px 10px"
+            },
+            "events": {
+              "onClick": [{
+                "type": "stateChange",
+                "modifies": "activeTab",
+                "newState": 2
+              }]
+            }
+          },
+          {
+            "type": "button",
+            "key": "tab4",
+            "children": ["these"],
+            "style": {
+              "border": "1px solid black",
+              "padding": "5px 10px"
+            },
+            "events": {
+              "onClick": [{
+                "type": "stateChange",
+                "modifies": "activeTab",
+                "newState": 3
+              }]
+            }
+          }
+        ]
+      },
+      {
+        "type": "view",
+        "key": "text",
+        "children": [
+          "Active tab: ",
+          "$state.activeTab"
+        ]
+      },
+      {
+        "type": "state",
+        "key": "activeTab",
+        "states": [
+          {
+            "value": 0,
+            "content": {
+              "type": "text",
+              "key": "text1",
+              "children": ["This is the first tab"]
+            }
+          },{
+            "value": 1,
+            "content": {
+              "type": "text",
+              "key": "text2",
+              "children": ["This is the second tab"]
+            }
+          },{
+            "value": 2,
+            "content": {
+              "type": "text",
+              "key": "text3",
+              "children": ["This is the third tab"]
+            }
+          },{
+            "value": 3,
+            "content": {
+              "type": "text",
+              "key": "text4",
+              "children": ["This is the fourth tab"]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

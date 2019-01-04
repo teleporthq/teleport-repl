@@ -1,0 +1,11 @@
+{
+  "Slot": {
+    "type": "slot"
+  },
+  "View": {
+    "type": "div",
+    "attrs": {
+      "class": "$attrs.className"
+    }
+  }
+}

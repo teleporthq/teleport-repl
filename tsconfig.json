@@ -15,6 +15,7 @@
     "sourceMap": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "typeRoots": [
       "./node_modules/@types",
       "./app/types"

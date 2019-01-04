@@ -6,7 +6,10 @@ export default class PreviewPage extends React.Component {
     return (
       <>
         <p>Welcome to React!</p>
-        <PreviewedComponent/>
+        <PreviewedComponent 
+          avatarUrl='https://picsum.photos/150/150' 
+          authorName='TeleportHQ Rocks'
+        />
       </>
     )
   }

@@ -1,0 +1,13 @@
+{
+  "Group": {
+    "type": "Fragment",
+    "dependency": {
+      "type": "library",
+      "path": "react",
+      "meta": {
+        "namedImport": true
+      }
+    }
+  }
+}
+  

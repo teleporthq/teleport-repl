@@ -1,5 +1,5 @@
 <template>
-  <previewed-component />
+  <PreviewedComponent />
 </template>
 
 <script>

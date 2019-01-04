@@ -64,11 +64,10 @@ require(['vs/editor/editor.main'], function() {
     schemas: [{
       uri: 'http://teleport/uild.json',
       fileMatch: [modelUri.toString()],
-      schema: { // This will later be loaded from the remote schema
+      schema: {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "$id": "http://example.com/root.json",
         "type": "object",
-        "title": "Component Root",
+        "title": "Component Definition",
         "required": [
           "name",
           "content",
@@ -77,9 +76,8 @@ require(['vs/editor/editor.main'], function() {
         "additionalProperties": false,
         "properties": {
           "name": {
-            "$id": "#/properties/name",
             "type": "string",
-            "default": "ComponentName"
+            "default": "MyComponent"
           },
           "content": {
             "$ref": "#/definitions/content"
@@ -90,15 +88,39 @@ require(['vs/editor/editor.main'], function() {
           },
           "meta": {
             "type": "object"
+          },
+          "propDefinitions": {
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {"type": "string"},
+                    "defaultValue": {
+                      "oneOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    }
+                  }
+              }
+            }
           }
         },
         "definitions": {
           "content": {
-            "$id": "content",
             "type": "object",
             "required": [
               "type",
-              "source"
+              "name"
             ],
             "additionalProperties": false,
             "properties": {
@@ -109,16 +131,14 @@ require(['vs/editor/editor.main'], function() {
                   "View"
                 ]
               },
-              "source": {
-                "type": "string",
-                "examples": [
-                  "teleport-elements-core"
-                ]
+              "dependency": {
+                "$ref": "#/definitions/dependency"
               },
               "name": {
                 "type": "string",
+                "default": "MyComponent",
                 "examples": [
-                  "Text",
+                  "Component",
                   "View"
                 ]
               },
@@ -133,7 +153,10 @@ require(['vs/editor/editor.main'], function() {
                   {
                     "type": "array",
                     "items": {
-                      "$ref": "#/definitions/content"
+                      "oneOf": [
+                        { "$ref": "#/definitions/content" },
+                        { "type": "string" }
+                      ]
                     },
                     "default": []
                   },
@@ -145,7 +168,6 @@ require(['vs/editor/editor.main'], function() {
             }
           },
           "style": {
-            "$id": "style",
             "type": "object",
             "properties": {
               "width": {
@@ -199,6 +221,24 @@ require(['vs/editor/editor.main'], function() {
                 "examples": [
                   "magenta"
                 ]
+              }
+            }
+          },
+          "dependency": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": {"type": "string", "examples": ["package", "local", "library"]},
+              "meta": {
+                "type": "object", 
+                "additionalProperties": false,
+                "properties": {
+                  "path": {"type": "string"},
+                  "version": {"type": "string", "default": "1.0.0"},
+                  "namedImport": {"type": "boolean", "default": false},
+                  "originalName": {"type": "string"}
+                }
               }
             }
           }

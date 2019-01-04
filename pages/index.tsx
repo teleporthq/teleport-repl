@@ -5,36 +5,59 @@ import { MonacoEditor, MonacoUpdateEventPackage } from '../components/MonacoEdit
 import { GeneratorTargetsChooser } from '../components/GeneratorTargetsChooser'
 import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
+import { JsonInputChooser } from '../components/JsonInputChooser'
 
-import loadWrapper from '../utils/teleportWrapper'
-import uildValidator from '../utils/uildValidator'
+import { validateComponent } from '../libraries/uidl-definitions/validators'
+
+import generateReactComponent from '../libraries/component-generators/react/react-all'
+import createVueGenerator from '../libraries/component-generators/vue/vue-component'
+
+import authorCardUIDL from '../inputs/component-author-card.json'
+import tabSelectorUIDL from '../inputs/component-tab-selector.json'
+import { ComponentUIDL } from '../libraries/uidl-definitions/types'
+
+const uidlSamples: Record<string, ComponentUIDL> = {
+  'author-card': authorCardUIDL,
+  'tab-selector': tabSelectorUIDL,
+}
+
+const generateVueComponent = createVueGenerator()
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
   // Default options are marked with *
-  return fetch(url, {
-    body: data, // body data type must match "Content-Type" header
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    mode: 'cors', // no-cors, cors, *same-origin
-    redirect: 'follow', // manual, *follow, error
-    referrer: 'no-referrer', // no-referrer, *client
-  }).then((response) => response.json()) // parses response to JSON
+  return (
+    fetch(url, {
+      body: data, // body data type must match "Content-Type" header
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, cors, *same-origin
+      redirect: 'follow', // manual, *follow, error
+      referrer: 'no-referrer', // no-referrer, *client
+    })
+      .then((response) => response.json())
+      // tslint:disable-next-line:no-console
+      .catch((err) => console.error(err))
+  ) // parses response to JSON
 }
 interface PlaygroundPageState {
   generatedCode: string
   targetLibrary: string
   inputJson: string
+  sourceJSON: string
 }
 
 export default class PlaygroundPage extends React.Component<{}, PlaygroundPageState> {
   public state: PlaygroundPageState = {
     generatedCode: '',
     inputJson: '',
-    targetLibrary: 'react',
+    targetLibrary: 'react.InlineStyles',
+    sourceJSON: 'author-card.json',
   }
+
+  public codeEditorRef = React.createRef<MonacoEditor>()
 
   public handleGeneratorTypeChange = (ev: { target: { value: string } }) => {
     this.setState({ targetLibrary: ev.target.value }, this.handleInputChange)
@@ -48,45 +71,96 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     this.setState({ inputJson: updateEvent.value }, this.handleInputChange)
   }
 
-  public handleInputChange = () => {
+  public handleInputChange = async () => {
     const { targetLibrary, inputJson } = this.state
     let jsonValue: any = null
+
     try {
       jsonValue = JSON.parse(inputJson)
     } catch (err) {
       return
     }
 
-    const validationResult = uildValidator(jsonValue)
+    const validationResult = validateComponent(jsonValue)
     if (validationResult !== true) {
       // tslint:disable-next-line:no-console
       console.error(validationResult)
       return
     }
 
-    loadWrapper().then((wrapper) => {
-      const result = wrapper.generateComponent(jsonValue, targetLibrary)
-      const fileName = result.getFileNames()[0]
+    switch (targetLibrary) {
+      case 'react.InlineStyles':
+      case 'react.StyledJSX':
+      case 'react.JSS':
+      case 'react.CSSModules':
+        try {
+          const { code, dependencies } = await generateReactComponent(
+            jsonValue,
+            targetLibrary.replace('react.', '')
+          )
 
-      const generatedCode = result.getContent(fileName)
-
-      if (!generatedCode) {
-        return
-      }
-
-      this.setState(
-        {
-          generatedCode,
-        },
-        () => {
-          postData(this.getPreviewerUrl() + '/preview', generatedCode)
+          // tslint:disable-next-line:no-console
+          console.info('output dependencies: ', dependencies)
+          this.setState(
+            {
+              generatedCode: code.toString(),
+            },
+            () => {
+              postData(this.getPreviewerUrl() + '/preview', code.toString())
+            }
+          )
+        } catch (err) {
+          // tslint:disable-next-line:no-console
+          console.error('generateReactComponent', err)
         }
-      )
-    })
+        return
+
+      case 'vue-ast':
+        try {
+          const { code, dependencies } = await generateVueComponent(jsonValue)
+
+          // tslint:disable-next-line:no-console
+          console.info('output dependencies: ', dependencies)
+          this.setState(
+            {
+              generatedCode: code,
+            },
+            () => {
+              postData(this.getPreviewerUrl() + '/preview', code)
+            }
+          )
+        } catch (err) {
+          // tslint:disable-next-line:no-console
+          console.error('generateVueComponent', err)
+        }
+        return
+    }
+  }
+
+  public handleJSONChoose = (ev: { target: { value: string } }) => {
+    const newValue = ev.target.value
+    const uidl = uidlSamples[newValue]
+
+    if (this.codeEditorRef && this.codeEditorRef.current) {
+      this.codeEditorRef.current.setValue(JSON.stringify(uidl, null, 2))
+      this.setState({ sourceJSON: newValue })
+    }
   }
 
   public getPreviewerUrl() {
-    return this.state.targetLibrary === 'react' ? 'http://localhost:3031' : 'http://localhost:3032'
+    switch (this.state.targetLibrary) {
+      case 'react.InlineStyles':
+      case 'react.StyledJSX':
+      case 'react.JSS':
+      case 'react.CSSModules':
+        return 'http://localhost:3031'
+      case 'vue-ast':
+        return 'http://localhost:3032'
+      default:
+        // tslint:disable-next-line:no-console
+        console.error('no matching previwer found for', this.state.targetLibrary)
+        return 'http://localhost:9999'
+    }
   }
 
   public render() {
@@ -111,7 +185,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
             }
 
             .code-view-container {
-              flex: 1;
+              flex: 2;
             }
 
             .json-input-container {
@@ -125,44 +199,40 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
           `}</style>
 
           <div className="json-input-container">
-            <PannelTitle>Input json here</PannelTitle>
+            <PannelTitle>
+              Input json:
+              <JsonInputChooser
+                options={Object.keys(uidlSamples)}
+                value={this.state.sourceJSON}
+                onChoose={this.handleJSONChoose}
+              />
+            </PannelTitle>
             <MonacoEditor
+              ref={this.codeEditorRef}
               name="json-editor"
-              value={`{
-  "name": "TestComponent",
-  "version": "v1",
-  "content": {
-    "type": "View",
-    "source": "teleport-elements-core",
-    "name" : "View", 
-    "style" : {
-        "width" : "100%", 
-        "height" : "100%", 
-        "flexDirection" : "row", 
-        "backgroundColor" : "#822CEC",
-        "color": "#FFF"
-    },
-    "children": "Hello Teleport World!"
-  }
-}`}
+              value={JSON.stringify(authorCardUIDL, null, 2)}
               onMessage={this.handleJSONUpdate}
             />
           </div>
 
           <div className="results-container">
             <div className="generators-target-type">
-              <GeneratorTargetsChooser onChoose={this.handleGeneratorTypeChange} value={this.state.targetLibrary} />
-              <button>Refresh All</button>
-              <button>Refresh Code</button>
-              <button>Refresh Project</button>
+              <GeneratorTargetsChooser
+                onChoose={this.handleGeneratorTypeChange}
+                value={this.state.targetLibrary}
+              />
             </div>
-            <PannelTitle>Running app with generated code</PannelTitle>
             <div className="live-view-container">
               <PreviewFrame url={this.getPreviewerUrl()} />
             </div>
             <div className="code-view-container">
               <PannelTitle>Generated code</PannelTitle>
-              <MonacoEditor name="code-preview" language="javascript" value={this.state.generatedCode} readOnly />
+              <MonacoEditor
+                name="code-preview"
+                language="javascript"
+                value={this.state.generatedCode}
+                readOnly
+              />
             </div>
           </div>
         </div>
