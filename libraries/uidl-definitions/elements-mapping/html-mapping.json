@@ -5,11 +5,59 @@
   "group": {
     "type": "div"
   },
+  "main": {
+    "type": "main"
+  },
+  "header": {
+    "type": "header"
+  },
+  "nav": {
+    "type": "nav"
+  },
+  "section": {
+    "type": "section"
+  },
+  "article": {
+    "type": "article"
+  },
+  "aside": {
+    "type": "aside"
+  },
+  "footer": {
+    "type": "footer"
+  },
   "text": {
     "type": "span"
   },
+  "textblock": {
+    "type": "p"
+  },
+  "strongtext": {
+    "type": "strong"
+  },
+  "formattedtext": {
+    "type": "pre"
+  },
+  "label": {
+    "type": "label"
+  },
   "heading1": {
     "type": "h1"
+  },
+  "heading2": {
+    "type": "h2"
+  },
+  "heading3": {
+    "type": "h3"
+  },
+  "heading4": {
+    "type": "h4"
+  },
+  "heading5": {
+    "type": "h5"
+  },
+  "heading6": {
+    "type": "h6"
   },
   "image": {
     "type": "img",
@@ -22,6 +70,21 @@
     "attrs": {
       "type": "text"
     }
+  },
+  "checkbox": {
+    "type": "input",
+    "attrs": {
+      "type": "checkbox"
+    }
+  },
+  "radiobutton": {
+    "type": "input",
+    "attrs": {
+      "type": "radio"
+    }
+  },
+  "textarea": {
+    "type": "textarea"
   },
   "link": {
     "type": "a",
@@ -54,5 +117,17 @@
       },
       "dataSource": "$attrs.options"
     }
+  },
+  "video": {
+    "type": "video"
+  },
+  "audio": {
+    "type": "audio"
+  },
+  "svg": {
+    "type": "svg"
+  },
+  "line": {
+    "type": "hr"
   }
 }
