@@ -1,5 +1,6 @@
 import { ChunkDefinition } from '../pipeline/types'
 
+// TODO: Move to assembly line (core package)
 export const groupChunksByFileId = (
   chunks: ChunkDefinition[]
 ): Record<string, ChunkDefinition[]> => {

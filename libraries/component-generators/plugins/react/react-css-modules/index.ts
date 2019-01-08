@@ -1,4 +1,4 @@
-import { ComponentPlugin, ComponentPluginFactory } from '../../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../../pipeline/types'
 import { applyCSSModulesAndGetDeclarations } from './utils'
 
 interface ReactCSSModulesConfig {

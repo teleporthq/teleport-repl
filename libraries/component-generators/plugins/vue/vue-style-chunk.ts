@@ -2,9 +2,9 @@ import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
 
-import { ComponentPlugin, ComponentPluginFactory } from '../../types'
-import { cammelCaseToDashCase } from '../../utils/helpers'
-import { ComponentContent } from '../../../../uidl-definitions/types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../pipeline/types'
+import { cammelCaseToDashCase } from '../../pipeline/utils/helpers'
+import { ComponentContent } from '../../../uidl-definitions/types'
 
 const filterOutDynamicStyles = (style: any) => {
   if (!style) {
@@ -30,11 +30,11 @@ const generateStyleTagStrings = (
 ) => {
   let accumulator: any[] = []
 
-  const { style, children, name } = content
+  const { style, children, key } = content
   const { staticStyles, dynamicStyles } = filterOutDynamicStyles(style)
   if (style) {
-    const root = templateLookup[name]
-    const className = cammelCaseToDashCase(name)
+    const root = templateLookup[key]
+    const className = cammelCaseToDashCase(key)
     accumulator.push(
       jss
         .createStyleSheet(
@@ -50,8 +50,8 @@ const generateStyleTagStrings = (
 
     if (Object.keys(dynamicStyles).length) {
       const vueFriendlyStyleBind = Object.keys(dynamicStyles).reduce(
-        (acc: string[], key) => {
-          acc.push(`${key}: ${dynamicStyles[key]}`)
+        (acc: string[], styleKey) => {
+          acc.push(`${styleKey}: ${dynamicStyles[styleKey]}`)
           return acc
         },
         []

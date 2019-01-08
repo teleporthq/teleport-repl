@@ -1,7 +1,7 @@
 import { ComponentAssemblyLine, Builder } from '../pipeline'
 
-import { createPlugin as createRouterPlugin } from '../pipeline/plugins/vue/vue-router'
-import { createPlugin as createImportPlugin } from '../pipeline/plugins/common/import-statements'
+import { createPlugin as createRouterPlugin } from '../plugins/vue/vue-router'
+import { createPlugin as createImportPlugin } from '../plugins/common/import-statements'
 
 import { GeneratorOptions } from '../pipeline/types'
 

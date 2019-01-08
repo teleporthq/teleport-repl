@@ -7,9 +7,9 @@ import {
   ComponentPluginFactory,
   RegisterDependency,
 } from '../pipeline/types'
-import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
+import { createPlugin as importStatements } from '../plugins/common/import-statements'
 import { ComponentAssemblyLine, Builder } from '../pipeline'
-import { generateTreeStructure } from '../pipeline/plugins/react/react-base-component'
+import { generateTreeStructure } from '../plugins/react/react-base-component'
 
 import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import reactMapping from './elements-mapping.json'
@@ -107,6 +107,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
         const nodesLookup = {}
         const jsxTagStructure = generateTreeStructure(
           content,
+          {}, // TODO: add prop definitions here
           {}, // TODO: add state definitions here
           nodesLookup,
           (a, b) => {

@@ -1,16 +1,16 @@
 import * as t from '@babel/types'
 
-import { ComponentPlugin, ComponentPluginFactory } from '../../types'
-import { ComponentContent } from '../../../../uidl-definitions/types'
-import { addDynamicPropOnJsxOpeningTag } from '../../utils/jsx-ast'
+import { ComponentPlugin, ComponentPluginFactory } from '../../pipeline/types'
+import { ComponentContent } from '../../../uidl-definitions/types'
+import { addDynamicPropOnJsxOpeningTag } from '../../pipeline/utils/jsx-ast'
 import {
   ParsedASTNode,
   makeConstAssign,
   makeJSSDefaultExport,
   objectToObjectExpression,
-} from '../../utils/js-ast'
+} from '../../pipeline/utils/js-ast'
 
-import { cammelCaseToDashCase } from '../../utils/helpers'
+import { cammelCaseToDashCase } from '../../pipeline/utils/helpers'
 
 const prepareDynamicProps = (style: any) => {
   return Object.keys(style).reduce((acc: any, key) => {

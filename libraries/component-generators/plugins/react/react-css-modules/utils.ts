@@ -4,11 +4,14 @@ import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
 
-import { cammelCaseToDashCase, stringToCamelCase } from '../../../utils/helpers'
-import { addJSXTagStyles, addExternalPropOnJsxOpeningTag } from '../../../utils/jsx-ast'
-import { ParsedASTNode } from '../../../utils/js-ast'
+import { cammelCaseToDashCase, stringToCamelCase } from '../../../pipeline/utils/helpers'
+import {
+  addJSXTagStyles,
+  addExternalPropOnJsxOpeningTag,
+} from '../../../pipeline/utils/jsx-ast'
+import { ParsedASTNode } from '../../../pipeline/utils/js-ast'
 
-import { ComponentContent } from '../../../../../uidl-definitions/types'
+import { ComponentContent } from '../../../../uidl-definitions/types'
 
 export const splitDynamicAndStaticProps = (style: Record<string, any>) => {
   return Object.keys(style).reduce(

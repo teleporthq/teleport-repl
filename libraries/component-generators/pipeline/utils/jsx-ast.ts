@@ -1,6 +1,6 @@
 import * as types from '@babel/types'
 import { objectToObjectExpression, convertValueToLiteral } from './js-ast'
-import { StateIdentifier } from '../plugins/react/types'
+import { StateIdentifier } from '../types'
 import { ConditionalExpression } from '../../../uidl-definitions/types'
 
 type BinaryOperator =

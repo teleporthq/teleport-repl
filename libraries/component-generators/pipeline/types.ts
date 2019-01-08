@@ -78,3 +78,13 @@ export interface GeneratorOptions {
 }
 
 export type GeneratorFunction = (content: any) => string
+
+/**
+ * This structure is used for keeping information about a single state key while creating a component
+ */
+export interface StateIdentifier {
+  key: string
+  type: string
+  setter: string
+  default: any
+}

@@ -1,13 +1,13 @@
 import { ComponentAssemblyLine, Builder } from '../pipeline'
 
-import { createPlugin as reactComponent } from '../pipeline/plugins/react/react-base-component'
-import { createPlugin as reactStyledJSX } from '../pipeline/plugins/react/react-styled-jsx'
-import { createPlugin as reactJSS } from '../pipeline/plugins/react/react-jss'
-import { createPlugin as reactInlineStyles } from '../pipeline/plugins/react/react-inline-styles'
-import { createPlugin as reactPropTypes } from '../pipeline/plugins/react/react-proptypes'
-import { createPlugin as reactCSSModules } from '../pipeline/plugins/react/react-css-modules'
+import { createPlugin as reactComponent } from '../plugins/react/react-base-component'
+import { createPlugin as reactStyledJSX } from '../plugins/react/react-styled-jsx'
+import { createPlugin as reactJSS } from '../plugins/react/react-jss'
+import { createPlugin as reactInlineStyles } from '../plugins/react/react-inline-styles'
+import { createPlugin as reactPropTypes } from '../plugins/react/react-proptypes'
+import { createPlugin as reactCSSModules } from '../plugins/react/react-css-modules'
 
-import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
+import { createPlugin as importStatements } from '../plugins/common/import-statements'
 
 import { ComponentPlugin, GeneratorOptions } from '../pipeline/types'
 import { ComponentUIDL, ElementsMapping } from '../../uidl-definitions/types'

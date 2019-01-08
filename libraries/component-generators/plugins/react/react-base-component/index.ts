@@ -8,15 +8,19 @@ import {
   addDynamicChild,
   addDynamicPropOnJsxOpeningTag,
   createConditionalJSXExpression,
-} from '../../utils/jsx-ast'
+} from '../../../pipeline/utils/jsx-ast'
 
-import { makeDefaultExport } from '../../utils/js-ast'
+import { makeDefaultExport } from '../../../pipeline/utils/js-ast'
 import { addEventHandlerToTag, makePureComponent } from './utils'
 
-import { capitalize } from '../../utils/helpers'
+import { capitalize } from '../../../pipeline/utils/helpers'
 
-import { ComponentPlugin, ComponentPluginFactory, RegisterDependency } from '../../types'
-import { StateIdentifier } from './types'
+import {
+  ComponentPlugin,
+  ComponentPluginFactory,
+  RegisterDependency,
+  StateIdentifier,
+} from '../../../pipeline/types'
 
 import { ComponentContent, PropDefinition } from '../../../../uidl-definitions/types'
 

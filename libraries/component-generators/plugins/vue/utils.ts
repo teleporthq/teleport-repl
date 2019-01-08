@@ -1,6 +1,6 @@
 import * as types from '@babel/types'
 import cheerio from 'cheerio'
-import { PropDefinition } from '../../../../uidl-definitions/types'
+import { PropDefinition } from '../../../uidl-definitions/types'
 
 /**
  * Generate the AST version of
@@ -67,19 +67,6 @@ export const splitProps = (props: {
     },
     { staticProps: {}, dynamicProps: {} }
   )
-}
-
-/**
- * TODO: Remove the replacement of $props. when we switch to defined dynamic props
- */
-export const addDynamicTemplateBinds = (
-  root: Cheerio,
-  attrs: { [key: string]: string }
-) => {
-  Object.keys(attrs).forEach((key) => {
-    const propsName = attrs[key].replace('$props.', '')
-    root.attr(`:${key}`, propsName)
-  })
 }
 
 export const generateEmptyVueComponentJS = (

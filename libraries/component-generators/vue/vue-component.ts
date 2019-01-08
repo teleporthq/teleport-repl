@@ -1,8 +1,8 @@
 import { ComponentAssemblyLine, Builder } from '../pipeline'
 
-import { createPlugin as vueBaseComponent } from '../pipeline/plugins/vue/vue-base-component'
-import { createPlugin as vueStyleComponent } from '../pipeline/plugins/vue/vue-style-chunk'
-import { createPlugin as importStatements } from '../pipeline/plugins/common/import-statements'
+import { createPlugin as vueBaseComponent } from '../plugins/vue/vue-base-component'
+import { createPlugin as vueStyleComponent } from '../plugins/vue/vue-style-chunk'
+import { createPlugin as importStatements } from '../plugins/common/import-statements'
 
 import { GeneratorOptions } from '../pipeline/types'
 import { ComponentUIDL } from '../../uidl-definitions/types'

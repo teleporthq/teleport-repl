@@ -4,12 +4,15 @@ jss.setup(preset())
 
 import * as t from '@babel/types'
 
-import { ComponentPlugin, ComponentPluginFactory } from '../../types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../pipeline/types'
 
-import { addClassStringOnJSXTag, generateStyledJSXTag } from '../../utils/jsx-ast'
+import {
+  addClassStringOnJSXTag,
+  generateStyledJSXTag,
+} from '../../pipeline/utils/jsx-ast'
 
-import { cammelCaseToDashCase } from '../../utils/helpers'
-import { ComponentContent } from '../../../../uidl-definitions/types'
+import { cammelCaseToDashCase } from '../../pipeline/utils/helpers'
+import { ComponentContent } from '../../../uidl-definitions/types'
 
 const prepareDynamicProps = (style: any) => {
   return Object.keys(style).reduce((acc: any, key) => {

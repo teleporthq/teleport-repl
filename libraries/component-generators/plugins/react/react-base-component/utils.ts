@@ -1,7 +1,7 @@
 import * as types from '@babel/types'
-import { StateIdentifier } from './types'
-import { capitalize } from '../../utils/helpers'
-import { convertValueToLiteral } from '../../utils/js-ast'
+import { StateIdentifier } from '../../../pipeline/types'
+import { capitalize } from '../../../pipeline/utils/helpers'
+import { convertValueToLiteral } from '../../../pipeline/utils/js-ast'
 import { EventHandlerStatement, PropDefinition } from '../../../../uidl-definitions/types'
 
 const createStateChangeStatement = (

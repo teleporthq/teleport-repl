@@ -1,4 +1,8 @@
-import { ComponentPlugin, ComponentPluginFactory, RegisterDependency } from '../../types'
+import {
+  ComponentPlugin,
+  ComponentPluginFactory,
+  RegisterDependency,
+} from '../../pipeline/types'
 
 import {
   generateSingleVueNode,
@@ -7,8 +11,8 @@ import {
   generateVueComponentPropTypes,
 } from './utils'
 
-import { objectToObjectExpression } from '../../utils/js-ast'
-import { ComponentContent } from '../../../../uidl-definitions/types'
+import { objectToObjectExpression } from '../../pipeline/utils/js-ast'
+import { ComponentContent } from '../../../uidl-definitions/types'
 
 const addTextNodeToTag = (tag: Cheerio, text: string) => {
   if (text.startsWith('$props.') && !text.endsWith('$props.')) {
