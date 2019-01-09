@@ -134,22 +134,21 @@
                 "key": "cards-container",
                 "style": {
                   "width": "100%",
-                  "border": "1px solid red",
-                  "display": "flex"
+                  "border": "1px solid red"
                 },
-                "repeat": {
-                  "content": {
-                    "type": "Card",
-                    "key": "card",
+                "children": [
+                  {
+                    "type": "Cards",
+                    "key": "cards",
                     "attrs": {
-                      "item": "$source"
+                      "items2": "asdads",
+                      "items": ["Hello!", "is", "it", "me", "you're", "looking", "for?"]
                     },
                     "dependency": {
                       "type": "local"
                     }
-                  },
-                  "dataSource": ["hello", "world", "!", "how", "are", "you", "?"]
-                }
+                  }
+                ]
               }
             ]
           }
@@ -478,6 +477,52 @@
           "border": "1px solid black"
         },
         "children": ["$props.item"]
+      }
+    },
+    "Cards": {
+      "name": "Cards",
+      "propDefinitions": {
+        "items": {
+          "type": "array",
+          "defaultValue": []
+        }
+      },
+      "content": {
+        "type": "view",
+        "key": "cards-container",
+        "style": {
+          "width": "100%",
+          "border": "1px solid red",
+          "display": "flex"
+        },
+        "children": [{
+          "type": "text",
+          "key": "joker",
+          "children": ["Last"]
+        }],
+        "repeat": {
+          "content": {
+            "type": "view",
+            "key": "card-container",
+            "style": {
+              "backgroundColor": "royalblue",
+              "color": "white",
+              "margin": "10px",
+              "border": "1px solid black"
+            },
+            "children": [{
+              "type": "Card",
+              "key": "card",
+              "attrs": {
+                "item": "$item"
+              },
+              "dependency": {
+                "type": "local"
+              }
+            }]
+          },
+          "dataSource": "props.items"
+        }
       }
     }
   }

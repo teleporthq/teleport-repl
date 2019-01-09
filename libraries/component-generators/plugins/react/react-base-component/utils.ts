@@ -1,6 +1,5 @@
 import * as types from '@babel/types'
 import { StateIdentifier } from '../../../pipeline/types'
-import { capitalize } from '../../../pipeline/utils/helpers'
 import { convertValueToLiteral } from '../../../pipeline/utils/js-ast'
 import { EventHandlerStatement, PropDefinition } from '../../../../uidl-definitions/types'
 
@@ -148,4 +147,19 @@ export const makeStateHookAST = (stateIdentifier: StateIdentifier, t = types) =>
   ])
 }
 
-export const convertToReactEventName = (str: string): string => 'on' + capitalize(str)
+export const makeRepeatStructureWithMap = (
+  dataSource: string | any[],
+  content: types.JSXElement,
+  t = types
+) => {
+  const source =
+    typeof dataSource === 'string'
+      ? t.identifier(dataSource)
+      : t.arrayExpression(dataSource.map((element) => convertValueToLiteral(element)))
+
+  return t.jsxExpressionContainer(
+    t.callExpression(t.memberExpression(source, t.identifier('map')), [
+      t.arrowFunctionExpression([t.identifier('item')], content),
+    ])
+  )
+}

@@ -23,6 +23,8 @@ export const objectToObjectExpression = (
 
     if (value instanceof ParsedASTNode) {
       computedLiteralValue = value.ast
+    } else if (Array.isArray(value)) {
+      computedLiteralValue = t.arrayExpression(value)
     } else if (typeof value === 'string') {
       computedLiteralValue = t.stringLiteral(value)
     } else if (typeof value === 'number') {

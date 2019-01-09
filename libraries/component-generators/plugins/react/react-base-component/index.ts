@@ -11,7 +11,11 @@ import {
 } from '../../../pipeline/utils/jsx-ast'
 
 import { makeDefaultExport } from '../../../pipeline/utils/js-ast'
-import { addEventHandlerToTag, makePureComponent } from './utils'
+import {
+  addEventHandlerToTag,
+  makePureComponent,
+  makeRepeatStructureWithMap,
+} from './utils'
 
 import { capitalize } from '../../../pipeline/utils/helpers'
 
@@ -31,15 +35,6 @@ import { ComponentContent, PropDefinition } from '../../../../uidl-definitions/t
  * @param value the value(string, number, bool) of the attribute that should be added on the current AST node
  */
 const addAttributeToTag = (tag: t.JSXElement, key: string, value: any) => {
-  // TODO: remove this check when we know how to handle array attributes
-  if (
-    typeof value !== 'number' &&
-    typeof value !== 'boolean' &&
-    typeof value !== 'string'
-  ) {
-    return
-  }
-
   if (typeof value !== 'string') {
     addASTAttributeToJSXTag(tag, { name: key, value })
     return
@@ -51,6 +46,8 @@ const addAttributeToTag = (tag: t.JSXElement, key: string, value: any) => {
   } else if (value.startsWith('$state.')) {
     const dynamicPropValue = value.replace('$state.', '')
     addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue)
+  } else if (value.startsWith('$item')) {
+    addDynamicPropOnJsxOpeningTag(tag, key, 'item')
   } else {
     addASTAttributeToJSXTag(tag, { name: key, value })
   }
@@ -61,6 +58,8 @@ const addTextElementToTag = (tag: t.JSXElement, text: string) => {
     addDynamicChild(tag, text.replace('$props.', ''), 'props')
   } else if (text.startsWith('$state.') && !text.endsWith('$state.')) {
     addDynamicChild(tag, text.replace('$state.', ''))
+  } else if (text.startsWith('$item')) {
+    addDynamicChild(tag, 'item')
   } else {
     addChildJSXText(tag, text)
   }
@@ -73,7 +72,7 @@ export const generateTreeStructure = (
   nodesLookup: Record<string, t.JSXElement>,
   registerDependency: RegisterDependency
 ): t.JSXElement => {
-  const { type, children, key, attrs, dependency, events } = content
+  const { type, children, key, attrs, dependency, events, repeat } = content
 
   const mainTag = generateASTDefinitionForJSXTag(type)
 
@@ -98,6 +97,23 @@ export const generateTreeStructure = (
         propDefinitions
       )
     })
+  }
+
+  if (repeat) {
+    const { content: repeatContent, dataSource } = repeat
+
+    const contentAST = generateTreeStructure(
+      repeatContent,
+      propDefinitions,
+      stateIdentifiers,
+      nodesLookup,
+      registerDependency
+    )
+
+    addAttributeToTag(contentAST, 'key', '$item')
+
+    const repeatAST = makeRepeatStructureWithMap(dataSource, contentAST)
+    mainTag.children.push(repeatAST)
   }
 
   if (children) {

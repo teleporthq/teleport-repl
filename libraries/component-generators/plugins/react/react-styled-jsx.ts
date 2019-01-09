@@ -33,7 +33,7 @@ const generateStyledJSXString = (
 ) => {
   let accumulator: any[] = []
 
-  const { style, children, key } = content
+  const { style, children, key, repeat } = content
   if (style) {
     const root = nodesLookup[key]
     const className = cammelCaseToDashCase(key)
@@ -50,6 +50,10 @@ const generateStyledJSXString = (
         .toString()
     )
     addClassStringOnJSXTag(root, className)
+  }
+
+  if (repeat) {
+    accumulator = accumulator.concat(generateStyledJSXString(repeat.content, nodesLookup))
   }
 
   if (children) {

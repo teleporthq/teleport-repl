@@ -9,6 +9,7 @@ export default class PreviewPage extends React.Component {
         <PreviewedComponent 
           avatarUrl='https://picsum.photos/150/150' 
           authorName='TeleportHQ Rocks'
+          items={["hello!", "this", "is", "a", "test"]}
         />
       </>
     )

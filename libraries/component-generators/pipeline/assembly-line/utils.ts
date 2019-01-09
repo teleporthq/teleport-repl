@@ -98,23 +98,6 @@ const insertChildrenIntoNode = (
   }, initialValue)
 }
 
-const createChildNodeFromContent = (node: ComponentContent | string, source: string) => {
-  if (typeof node === 'string') {
-    if (node === '$source') {
-      return source
-    }
-
-    return node
-  }
-
-  // For now we rely on string templates until we figure out if the use case is correct
-  return JSON.parse(
-    JSON.stringify(node)
-      .split('$source')
-      .join(source)
-  )
-}
-
 export const resolveUIDLNode = (
   node: ComponentContent,
   elementsMapping: ElementsMapping,
@@ -141,31 +124,41 @@ export const resolveUIDLNode = (
   // If the mapping contains children, insert that structure into the UIDL
   if (mappedElement.children) {
     const originalNodeChildren = node.children || []
+
+    // TODO: Add a deep copy method to our project? this might be a bit too much for the
     const replacingNode = {
       ...node,
-      children: [...mappedElement.children],
+      children: JSON.parse(JSON.stringify(mappedElement.children)),
     }
 
     insertChildrenIntoNode(replacingNode, originalNodeChildren)
     node.children = replacingNode.children
   }
 
+  // The UIDL has priority over the mapping repeat
   const repeatStructure = node.repeat || mappedElement.repeat
   if (repeatStructure) {
     const { dataSource, content } = repeatStructure
-    if (typeof dataSource === 'string') {
-      if (dataSource.startsWith('$attrs.') && node.attrs) {
-        const uidlDataSourceKey = dataSource.replace('$attrs.', '')
-        const dataSourceArray = node.attrs[uidlDataSourceKey]
-        node.children = dataSourceArray.map((source: any) =>
-          createChildNodeFromContent(content, source)
-        )
-      }
-    } else {
-      node.children = dataSource.map((source: any) =>
-        createChildNodeFromContent(content, source)
-      )
+
+    // Data source might be preset on a referenced attribute in the uidl node
+    // ex: attrs[options] in case of a dropdown primitive with select/options
+    if (
+      typeof dataSource === 'string' &&
+      dataSource.startsWith('$attrs.') &&
+      node.attrs
+    ) {
+      const nodeDataSourceAttr = dataSource.replace('$attrs.', '')
+      repeatStructure.dataSource = node.attrs[nodeDataSourceAttr]
     }
+
+    // The content inside the repeat must also be mapped like any regular content node
+    repeatStructure.content = resolveUIDLNode(
+      content,
+      elementsMapping,
+      localDependenciesPrefix
+    )
+
+    node.repeat = repeatStructure
   }
 
   // If the node has multiple state branches, each content needs to be resolved

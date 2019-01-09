@@ -159,6 +159,14 @@ export const generateBasicJSXTag = (tagName: string, children: any[] = [], t = t
  * equivalent
  */
 const getProperAttributeValueAssignment = (value: any, t = types) => {
+  if (Array.isArray(value)) {
+    return t.jsxExpressionContainer(
+      t.arrayExpression(value.map((val) => convertValueToLiteral(val)))
+    )
+  }
+
+  // TODO: Handle objects
+
   switch (typeof value) {
     case 'string':
       return t.stringLiteral(value)

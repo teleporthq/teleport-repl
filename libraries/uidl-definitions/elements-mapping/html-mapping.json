@@ -101,8 +101,8 @@
     "repeat": {
       "content": {
         "type": "li",
-        "key": "item-$source",
-        "children": ["$source"]
+        "key": "item",
+        "children": ["$item"]
       },
       "dataSource": "$attrs.items"
     }
@@ -112,8 +112,8 @@
     "repeat": {
       "content": {
         "type": "option",
-        "key": "option-$source",
-        "children": ["$source"]
+        "key": "option",
+        "children": ["$item"]
       },
       "dataSource": "$attrs.options"
     }

@@ -57,7 +57,7 @@ export const applyCSSModulesAndGetDeclarations = (
   let accumulator: any[] = []
   const { nodesLookup = {}, camelCaseClassNames } = params
 
-  const { style, children, key } = content
+  const { style, children, key, repeat } = content
   if (style) {
     const root = nodesLookup[key]
     const className = cammelCaseToDashCase(key)
@@ -92,6 +92,11 @@ export const applyCSSModulesAndGetDeclarations = (
       'className',
       t.identifier(cssClassNameFromStylesObject)
     )
+  }
+
+  if (repeat) {
+    const items = applyCSSModulesAndGetDeclarations(repeat.content, params)
+    accumulator = accumulator.concat(...items)
   }
 
   if (children) {

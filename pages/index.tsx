@@ -14,10 +14,12 @@ import createVueGenerator from '../libraries/component-generators/vue/vue-compon
 
 import authorCardUIDL from '../inputs/component-author-card.json'
 import tabSelectorUIDL from '../inputs/component-tab-selector.json'
+import cardListUIDL from '../inputs/component-card-list.json'
 import { ComponentUIDL } from '../libraries/uidl-definitions/types'
 
 const uidlSamples: Record<string, ComponentUIDL> = {
   'author-card': authorCardUIDL,
+  'card-list': cardListUIDL,
   'tab-selector': tabSelectorUIDL,
 }
 
