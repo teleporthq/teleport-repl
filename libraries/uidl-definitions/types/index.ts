@@ -44,6 +44,7 @@ export interface ComponentContent {
   repeat?: {
     content: ComponentContent
     dataSource: string | any[]
+    meta?: Record<string, any>
   }
   dependency?: ComponentDependency
   style?: Record<string, any>

@@ -47,11 +47,21 @@ export const objectToObjectExpression = (
   return objectExpression
 }
 
+type ExpressionLiteral =
+  | types.StringLiteral
+  | types.BooleanLiteral
+  | types.NumberLiteral
+  | types.Identifier
+  | types.ArrayExpression
 export const convertValueToLiteral = (
   value: any,
   explicitType: string = '',
   t = types
-) => {
+): ExpressionLiteral => {
+  if (Array.isArray(value)) {
+    return t.arrayExpression(value.map((val) => convertValueToLiteral(val)))
+  }
+
   const typeToCompare = explicitType ? explicitType : typeof value
   switch (typeToCompare) {
     case 'string':

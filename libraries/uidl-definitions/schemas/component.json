@@ -101,7 +101,8 @@
                 { "type": "string" },
                 { "type": "array" }
               ]
-            }
+            },
+            "meta": { "type": "object" }
           }
         },
         "dependency": {
