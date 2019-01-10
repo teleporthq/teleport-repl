@@ -1,6 +1,21 @@
 export interface ProjectUIDL {
   $schema?: string
   name: string
+  globals: {
+    settings: {
+      title?: string
+      language?: string
+      themeColor?: string
+    }
+    meta?: Record<string, any>
+    externalAssets: Array<{
+      type: string
+      path: string
+      meta?: Record<string, any>
+    }>
+    variables?: Record<string, string>
+    defaultStyles?: Record<string, any>
+  }
   root: ComponentUIDL
   components?: Record<string, ComponentUIDL>
 }

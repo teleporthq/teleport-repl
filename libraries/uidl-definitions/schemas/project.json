@@ -5,7 +5,8 @@
   "required": [
     "$schema",
     "name",
-    "root"
+    "root",
+    "globals"
   ],
   "additionalProperties": false,
   "properties": {
@@ -16,6 +17,49 @@
     "name": {
       "type": "string",
       "default": "My-Teleport-Project"
+    },
+    "globals": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["settings", "externalAssets"],
+      "properties": {
+        "settings": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "language": { "type": "string" },
+            "title": { "type": "string" },
+            "themeColor": { "type": "string" }
+          }
+        },
+        "meta": {
+          "type": "object"
+        },
+        "externalAssets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "type": "string" },
+              "path": { "type": "string" },
+              "meta": { "type": "object" }
+            }
+          }
+        },
+        "variables": {
+          "type": "object"
+        },
+        "defaultStyles": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "$ref": "#/definitions/style"
+            }
+          }
+        }
+      }
     },
     "root": {
       "$ref": "#/definitions/component"

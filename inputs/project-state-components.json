@@ -1,6 +1,52 @@
 {
   "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/project.json",
   "name": "myVueProject",
+  "globals": {
+    "settings": {
+      "language": "en",
+      "themeColor": "#822CEC",
+      "title": "TeleportHQ"
+    },
+    "meta": {
+      "description": "Building the next generation of websites",
+      "keywords": "prea bun, prea ca la tara",
+      "viewport": "width=device-width, initial-scale=1.0"
+    },
+    "externalAssets": [
+      {
+        "type": "style",
+        "path": "/static/normalize.css",
+        "meta": {
+          "relative": true
+        }
+      }, 
+      {
+        "type": "script",
+        "path": "https://www.googletagmanager.com/gtm.js"
+      },
+      {
+        "type": "font",
+        "path": "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600"
+      },
+      {
+        "type": "icon",
+        "path": "/static/favicon.ico",
+        "meta": {
+          "size": "64px"
+        }
+      }
+    ],
+    "variables": {
+      "primaryColor": "#822CEC",
+      "secondaryColor": "#414141",
+      "spacing": "10px"
+    },
+    "defaultStyles": {
+      "view": {
+        "border": "1px solid red"
+      }
+    }
+  },
   "root": {
     "name": "App",
     "stateDefinitions": {
