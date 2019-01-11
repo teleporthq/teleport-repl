@@ -150,6 +150,7 @@ export const makeStateHookAST = (stateIdentifier: StateIdentifier, t = types) =>
 export const makeRepeatStructureWithMap = (
   dataSource: string | any[],
   content: types.JSXElement,
+  meta: any = {},
   t = types
 ) => {
   const source =
@@ -157,9 +158,14 @@ export const makeRepeatStructureWithMap = (
       ? t.identifier(dataSource)
       : t.arrayExpression(dataSource.map((element) => convertValueToLiteral(element)))
 
+  const arrowFunctionArguments = [t.identifier('item')]
+  if (meta.useIndex) {
+    arrowFunctionArguments.push(t.identifier('index'))
+  }
+
   return t.jsxExpressionContainer(
     t.callExpression(t.memberExpression(source, t.identifier('map')), [
-      t.arrowFunctionExpression([t.identifier('item')], content),
+      t.arrowFunctionExpression(arrowFunctionArguments, content),
     ])
   )
 }

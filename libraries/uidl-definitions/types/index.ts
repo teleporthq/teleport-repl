@@ -16,12 +16,12 @@ export interface ComponentUIDL {
 
 export interface PropDefinition {
   type: string
-  defaultValue?: string | number | boolean
+  defaultValue?: string | number | boolean | any[]
 }
 
 export interface StateDefinition {
   type: string
-  defaultValue: string | number | boolean
+  defaultValue: string | number | boolean | any[]
   values?: Array<{
     value: string | number | boolean
     meta?: {
