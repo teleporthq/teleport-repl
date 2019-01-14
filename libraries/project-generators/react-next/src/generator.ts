@@ -50,12 +50,12 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
   const states = root.content.states
   const stateDefinitions = root.stateDefinitions
   if (!states || !stateDefinitions) {
-    return
+    return distFolder
   }
 
   const routerDefinitions = stateDefinitions.router
   if (!routerDefinitions) {
-    return
+    return distFolder
   }
 
   await Promise.all(

@@ -51,7 +51,7 @@ export interface PipelineOperations {
  */
 export interface MappedElement {
   nodeName: string
-  attrs?: any
+  attrs?: Record<string, any>
   dependency?: ComponentDependency
 }
 

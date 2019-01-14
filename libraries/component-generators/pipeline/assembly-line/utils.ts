@@ -7,7 +7,7 @@ import {
 
 const mergeAttributes = (mappedElement: ElementMapping, uidlAttrs: any) => {
   // We gather the results here uniting the mapped attributes and the uidl attributes.
-  const resolvedAttrs: { [key: string]: any } = {}
+  const resolvedAttrs: Record<string, any> = {}
 
   // This will gather all the attributes from the UIDL which are mapped using the elements-mapping
   // These attributes will not be added on the tag as they are, but using the elements-mapping

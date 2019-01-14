@@ -4,14 +4,14 @@ import { readJSON, writeFolder } from '../../utils/path-utils'
 import projectJson from '../../../../inputs/project-state-components.json'
 
 import createNextProject from './generator'
-// import { ProjectGeneratorFunction } from '../../types'
+import { ProjectGeneratorFunction } from '../../types'
 import { ProjectUIDL } from '../../../uidl-definitions/types'
 
 import { validateProjectUIDL } from '../../../uidl-definitions/validators'
 
 const writeToDisk = async (
   projectUIDL: ProjectUIDL,
-  generatorFunction: any,
+  generatorFunction: ProjectGeneratorFunction,
   templatePath: string = 'project-boilerplate',
   distPath: string = 'dist'
 ) => {
