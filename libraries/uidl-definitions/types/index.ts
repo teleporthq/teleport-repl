@@ -3,18 +3,17 @@ export interface ProjectUIDL {
   name: string
   globals: {
     settings: {
-      title?: string
-      language?: string
-      themeColor?: string
+      title: string
+      language: string
     }
-    meta?: Record<string, any>
-    externalAssets: Array<{
+    meta?: Array<Record<string, string>>
+    assets: Array<{
       type: string
-      path: string
+      path?: string
+      content?: string
       meta?: Record<string, any>
     }>
     variables?: Record<string, string>
-    defaultStyles?: Record<string, any>
   }
   root: ComponentUIDL
   components?: Record<string, ComponentUIDL>

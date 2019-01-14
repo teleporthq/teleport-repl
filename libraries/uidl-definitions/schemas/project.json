@@ -21,21 +21,23 @@
     "globals": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["settings", "externalAssets"],
+      "required": ["settings", "assets"],
       "properties": {
         "settings": {
           "type": "object",
           "additionalProperties": false,
           "properties": {
             "language": { "type": "string" },
-            "title": { "type": "string" },
-            "themeColor": { "type": "string" }
+            "title": { "type": "string" }
           }
         },
         "meta": {
-          "type": "object"
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
         },
-        "externalAssets": {
+        "assets": {
           "type": "array",
           "items": {
             "type": "object",
@@ -44,20 +46,13 @@
             "properties": {
               "type": { "type": "string" },
               "path": { "type": "string" },
+              "content": { "type": "string" },
               "meta": { "type": "object" }
             }
           }
         },
         "variables": {
           "type": "object"
-        },
-        "defaultStyles": {
-          "type": "object",
-          "patternProperties": {
-            ".*": {
-              "$ref": "#/definitions/style"
-            }
-          }
         }
       }
     },

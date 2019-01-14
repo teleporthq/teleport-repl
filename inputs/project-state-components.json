@@ -4,25 +4,37 @@
   "globals": {
     "settings": {
       "language": "en",
-      "themeColor": "#822CEC",
       "title": "TeleportHQ"
     },
-    "meta": {
-      "description": "Building the next generation of websites",
-      "keywords": "prea bun, prea ca la tara",
-      "viewport": "width=device-width, initial-scale=1.0"
-    },
-    "externalAssets": [
+    "meta" : [
+      { "name": "description", "content": "Free Web tutorials" },
+      { "name": "keywords", "content": "prea bun, prea ca la tara" },
+      { "name": "theme-color", "content": "#822CEC" },
+      { "name": "viewport", "content": "width=device-width, initial-scale=1.0" },
+      { "property": "og:title", "content": "Free Web tutorials" }
+    ],
+    "assets": [
       {
         "type": "style",
         "path": "/static/normalize.css",
         "meta": {
-          "relative": true
+          "absolute": true,
+          "target": "body"
         }
       }, 
       {
         "type": "script",
-        "path": "https://www.googletagmanager.com/gtm.js"
+        "path": "https://www.googletagmanager.com/gtm.js",
+        "meta": {
+          "defer": true
+        }
+      },
+      {
+        "type": "script",
+        "content": "var x = 2",
+        "meta": {
+          "target": "body"
+        }
       },
       {
         "type": "font",
@@ -40,11 +52,6 @@
       "primaryColor": "#822CEC",
       "secondaryColor": "#414141",
       "spacing": "10px"
-    },
-    "defaultStyles": {
-      "view": {
-        "border": "1px solid red"
-      }
     }
   },
   "root": {
