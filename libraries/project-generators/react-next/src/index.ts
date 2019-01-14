@@ -30,10 +30,7 @@ const writeToDisk = async (
   await writeFolder(distFolder)
 }
 
-// const runInMemory = async (
-//   projectUIDL: ProjectUIDL,
-//   generatorFunction: ProjectGeneratorFunction
-// ) => {
+// const runInMemory = async (projectUIDL: ProjectUIDL, generatorFunction: any) => {
 //   const result = await generatorFunction(projectUIDL)
 //   console.log(JSON.stringify(result, null, 2))
 // }
@@ -41,4 +38,4 @@ const writeToDisk = async (
 console.log(validateProjectUIDL(projectJson))
 
 writeToDisk(projectJson, createNextProject, 'project-boilerplate')
-// runInMemory(projectJson, createNuxtProject)
+// runInMemory(projectJson, createNextProject)

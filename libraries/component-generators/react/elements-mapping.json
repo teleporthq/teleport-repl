@@ -1,5 +1,5 @@
 {
-  "Group": {
+  "group": {
     "type": "Fragment",
     "dependency": {
       "type": "library",
