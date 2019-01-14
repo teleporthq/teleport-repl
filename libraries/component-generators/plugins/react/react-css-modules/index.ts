@@ -33,7 +33,7 @@ export const createPlugin: ComponentPluginFactory<ReactCSSModulesConfig> = (
 
   const reactCSSModules: ComponentPlugin = async (structure, { registerDependency }) => {
     const { uidl, chunks } = structure
-    const { name } = uidl
+    const { name, meta } = uidl
 
     const componentChunk = chunks.filter((chunk) => chunk.name === componentChunkName)[0]
 
@@ -57,10 +57,13 @@ export const createPlugin: ComponentPluginFactory<ReactCSSModulesConfig> = (
 
     /**
      * Setup an import statement for the styles
+     * The name of the file is either in the meta of the component generator
+     * or we fallback to the name of the component
      */
+    const cssFileName = (meta && meta.fileName) || name
     registerDependency(styleObjectImportName, {
       type: 'local',
-      path: `./${name}.css`,
+      path: `./${cssFileName}.css`,
     })
 
     structure.chunks.push({

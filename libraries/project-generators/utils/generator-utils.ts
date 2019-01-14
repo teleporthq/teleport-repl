@@ -26,29 +26,37 @@ export const computeFileName = (stateKey: string, stateBranch: any) => {
 export const extractPageMetadata = (
   routerDefinitions: StateDefinition,
   stateName: string,
-  options: { usePathAsFileName?: boolean } = {
+  options: { usePathAsFileName?: boolean; convertDefaultToIndex?: boolean } = {
     usePathAsFileName: false,
+    convertDefaultToIndex: false,
   }
-): { fileName: string; componentName: string } => {
+): { fileName: string; componentName: string; path: string } => {
   const defaultPage = routerDefinitions.defaultValue
   const pageDefinitions = routerDefinitions.values || []
   const pageDefinition = pageDefinitions.find((stateDef) => stateDef.value === stateName)
 
+  // If not meta object is defined, the stateName is used
   if (!pageDefinition || !pageDefinition.meta) {
     return {
-      fileName: stateName === defaultPage ? 'index' : stateName,
+      fileName:
+        options.convertDefaultToIndex && stateName === defaultPage ? 'index' : stateName,
       componentName: stateName,
+      path: '/' + stateName,
     }
   }
 
-  const componentName = pageDefinition.meta.componentName || stateName
+  // In case the path is used as the url (next, nuxt), we override the filename from the path
   const fileNameFromMeta = options.usePathAsFileName
     ? pageDefinition.meta.path && pageDefinition.meta.path.slice(1)
     : pageDefinition.meta.fileName
 
   return {
-    fileName: stateName === defaultPage ? 'index' : fileNameFromMeta || stateName,
-    componentName,
+    fileName:
+      options.convertDefaultToIndex && stateName === defaultPage
+        ? 'index'
+        : fileNameFromMeta || stateName,
+    componentName: pageDefinition.meta.componentName || stateName,
+    path: pageDefinition.meta.path || '/' + stateName,
   }
 }
 

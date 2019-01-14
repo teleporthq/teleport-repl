@@ -6,7 +6,10 @@ import configureAssemblyLine, {
   ReactComponentFlavors,
 } from '../../../component-generators/react/react-component'
 
-import { extractExternalDependencies } from '../../utils/generator-utils'
+import {
+  extractExternalDependencies,
+  extractPageMetadata,
+} from '../../utils/generator-utils'
 
 import { File, Folder, ProjectGeneratorOptions } from '../../types'
 import { ProjectUIDL } from '../../../uidl-definitions/types'
@@ -17,45 +20,6 @@ const componentGenerator = configureAssemblyLine({
 
 const routingComponentGenerator = configureRouterAsemblyLine()
 
-const extractInlineComponent = (root: Record<string, any>) => {
-  const { components, states } = Object.keys(root.states).reduce(
-    (acc: any, stateKey) => {
-      const state = root.states[stateKey]
-      // if component has content declared in root
-      if (state.component.content.children) {
-        // push new component in
-        acc.components[state.component.name] = {
-          ...state.component,
-          type: state.component.name,
-        }
-
-        // modify state to contain local dependecy
-        acc.states[stateKey] = {
-          ...state,
-          component: {
-            name: state.component.name,
-            content: {
-              type: state.component.name,
-              name: state.component.name,
-              dependency: {
-                type: 'local',
-                path: `./${state.component.name}`,
-              },
-            },
-          },
-        }
-      } else {
-        acc.states[stateKey] = state
-      }
-
-      return acc
-    },
-    { states: {}, components: {} }
-  )
-
-  return { components, states }
-}
-
 export default async (
   jsDoc: ProjectUIDL,
   { sourcePackageJson, distPath = 'dist' }: ProjectGeneratorOptions = {
@@ -64,7 +28,7 @@ export default async (
 ) => {
   // pick root name/id
 
-  const { components, root } = jsDoc
+  const { components = {}, root } = jsDoc
 
   const componentsFolder: Folder = {
     name: 'components',
@@ -72,10 +36,16 @@ export default async (
     subFolders: [],
   }
 
+  const pagesFolder: Folder = {
+    name: 'pages',
+    files: [],
+    subFolders: [],
+  }
+
   const srcFolder: Folder = {
     name: 'src',
     files: [],
-    subFolders: [componentsFolder],
+    subFolders: [componentsFolder, pagesFolder],
   }
 
   const distFolder: Folder = {
@@ -85,18 +55,23 @@ export default async (
   }
 
   let allDependencies: Record<string, any> = {}
+  const componentMappings = { ...reactProjectMapping, ...customMapping }
 
-  const { components: newComponents, states } = extractInlineComponent(root)
-  const allComponents = {
-    ...components,
-    ...newComponents,
+  const { states } = root.content
+  const stateDefinitions = root.stateDefinitions
+  if (!states || !stateDefinitions) {
+    return distFolder
   }
 
-  // Handle the router first
-  const routingComponent = await routingComponentGenerator({
-    ...root,
-    states,
-  })
+  const routerDefinitions = stateDefinitions.router
+  if (!routerDefinitions) {
+    return distFolder
+  }
+
+  // routing component (index.js)
+  // TODO: Avoid leaky memory reference because the root is parsed once here and then each branch is parsed below
+  const rootCopy = JSON.parse(JSON.stringify(root))
+  const routingComponent = await routingComponentGenerator(rootCopy)
 
   srcFolder.files.push({
     name: 'index',
@@ -109,11 +84,60 @@ export default async (
     ...routingComponent.dependencies,
   }
 
-  const componentMappings = { ...reactProjectMapping, ...customMapping }
+  // pages
+  await Promise.all(
+    states.map(async (stateBranch) => {
+      const { value: pageKey, content: pageContent } = stateBranch
 
-  const generatedComponentFileGroups: File[][] = await Promise.all(
-    Object.keys(allComponents).map(async (componentName) => {
-      const component = allComponents[componentName]
+      if (typeof pageKey !== 'string' || typeof pageContent === 'string') {
+        return
+      }
+
+      const { componentName, fileName } = extractPageMetadata(routerDefinitions, pageKey)
+      const pageComponent = {
+        name: componentName,
+        content: pageContent,
+        meta: {
+          fileName,
+        },
+      }
+
+      const compiledComponent = await componentGenerator(pageComponent, {
+        customMapping: componentMappings,
+        localDependenciesPrefix: '../components/',
+      })
+
+      let cssFile: File | null = null
+      if (compiledComponent.css) {
+        cssFile = {
+          name: fileName,
+          extension: '.css',
+          content: compiledComponent.css,
+        }
+      }
+
+      const jsFile: File = {
+        name: fileName,
+        extension: '.js',
+        content: compiledComponent.code,
+      }
+
+      allDependencies = {
+        ...allDependencies,
+        ...compiledComponent.dependencies,
+      }
+
+      if (cssFile) {
+        pagesFolder.files.push(cssFile)
+      }
+      pagesFolder.files.push(jsFile)
+    })
+  )
+
+  // components
+  await Promise.all(
+    Object.keys(components).map(async (componentName) => {
+      const component = components[componentName]
       const compiledComponent = await componentGenerator(component, {
         customMapping: componentMappings,
       })
@@ -139,21 +163,11 @@ export default async (
       }
 
       if (cssFile) {
-        return [jsFile, cssFile]
+        componentsFolder.files.push(cssFile)
       }
-      return [jsFile]
+      componentsFolder.files.push(jsFile)
     })
   )
-
-  const generatedComponentsFiles = generatedComponentFileGroups.reduce(
-    (files: File[], fileGroup) => {
-      files.push(...fileGroup)
-      return files
-    },
-    []
-  )
-
-  componentsFolder.files.push(...generatedComponentsFiles)
 
   // Package.json
   if (sourcePackageJson) {

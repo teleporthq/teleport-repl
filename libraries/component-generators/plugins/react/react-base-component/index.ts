@@ -46,8 +46,8 @@ const addAttributeToTag = (tag: t.JSXElement, key: string, value: any) => {
   } else if (value.startsWith('$state.')) {
     const dynamicPropValue = value.replace('$state.', '')
     addDynamicPropOnJsxOpeningTag(tag, key, dynamicPropValue)
-  } else if (value.startsWith('$item')) {
-    addDynamicPropOnJsxOpeningTag(tag, key, 'item')
+  } else if (value === '$item' || value === '$index') {
+    addDynamicPropOnJsxOpeningTag(tag, key, value.slice(1))
   } else {
     addASTAttributeToJSXTag(tag, { name: key, value })
   }
@@ -58,8 +58,8 @@ const addTextElementToTag = (tag: t.JSXElement, text: string) => {
     addDynamicChild(tag, text.replace('$props.', ''), 'props')
   } else if (text.startsWith('$state.') && !text.endsWith('$state.')) {
     addDynamicChild(tag, text.replace('$state.', ''))
-  } else if (text.startsWith('$item')) {
-    addDynamicChild(tag, 'item')
+  } else if (text === '$item' || text === '$index') {
+    addDynamicChild(tag, text.slice(1))
   } else {
     addChildJSXText(tag, text)
   }
@@ -100,7 +100,7 @@ export const generateTreeStructure = (
   }
 
   if (repeat) {
-    const { content: repeatContent, dataSource } = repeat
+    const { content: repeatContent, dataSource, meta } = repeat
 
     const contentAST = generateTreeStructure(
       repeatContent,
@@ -112,7 +112,7 @@ export const generateTreeStructure = (
 
     addAttributeToTag(contentAST, 'key', '$item')
 
-    const repeatAST = makeRepeatStructureWithMap(dataSource, contentAST)
+    const repeatAST = makeRepeatStructureWithMap(dataSource, contentAST, meta)
     mainTag.children.push(repeatAST)
   }
 
@@ -236,7 +236,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
     const nodesLookup = {}
     const jsxTagStructure = generateTreeStructure(
       uidl.content,
-      uidl.propDefinitions,
+      uidl.propDefinitions || {},
       stateIdentifiers,
       nodesLookup,
       registerDependency

@@ -9,7 +9,7 @@ const createStateChangeStatement = (
   t = types
 ) => {
   if (!eventHandlerStatement.modifies) {
-    console.log(`No state identifier referenced under the "modifies" field`)
+    console.warn(`No state identifier referenced under the "modifies" field`)
     return null
   }
 
@@ -17,7 +17,7 @@ const createStateChangeStatement = (
   const stateIdentifier = stateIdentifiers[stateKey]
 
   if (!stateIdentifier) {
-    console.log(`No state hook was found for "${stateKey}"`)
+    console.warn(`No state hook was found for "${stateKey}"`)
     return null
   }
 
@@ -39,14 +39,14 @@ const createPropCallStatement = (
   const { calls: propFunctionKey, args = [] } = eventHandlerStatement
 
   if (!propFunctionKey) {
-    console.log(`No prop definition referenced under the "calls" field`)
+    console.warn(`No prop definition referenced under the "calls" field`)
     return null
   }
 
   const propDefinition = propDefinitions[propFunctionKey]
 
   if (!propDefinition || propDefinition.type !== 'func') {
-    console.log(`No prop definition was found for "${propFunctionKey}"`)
+    console.warn(`No prop definition was found for "${propFunctionKey}"`)
     return null
   }
 
@@ -150,6 +150,7 @@ export const makeStateHookAST = (stateIdentifier: StateIdentifier, t = types) =>
 export const makeRepeatStructureWithMap = (
   dataSource: string | any[],
   content: types.JSXElement,
+  meta: any = {},
   t = types
 ) => {
   const source =
@@ -157,9 +158,14 @@ export const makeRepeatStructureWithMap = (
       ? t.identifier(dataSource)
       : t.arrayExpression(dataSource.map((element) => convertValueToLiteral(element)))
 
+  const arrowFunctionArguments = [t.identifier('item')]
+  if (meta.useIndex) {
+    arrowFunctionArguments.push(t.identifier('index'))
+  }
+
   return t.jsxExpressionContainer(
     t.callExpression(t.memberExpression(source, t.identifier('map')), [
-      t.arrowFunctionExpression([t.identifier('item')], content),
+      t.arrowFunctionExpression(arrowFunctionArguments, content),
     ])
   )
 }

@@ -9,8 +9,10 @@ import {
 } from '../pipeline/types'
 import { createPlugin as importStatements } from '../plugins/common/import-statements'
 import { ComponentAssemblyLine, Builder } from '../pipeline'
-import { generateTreeStructure } from '../plugins/react/react-base-component'
 
+import { extractPageMetadata } from '../../project-generators/utils/generator-utils'
+
+import { ComponentUIDL } from '../../uidl-definitions/types'
 import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import reactMapping from './elements-mapping.json'
 
@@ -85,90 +87,54 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
 
     registerRouterDeps(registerDependency)
 
-    const { states } = uidl
-    const pages = states || {}
+    const { content, stateDefinitions = {} } = uidl
+    const { states: pages = [] } = uidl.content
+    const { router: routerDefinitions } = stateDefinitions
 
-    const mappings: any = {
-      routes: [],
-    }
+    const routeJSXDefinitions = pages.map((page) => {
+      const { value: pageKey } = page
 
-    const componentChunkNamesBeforeRouteChunk: string[] = []
-
-    const rootRouterTag = generateASTDefinitionForJSXTag('Router')
-    const routeDefinitions = Object.keys(pages).map((pageKey) => {
-      const { component: stateComponent, default: isDefault, meta } = pages[pageKey]
-      const { name, content } = stateComponent
-      const { type, children } = content
-      const route = generateASTDefinitionForJSXTag('Route')
-      const path = meta && meta.url ? meta.url : pageKey
-      const urlRoute = isDefault ? '/' : `/${path.toLocaleLowerCase()}`
-      const withInlineComponent = children && children.length
-      if (withInlineComponent) {
-        const nodesLookup = {}
-        const jsxTagStructure = generateTreeStructure(
-          content,
-          {}, // TODO: add prop definitions here
-          {}, // TODO: add state definitions here
-          nodesLookup,
-          (a, b) => {
-            const filePath = b.path || ''
-            b = {
-              ...b,
-              path: `./components/${filePath.replace('./', '')}`,
-              meta: {
-                ...b.meta,
-              },
-            }
-            return registerDependency(a, b)
-          }
+      if (typeof pageKey !== 'string' || typeof content === 'string') {
+        console.warn(
+          'Route not correctly specified. Value should be a string when defining routes'
         )
-
-        const generatedPageInstance = makePureComponent({
-          name: `${name}Page`,
-          jsxTagTree: jsxTagStructure,
-        })
-
-        const inlinePageComponentChunkName = `${componentChunkName}-${name}`
-        structure.chunks.push({
-          type: 'js',
-          name: inlinePageComponentChunkName,
-          linker: {
-            after: [importChunkName],
-          },
-          meta: {
-            nodesLookup,
-          },
-          content: generatedPageInstance,
-        })
-        componentChunkNamesBeforeRouteChunk.push(inlinePageComponentChunkName)
-      } else {
-        registerDependency(type, {
-          type: 'local',
-          path: `./components/${type}`,
-        })
+        return null
       }
+
+      const { fileName, componentName, path } = extractPageMetadata(
+        routerDefinitions,
+        pageKey
+      )
+      const route = generateASTDefinitionForJSXTag('Route')
+
+      registerDependency(componentName, {
+        type: 'local',
+        path: `./pages/${fileName}`,
+      })
 
       route.openingElement.attributes.push(
         t.jsxAttribute(t.jsxIdentifier('exact')),
-        t.jsxAttribute(t.jsxIdentifier('path'), t.stringLiteral(urlRoute)),
+        t.jsxAttribute(t.jsxIdentifier('path'), t.stringLiteral(path)),
         t.jsxAttribute(
           t.jsxIdentifier('component'),
-          t.jsxExpressionContainer(
-            t.identifier(withInlineComponent ? `${name}Page` : type)
-          )
+          t.jsxExpressionContainer(t.identifier(componentName))
         )
       )
 
       return route
     })
 
+    const rootRouterTag = generateASTDefinitionForJSXTag('Router')
+
     const divContainer = generateASTDefinitionForJSXTag('div')
 
     rootRouterTag.children.push(divContainer)
 
-    divContainer.children.push(...routeDefinitions)
-
-    mappings.routes = routeDefinitions
+    routeJSXDefinitions.forEach((route) => {
+      if (route) {
+        divContainer.children.push(route)
+      }
+    })
 
     const pureComponent = makePureComponent({
       name: uidl.name,
@@ -179,10 +145,7 @@ export const createPlugin: ComponentPluginFactory<AppRoutingComponentConfig> = (
       type: 'js',
       name: componentChunkName,
       linker: {
-        after: [importChunkName, ...componentChunkNamesBeforeRouteChunk],
-      },
-      meta: {
-        mappings,
+        after: [importChunkName],
       },
       content: pureComponent,
     })
@@ -227,7 +190,7 @@ export const configureRouterAsemblyLine = () => {
     importLibsChunkName: 'import',
   })
 
-  const generateComponent = async (jsDoc: any) => {
+  const generateComponent = async (jsDoc: ComponentUIDL) => {
     const asemblyLine = new ComponentAssemblyLine(
       [configureAppRouterComponent, configureImportStatements],
       {

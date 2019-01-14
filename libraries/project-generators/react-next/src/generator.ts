@@ -68,6 +68,7 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
 
       const metadata = extractPageMetadata(routerDefinitions, stateName, {
         usePathAsFileName: true,
+        convertDefaultToIndex: true,
       })
 
       const pageComponent: ComponentUIDL = {
