@@ -1,5 +1,5 @@
 {
-  "NavLink": {
+  "navlink": {
     "type": "Link",
     "dependency": {
       "type": "library",

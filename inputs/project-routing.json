@@ -11,15 +11,16 @@
           {
             "value": "home",
             "meta": {
-              "path": "/home",
-              "componentName": "Home"
+              "path": "/",
+              "componentName": "HomePage",
+              "fileName": "Home"
             }
           },
           {
             "value": "about",
             "meta": {
               "path": "/mask-url",
-              "componentName": "About"
+              "componentName": "AboutPage"
             }
           }
         ]
@@ -41,10 +42,13 @@
                 "children": ["click-me"]
               },
               {
-                "type": "text",
+                "type": "CustomText",
                 "key": "text",
                 "attrs": {
-                  "data-attr": "random"
+                  "message": "random message"
+                },
+                "dependency": {
+                  "type": "local"
                 }
               },
               {
@@ -86,6 +90,25 @@
           }
         }
       ]
+    }
+  },
+  "components": {
+    "CustomText": {
+      "name": "CustomText",
+      "propDefinitions": {
+        "message": {
+          "type": "string",
+          "defaultValue": ""
+        }
+      },
+      "content": {
+        "type": "text",
+        "key": "node-key",
+        "style": {
+          "color": "red"
+        },
+        "children": ["$props.message"]
+      }
     }
   }
 }

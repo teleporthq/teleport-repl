@@ -11,6 +11,7 @@
           {
             "value": "index",
             "meta": {
+              "path": "/",
               "componentName": "Home"
             }
           }
@@ -141,7 +142,6 @@
                     "type": "Cards",
                     "key": "cards",
                     "attrs": {
-                      "items2": "asdads",
                       "items": ["Hello!", "is", "it", "me", "you're", "looking", "for?"]
                     },
                     "dependency": {
@@ -465,7 +465,8 @@
       "name": "Card",
       "propDefinitions": {
         "item": {
-          "type": "string"
+          "type": "string",
+          "defaultValue": "placeholder"
         }
       },
       "content": {

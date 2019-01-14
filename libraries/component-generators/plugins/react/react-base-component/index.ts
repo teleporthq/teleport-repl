@@ -236,7 +236,7 @@ export const createPlugin: ComponentPluginFactory<JSXConfig> = (config) => {
     const nodesLookup = {}
     const jsxTagStructure = generateTreeStructure(
       uidl.content,
-      uidl.propDefinitions,
+      uidl.propDefinitions || {},
       stateIdentifiers,
       nodesLookup,
       registerDependency

@@ -9,7 +9,7 @@ const createStateChangeStatement = (
   t = types
 ) => {
   if (!eventHandlerStatement.modifies) {
-    console.log(`No state identifier referenced under the "modifies" field`)
+    console.warn(`No state identifier referenced under the "modifies" field`)
     return null
   }
 
@@ -17,7 +17,7 @@ const createStateChangeStatement = (
   const stateIdentifier = stateIdentifiers[stateKey]
 
   if (!stateIdentifier) {
-    console.log(`No state hook was found for "${stateKey}"`)
+    console.warn(`No state hook was found for "${stateKey}"`)
     return null
   }
 
@@ -39,14 +39,14 @@ const createPropCallStatement = (
   const { calls: propFunctionKey, args = [] } = eventHandlerStatement
 
   if (!propFunctionKey) {
-    console.log(`No prop definition referenced under the "calls" field`)
+    console.warn(`No prop definition referenced under the "calls" field`)
     return null
   }
 
   const propDefinition = propDefinitions[propFunctionKey]
 
   if (!propDefinition || propDefinition.type !== 'func') {
-    console.log(`No prop definition was found for "${propFunctionKey}"`)
+    console.warn(`No prop definition was found for "${propFunctionKey}"`)
     return null
   }
 

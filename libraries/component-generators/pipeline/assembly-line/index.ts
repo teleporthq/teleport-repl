@@ -5,7 +5,11 @@ import {
   RegisterDependency,
 } from '../types'
 
-import { ComponentDependency, ElementsMapping } from '../../../uidl-definitions/types'
+import {
+  ComponentDependency,
+  ElementsMapping,
+  ComponentUIDL,
+} from '../../../uidl-definitions/types'
 import { resolveUIDLNode } from './utils'
 
 export interface RuntimeParams {
@@ -24,7 +28,7 @@ export default class ComponentAsemblyLine {
     this.elementsMapping = elementsMapping
   }
 
-  public async run(uidl: any, params?: RuntimeParams) {
+  public async run(uidl: ComponentUIDL, params?: RuntimeParams) {
     const {
       initialStructure = {
         uidl,
@@ -47,13 +51,14 @@ export default class ComponentAsemblyLine {
 
     this.elementsMapping = { ...this.elementsMapping, ...customMapping }
 
+    const mappedContent = resolveUIDLNode(
+      uidl.content,
+      this.elementsMapping,
+      localDependenciesPrefix
+    )
     structure.uidl = {
       ...structure.uidl,
-      content: resolveUIDLNode(
-        uidl.content,
-        this.elementsMapping,
-        localDependenciesPrefix
-      ),
+      content: mappedContent,
     }
 
     const finalStructure: ComponentStructure = await this.plugins.reduce(

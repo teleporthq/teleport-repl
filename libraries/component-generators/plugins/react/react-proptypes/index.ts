@@ -32,6 +32,10 @@ export const createPlugin: ComponentPluginFactory<ReactJSPropTypesConfig> = (con
       )
     }
 
+    if (!uidl.propDefinitions) {
+      return structure
+    }
+
     // TODO used the name from the mappings of the component, not from the UIDL
     const defaultPropsAst = buildDefaultPropsAst(name, uidl.propDefinitions)
     const typesOfPropsAst = buildTypesOfPropsAst(name, 'PropTypes', uidl.propDefinitions)

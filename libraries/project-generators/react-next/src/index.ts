@@ -1,7 +1,7 @@
 import path from 'path'
 import { readJSON, writeFolder } from '../../utils/path-utils'
 
-import projectJson from '../../../../inputs/project-todolist.json'
+import projectJson from '../../../../inputs/project-state-components.json'
 
 import createNextProject from './generator'
 // import { ProjectGeneratorFunction } from '../../types'

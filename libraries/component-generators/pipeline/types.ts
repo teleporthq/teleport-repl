@@ -1,4 +1,8 @@
-import { ComponentDependency, ElementsMapping } from '../../uidl-definitions/types'
+import {
+  ComponentDependency,
+  ElementsMapping,
+  ComponentUIDL,
+} from '../../uidl-definitions/types'
 
 export interface EmbedDefinition {
   chunkName: string
@@ -32,7 +36,7 @@ export interface ChunkDefinition {
 export interface ComponentStructure {
   chunks: ChunkDefinition[]
   meta: any
-  uidl: any
+  uidl: ComponentUIDL
 }
 
 export interface PipelineOperations {
