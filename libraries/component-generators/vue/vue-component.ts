@@ -4,7 +4,7 @@ import { createPlugin as vueBaseComponent } from '../plugins/vue/vue-base-compon
 import { createPlugin as vueStyleComponent } from '../plugins/vue/vue-style-chunk'
 import { createPlugin as importStatements } from '../plugins/common/import-statements'
 
-import { GeneratorOptions } from '../pipeline/types'
+import { GeneratorOptions } from '../types'
 import { ComponentUIDL } from '../../uidl-definitions/types'
 
 import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'

@@ -1,11 +1,7 @@
-import {
-  ComponentPlugin,
-  ComponentPluginFactory,
-  ChunkDefinition,
-} from '../../pipeline/types'
+import { ComponentPlugin, ComponentPluginFactory, ChunkDefinition } from '../../types'
 import { ComponentDependency } from '../../../uidl-definitions/types'
 
-import { makeGenericImportStatement } from '../../pipeline/utils/js-ast'
+import { makeGenericImportStatement } from '../../utils/js-ast'
 
 interface ImportDependency {
   identifier: string

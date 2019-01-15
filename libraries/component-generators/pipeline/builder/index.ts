@@ -1,4 +1,4 @@
-import { ChunkDefinition, GeneratorFunction } from '../types'
+import { ChunkDefinition, GeneratorFunction } from '../../types'
 
 import { generator as babelCodeGenerator } from './generators/js-ast-to-code'
 import { generator as cheerioHTMLGenerator } from './generators/html-to-string'

@@ -21,7 +21,7 @@
     "globals": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["settings", "assets"],
+      "required": ["settings", "assets", "meta"],
       "properties": {
         "settings": {
           "type": "object",

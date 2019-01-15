@@ -2,8 +2,8 @@ import preset from 'jss-preset-default'
 import jss from 'jss'
 jss.setup(preset())
 
-import { ComponentPlugin, ComponentPluginFactory } from '../../pipeline/types'
-import { cammelCaseToDashCase } from '../../pipeline/utils/helpers'
+import { ComponentPlugin, ComponentPluginFactory } from '../../types'
+import { cammelCaseToDashCase } from '../../utils/helpers'
 import { ComponentContent } from '../../../uidl-definitions/types'
 
 const filterOutDynamicStyles = (style: any) => {

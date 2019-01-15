@@ -1,12 +1,8 @@
 import * as t from '@babel/types'
 
-import { generateASTDefinitionForJSXTag } from '../pipeline/utils/jsx-ast'
+import { generateASTDefinitionForJSXTag } from '../utils/jsx-ast'
 
-import {
-  ComponentPlugin,
-  ComponentPluginFactory,
-  RegisterDependency,
-} from '../pipeline/types'
+import { ComponentPlugin, ComponentPluginFactory, RegisterDependency } from '../types'
 import { createPlugin as importStatements } from '../plugins/common/import-statements'
 import { ComponentAssemblyLine, Builder } from '../pipeline'
 

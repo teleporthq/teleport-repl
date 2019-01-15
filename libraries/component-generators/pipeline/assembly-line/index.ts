@@ -3,7 +3,7 @@ import {
   ComponentStructure,
   PipelineOperations,
   RegisterDependency,
-} from '../types'
+} from '../../types'
 
 import {
   ComponentDependency,

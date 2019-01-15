@@ -47,15 +47,6 @@ export interface PipelineOperations {
 }
 
 /**
- * The structure returned by the resolver function for each element of the UIDL
- */
-export interface MappedElement {
-  nodeName: string
-  attrs?: Record<string, any>
-  dependency?: ComponentDependency
-}
-
-/**
  * A consumer (plugin basically) is
  */
 export type ComponentPlugin = (

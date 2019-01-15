@@ -16,9 +16,8 @@
     "assets": [
       {
         "type": "style",
-        "path": "/static/normalize.css",
+        "path": "https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css",
         "meta": {
-          "absolute": true,
           "target": "body"
         }
       }, 
@@ -31,14 +30,18 @@
       },
       {
         "type": "script",
-        "content": "var x = 2",
+        "content": "console.log(\"inline script\")",
         "meta": {
           "target": "body"
         }
       },
       {
         "type": "font",
-        "path": "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600"
+        "path": "https://fonts.googleapis.com/css?family=Roboto"
+      },
+      {
+        "type": "style",
+        "content": "body{font-family: 'Roboto', sans-serif;}"
       },
       {
         "type": "icon",

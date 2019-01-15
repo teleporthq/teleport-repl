@@ -10,7 +10,7 @@ import { createPlugin as reactCSSModules } from '../plugins/react/react-css-modu
 
 import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import reactMapping from './elements-mapping.json'
-import { ComponentPlugin } from '../pipeline/types'
+import { ComponentPlugin } from '../types'
 import { groupChunksByFileId } from './utils'
 import { ComponentUIDL, ElementsMapping } from '../../uidl-definitions/types'
 

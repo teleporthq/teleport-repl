@@ -1,7 +1,7 @@
 import * as types from '@babel/types'
 import { objectToObjectExpression, convertValueToLiteral } from './js-ast'
 import { StateIdentifier } from '../types'
-import { ConditionalExpression } from '../../../uidl-definitions/types'
+import { ConditionalExpression } from '../../uidl-definitions/types'
 
 type BinaryOperator =
   | '==='
@@ -140,7 +140,7 @@ export const generateStyledJSXTag = (
 
   const jsxTagChild = t.jsxExpressionContainer(templateLiteral)
   const jsxTag = generateBasicJSXTag('style', [jsxTagChild, t.jsxText('\n')], t)
-  addASTAttributeToJSXTag(jsxTag, { name: 'jsx' }, t)
+  addAttributeToJSXTag(jsxTag, { name: 'jsx' }, t)
   return jsxTag
 }
 
@@ -165,7 +165,9 @@ const getProperAttributeValueAssignment = (value: any, t = types) => {
     )
   }
 
-  // TODO: Handle objects
+  if (typeof value === 'object') {
+    return t.jsxExpressionContainer(objectToObjectExpression(value))
+  }
 
   switch (typeof value) {
     case 'string':
@@ -178,7 +180,7 @@ const getProperAttributeValueAssignment = (value: any, t = types) => {
       return value
   }
 }
-export const addASTAttributeToJSXTag = (
+export const addAttributeToJSXTag = (
   jsxNode: types.JSXElement,
   attribute: { name: string; value?: any },
   t = types

@@ -3,7 +3,7 @@ import { ComponentAssemblyLine, Builder } from '../pipeline'
 import { createPlugin as createRouterPlugin } from '../plugins/vue/vue-router'
 import { createPlugin as createImportPlugin } from '../plugins/common/import-statements'
 
-import { GeneratorOptions } from '../pipeline/types'
+import { GeneratorOptions } from '../types'
 
 import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'
 import vueMapping from './elements-mapping.json'

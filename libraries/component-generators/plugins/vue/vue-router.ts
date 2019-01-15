@@ -1,5 +1,5 @@
 import * as t from '@babel/types'
-import { ComponentPluginFactory, ComponentPlugin } from '../../pipeline/types'
+import { ComponentPluginFactory, ComponentPlugin } from '../../types'
 
 interface VueRouterConfig {
   codeChunkName: string

@@ -3,7 +3,7 @@ import babelGenerator from '@babel/generator'
 import * as prettier from 'prettier/standalone'
 import parserPlugin from 'prettier/parser-babylon'
 
-import { GeneratorFunction } from '../../types'
+import { GeneratorFunction } from '../../../types'
 
 export const generator: GeneratorFunction = (anyContent) => {
   let ast = anyContent

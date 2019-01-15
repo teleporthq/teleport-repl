@@ -14,6 +14,7 @@ import createAssemblyLine, {
   ReactComponentFlavors,
 } from '../../../component-generators/react/react-component'
 
+import { createDocumentComponent } from './utils'
 import nextMapping from './elements-mapping.json'
 
 const componentGenerator = createAssemblyLine({
@@ -21,10 +22,10 @@ const componentGenerator = createAssemblyLine({
   customMapping: nextMapping,
 })
 
-export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {}) => {
+export default async (uidl: ProjectUIDL, options: ProjectGeneratorOptions = {}) => {
   // pick root name/id
 
-  const { components, root } = jsDoc
+  const { components, root } = uidl
 
   const pagesFolder: Folder = {
     name: 'pages',
@@ -38,13 +39,31 @@ export default async (jsDoc: ProjectUIDL, options: ProjectGeneratorOptions = {})
     subFolders: [],
   }
 
+  const staticFolder: Folder = {
+    name: 'static',
+    files: [],
+    subFolders: [],
+  }
+
   const distFolder: Folder = {
     name: options.distPath || 'dist',
     files: [],
-    subFolders: [pagesFolder, componentsFolder],
+    subFolders: [pagesFolder, componentsFolder, staticFolder],
   }
 
   let allDependencies: Record<string, ComponentDependency> = {}
+
+  // document page
+  const documentComponent = createDocumentComponent(uidl)
+  if (documentComponent) {
+    const file: File = {
+      name: '_document',
+      extension: '.js',
+      content: documentComponent,
+    }
+
+    pagesFolder.files.push(file)
+  }
 
   // page compnents first
   const states = root.content.states

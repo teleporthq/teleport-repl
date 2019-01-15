@@ -1,4 +1,4 @@
-import { ChunkDefinition } from '../pipeline/types'
+import { ChunkDefinition } from '../types'
 
 // TODO: Move to assembly line (core package)
 export const groupChunksByFileId = (

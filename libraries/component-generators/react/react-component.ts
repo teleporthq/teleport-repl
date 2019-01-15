@@ -9,7 +9,7 @@ import { createPlugin as reactCSSModules } from '../plugins/react/react-css-modu
 
 import { createPlugin as importStatements } from '../plugins/common/import-statements'
 
-import { ComponentPlugin, GeneratorOptions } from '../pipeline/types'
+import { ComponentPlugin, GeneratorOptions } from '../types'
 import { ComponentUIDL, ElementsMapping } from '../../uidl-definitions/types'
 
 import htmlMapping from '../../uidl-definitions/elements-mapping/html-mapping.json'

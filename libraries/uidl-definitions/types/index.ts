@@ -6,7 +6,7 @@ export interface ProjectUIDL {
       title: string
       language: string
     }
-    meta?: Array<Record<string, string>>
+    meta: Array<Record<string, string>>
     assets: Array<{
       type: string
       path?: string

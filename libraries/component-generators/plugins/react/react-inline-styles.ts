@@ -1,10 +1,10 @@
-import { ComponentPlugin, ComponentPluginFactory } from '../../pipeline/types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../types'
 import { ComponentContent } from '../../../uidl-definitions/types'
 
 import * as t from '@babel/types'
 
-import { addJSXTagStyles } from '../../pipeline/utils/jsx-ast'
-import { ParsedASTNode } from '../../pipeline/utils/js-ast'
+import { addJSXTagStyles } from '../../utils/jsx-ast'
+import { ParsedASTNode } from '../../utils/js-ast'
 
 const prepareDynamicProps = (style: any) => {
   return Object.keys(style).reduce((acc: any, key) => {

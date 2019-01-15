@@ -3,28 +3,28 @@ import * as t from '@babel/types'
 import {
   addChildJSXTag,
   addChildJSXText,
-  addASTAttributeToJSXTag,
+  addAttributeToJSXTag,
   generateASTDefinitionForJSXTag,
   addDynamicChild,
   addDynamicPropOnJsxOpeningTag,
   createConditionalJSXExpression,
-} from '../../../pipeline/utils/jsx-ast'
+} from '../../../utils/jsx-ast'
 
-import { makeDefaultExport } from '../../../pipeline/utils/js-ast'
+import { makeDefaultExport } from '../../../utils/js-ast'
 import {
   addEventHandlerToTag,
   makePureComponent,
   makeRepeatStructureWithMap,
 } from './utils'
 
-import { capitalize } from '../../../pipeline/utils/helpers'
+import { capitalize } from '../../../utils/helpers'
 
 import {
   ComponentPlugin,
   ComponentPluginFactory,
   RegisterDependency,
   StateIdentifier,
-} from '../../../pipeline/types'
+} from '../../../types'
 
 import { ComponentContent, PropDefinition } from '../../../../uidl-definitions/types'
 
@@ -36,7 +36,7 @@ import { ComponentContent, PropDefinition } from '../../../../uidl-definitions/t
  */
 const addAttributeToTag = (tag: t.JSXElement, key: string, value: any) => {
   if (typeof value !== 'string') {
-    addASTAttributeToJSXTag(tag, { name: key, value })
+    addAttributeToJSXTag(tag, { name: key, value })
     return
   }
 
@@ -49,7 +49,7 @@ const addAttributeToTag = (tag: t.JSXElement, key: string, value: any) => {
   } else if (value === '$item' || value === '$index') {
     addDynamicPropOnJsxOpeningTag(tag, key, value.slice(1))
   } else {
-    addASTAttributeToJSXTag(tag, { name: key, value })
+    addAttributeToJSXTag(tag, { name: key, value })
   }
 }
 

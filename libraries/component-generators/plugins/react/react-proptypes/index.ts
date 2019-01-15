@@ -1,4 +1,4 @@
-import { ComponentPlugin, ComponentPluginFactory } from '../../../pipeline/types'
+import { ComponentPlugin, ComponentPluginFactory } from '../../../types'
 import { buildDefaultPropsAst, buildTypesOfPropsAst } from './utils'
 
 interface ReactJSPropTypesConfig {
