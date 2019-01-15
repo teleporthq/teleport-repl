@@ -37,6 +37,33 @@
             "type": "object"
           }
         },
+        "manifest": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "short_name": { "type": "string" },
+            "name": { "type": "string" },
+            "icons": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["src", "type", "sizes"],
+                "properties": {
+                  "src": { "type": "string" },
+                  "type": { "type": "string" },
+                  "sizes": { "type": "string" }
+                }
+              }
+            },
+            "start_url": { "type": "string" },
+            "background_color": { "type": "string" },
+            "display": { "type": "string" },
+            "orientation": { "type": "string" },
+            "scope": { "type": "string" },
+            "theme_color": { "type": "string" }
+          }
+        },
         "assets": {
           "type": "array",
           "items": {

@@ -3,7 +3,7 @@ import parserPlugin from 'prettier/parser-html'
 
 import { GeneratorFunction } from '../../../types'
 
-export const generator: GeneratorFunction = (htmlObject) => {
+export const generator: GeneratorFunction = (htmlObject: any) => {
   const unformatedString = htmlObject.html() as string
 
   const formatted = prettier.format(unformatedString, {

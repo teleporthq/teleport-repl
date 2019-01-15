@@ -9,7 +9,7 @@ import * as types from '@babel/types'
 import { ProjectUIDL } from '../../../uidl-definitions/types'
 
 export const createDocumentComponent = (uidl: ProjectUIDL, t = types) => {
-  const { settings, meta, assets } = uidl.globals
+  const { settings, meta, assets, manifest } = uidl.globals
 
   const htmlNode = generateASTDefinitionForJSXTag('html')
   const headNode = generateASTDefinitionForJSXTag('Head')
@@ -31,6 +31,13 @@ export const createDocumentComponent = (uidl: ProjectUIDL, t = types) => {
     const titleTag = generateASTDefinitionForJSXTag('title')
     addChildJSXText(titleTag, settings.title)
     addChildJSXTag(headNode, titleTag)
+  }
+
+  if (manifest) {
+    const linkTag = generateASTDefinitionForJSXTag('link')
+    addAttributeToJSXTag(linkTag, { name: 'rel', value: 'manifest' })
+    addAttributeToJSXTag(linkTag, { name: 'href', value: '/static/manifest.json' })
+    addChildJSXTag(headNode, linkTag)
   }
 
   meta.forEach((metaItem) => {
@@ -57,6 +64,7 @@ export const createDocumentComponent = (uidl: ProjectUIDL, t = types) => {
         name: 'dangerouslySetInnerHTML',
         value: { __html: asset.content },
       })
+      addChildJSXTag(headNode, styleTag)
     }
 
     // script (external or inline)
@@ -87,10 +95,17 @@ export const createDocumentComponent = (uidl: ProjectUIDL, t = types) => {
 
     // icon
     if (asset.type === 'icon' && asset.path) {
-      // TODO: add type and sizes
       const iconTag = generateASTDefinitionForJSXTag('link')
       addAttributeToJSXTag(iconTag, { name: 'rel', value: 'shortcut icon' })
       addAttributeToJSXTag(iconTag, { name: 'href', value: asset.path })
+
+      if (typeof asset.meta === 'object') {
+        const assetMeta = asset.meta
+        Object.keys(assetMeta).forEach((metaKey) => {
+          addAttributeToJSXTag(iconTag, { name: metaKey, value: assetMeta[metaKey] })
+        })
+      }
+
       addChildJSXTag(headNode, iconTag)
     }
   })
@@ -101,15 +116,6 @@ export const createDocumentComponent = (uidl: ProjectUIDL, t = types) => {
 
   // Convert AST to string
   return generator(documentAST)
-}
-
-export const createManifestJSON = (manifest: any) => {
-  const defaultManifest = {}
-
-  return {
-    ...defaultManifest,
-    ...manifest,
-  }
 }
 
 const createDocumentASTDefinition = (htmlNode, t = types) => {

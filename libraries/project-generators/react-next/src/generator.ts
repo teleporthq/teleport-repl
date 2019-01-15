@@ -8,6 +8,7 @@ import {
 import {
   extractExternalDependencies,
   extractPageMetadata,
+  createManifestJSON,
 } from '../../utils/generator-utils'
 
 import createAssemblyLine, {
@@ -52,6 +53,18 @@ export default async (uidl: ProjectUIDL, options: ProjectGeneratorOptions = {}) 
   }
 
   let allDependencies: Record<string, ComponentDependency> = {}
+
+  // manifest json
+  if (uidl.globals.manifest) {
+    const manifestJSON = createManifestJSON(uidl.globals.manifest, uidl.name)
+    const manifestFile: File = {
+      name: 'manifest',
+      extension: '.json',
+      content: JSON.stringify(manifestJSON, null, 2),
+    }
+
+    staticFolder.files.push(manifestFile)
+  }
 
   // document page
   const documentComponent = createDocumentComponent(uidl)

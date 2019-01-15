@@ -1,12 +1,12 @@
 import { ComponentPlugin, ComponentPluginFactory, RegisterDependency } from '../../types'
 
 import {
-  generateSingleVueNode,
   splitProps,
   generateEmptyVueComponentJS,
   generateVueComponentPropTypes,
 } from './utils'
 
+import { createXMLNode } from '../../utils/xml'
 import { objectToObjectExpression } from '../../utils/js-ast'
 import { ComponentContent } from '../../../uidl-definitions/types'
 
@@ -15,8 +15,8 @@ const addTextNodeToTag = (tag: Cheerio, text: string) => {
     // For real time, when users are typing we need to make sure there's something after the dot (.)
     const propName = text.replace('$props.', '')
     if (propName === 'children') {
-      const slot = generateSingleVueNode({ tagName: 'slot', selfClosing: false })
-      tag.append(slot.root())
+      const slot = createXMLNode('slot')
+      tag.append(slot)
     } else {
       tag.append(`{{${propName}}}`)
     }
@@ -29,19 +29,14 @@ const generateVueNodesTree = (
   content: ComponentContent,
   templateLookup: Record<string, any>,
   registerDependency: RegisterDependency
-): CheerioStatic => {
+): Cheerio => {
   const { type, children, attrs, dependency } = content
 
   if (dependency) {
     registerDependency(type, { ...dependency })
   }
 
-  const mainTag = generateSingleVueNode({
-    tagName: type,
-    // custom elements cannot be self-enclosing in Vue
-    selfClosing: false,
-  })
-  const root = mainTag(type)
+  const root = createXMLNode(type)
 
   if (children) {
     children.forEach((child) => {
@@ -50,7 +45,7 @@ const generateVueNodesTree = (
         return
       }
       const childTag = generateVueNodesTree(child, templateLookup, registerDependency)
-      root.append(childTag.root())
+      root.append(childTag)
     })
   }
 
@@ -67,7 +62,7 @@ const generateVueNodesTree = (
 
   templateLookup[name] = root
 
-  return mainTag
+  return root
 }
 
 interface VueComponentConfig {

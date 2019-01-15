@@ -1,5 +1,4 @@
 import * as types from '@babel/types'
-import cheerio from 'cheerio'
 import { PropDefinition } from '../../../uidl-definitions/types'
 
 /**
@@ -24,32 +23,6 @@ export const buildEmptyVueJSExport = (t = types, params: { name: string }) => {
       t.objectProperty(t.identifier('props'), t.objectExpression([])),
     ])
   )
-}
-
-export const generateSingleVueNode = (params: {
-  tagName: string
-  selfClosing?: boolean
-}): CheerioStatic => {
-  const emptyDeclaration = params.selfClosing
-    ? `<${params.tagName}/>`
-    : `<${params.tagName}> </${params.tagName}>`
-  let result
-
-  try {
-    result = cheerio.load(emptyDeclaration, {
-      xmlMode: true, // otherwise the .html returns a <html><body> thing
-      decodeEntities: false, // otherwise we can't set objects like `{ 'text-danger': hasError }`
-      // without having them escaped with &quote; and stuff
-    })
-  } catch (err) {
-    result = cheerio.load(`<${params.tagName}> </${params.tagName}>`, {
-      xmlMode: true, // otherwise the .html returns a <html><body> thing
-      decodeEntities: false, // otherwise we can't set objects like `{ 'text-danger': hasError }`
-      // without having them escaped with &quote; and stuff
-    })
-  }
-
-  return result
 }
 
 /**

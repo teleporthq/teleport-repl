@@ -6,5 +6,5 @@ const path = require('path')
 module.exports = {
   distFolder: path.resolve(__dirname, '../dist'),
   entryPath: path.resolve(__dirname, '../src/index.js'),
-  htmlFile: path.resolve(__dirname, '../src/static/index.html')
+  htmlFile: path.resolve(__dirname, '../src/index.html')
 }

@@ -9,10 +9,12 @@ import configureAssemblyLine, {
 import {
   extractExternalDependencies,
   extractPageMetadata,
+  createManifestJSON,
 } from '../../utils/generator-utils'
 
 import { File, Folder, ProjectGeneratorOptions } from '../../types'
 import { ProjectUIDL } from '../../../uidl-definitions/types'
+import { createHtmlIndexFile } from './utils'
 
 const componentGenerator = configureAssemblyLine({
   variation: ReactComponentFlavors.CSSModules,
@@ -21,14 +23,14 @@ const componentGenerator = configureAssemblyLine({
 const routingComponentGenerator = configureRouterAsemblyLine()
 
 export default async (
-  jsDoc: ProjectUIDL,
+  uidl: ProjectUIDL,
   { sourcePackageJson, distPath = 'dist' }: ProjectGeneratorOptions = {
     distPath: 'dist',
   }
 ) => {
   // pick root name/id
 
-  const { components = {}, root } = jsDoc
+  const { components = {}, root } = uidl
 
   const componentsFolder: Folder = {
     name: 'components',
@@ -42,10 +44,16 @@ export default async (
     subFolders: [],
   }
 
+  const staticFolder: Folder = {
+    name: 'static',
+    files: [],
+    subFolders: [],
+  }
+
   const srcFolder: Folder = {
     name: 'src',
     files: [],
-    subFolders: [componentsFolder, pagesFolder],
+    subFolders: [componentsFolder, pagesFolder, staticFolder],
   }
 
   const distFolder: Folder = {
@@ -66,6 +74,28 @@ export default async (
   const routerDefinitions = stateDefinitions.router
   if (!routerDefinitions) {
     return distFolder
+  }
+
+  if (uidl.globals.manifest) {
+    const manifestJSON = createManifestJSON(uidl.globals.manifest, uidl.name)
+    const manifestFile: File = {
+      name: 'manifest',
+      extension: '.json',
+      content: JSON.stringify(manifestJSON, null, 2),
+    }
+
+    staticFolder.files.push(manifestFile)
+  }
+
+  const htmlIndexContent = createHtmlIndexFile(uidl)
+  if (htmlIndexContent) {
+    const htmlFile: File = {
+      name: 'index',
+      extension: '.html',
+      content: htmlIndexContent,
+    }
+
+    srcFolder.files.push(htmlFile)
   }
 
   // routing component (index.js)

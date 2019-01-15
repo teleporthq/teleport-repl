@@ -5,7 +5,7 @@ const path = require('path')
  * destination directory. 
  */
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-// const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const { entryPath, distFolder, htmlFile } = require('./bundle-config/paths')
@@ -87,6 +87,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       // Load a custom template (lodash by default)
       template: htmlFile
-    })
+    }),
+    new CopyWebpackPlugin([
+      { from: './src/static/', to: 'static/' }
+    ])
   ]
 };

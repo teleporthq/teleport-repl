@@ -1,4 +1,8 @@
-import { ComponentDependency, StateDefinition } from '../../uidl-definitions/types'
+import {
+  ComponentDependency,
+  StateDefinition,
+  WebManifest,
+} from '../../uidl-definitions/types'
 
 // Especially useful for nuxt/next generators where the file name will dictate the url
 // In case the default flag is set, the file is set as index
@@ -76,4 +80,19 @@ export const extractExternalDependencies = (
 
       return acc
     }, {})
+}
+
+// Creates a manifest json with the UIDL having priority over the default values
+export const createManifestJSON = (manifest: WebManifest, projectName?: string) => {
+  const defaultManifest: WebManifest = {
+    short_name: projectName,
+    name: projectName,
+    display: 'standalone',
+    start_url: '/',
+  }
+
+  return {
+    ...defaultManifest,
+    ...manifest,
+  }
 }

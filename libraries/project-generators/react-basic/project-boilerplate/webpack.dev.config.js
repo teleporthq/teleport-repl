@@ -104,6 +104,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       // Load a custom template (lodash by default)
       template: htmlFile
-    })
+    }),
+    new CopyWebpackPlugin([
+      { from: './src/static/', to: 'static/' }
+    ])
   ]
 };

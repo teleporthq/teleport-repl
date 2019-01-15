@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/project.json",
-  "name": "myVueProject",
+  "name": "Teleport Project",
   "globals": {
     "settings": {
       "language": "en",
@@ -9,10 +9,25 @@
     "meta" : [
       { "name": "description", "content": "Free Web tutorials" },
       { "name": "keywords", "content": "prea bun, prea ca la tara" },
-      { "name": "theme-color", "content": "#822CEC" },
       { "name": "viewport", "content": "width=device-width, initial-scale=1.0" },
       { "property": "og:title", "content": "Free Web tutorials" }
     ],
+    "manifest": {
+      "icons": [
+        {
+          "src": "/static/icons-192.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        },
+        {
+          "src": "/static/icons-512.png",
+          "type": "image/png",
+          "sizes": "512x512"
+        }
+      ],
+      "theme_color": "#822CEC",
+      "background_color": "#822CEC"
+    },
     "assets": [
       {
         "type": "style",
@@ -45,9 +60,10 @@
       },
       {
         "type": "icon",
-        "path": "/static/favicon.ico",
+        "path": "/static/favicon-32x32.png",
         "meta": {
-          "size": "64px"
+          "type": "image/png",
+          "sizes": "32x32"
         }
       }
     ],

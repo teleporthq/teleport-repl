@@ -13,6 +13,7 @@ export interface ProjectUIDL {
       content?: string
       meta?: Record<string, any>
     }>
+    manifest?: WebManifest
     variables?: Record<string, string>
   }
   root: ComponentUIDL
@@ -95,6 +96,18 @@ export interface ConditionalExpression {
     operand?: string | boolean | number
   }>
   matchingCriteria: string
+}
+
+export interface WebManifest {
+  short_name?: string
+  name?: string
+  icons?: Array<{ src: string; type: string; sizes: string }>
+  start_url?: string
+  background_color?: string
+  display?: string
+  orientation?: string
+  scope?: string
+  theme_color?: string
 }
 
 /* element mapping interfaces */
