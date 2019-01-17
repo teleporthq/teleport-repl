@@ -7,17 +7,14 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 import { JsonInputChooser } from '../components/JsonInputChooser'
 
-import { validateComponent } from '../libraries/uidl-definitions/validators'
-
-import generateReactComponent from '../libraries/component-generators/react/react-all'
-import createVueGenerator from '../libraries/component-generators/vue/vue-component'
+import { UIDLValidators, UIDLTypes, createReactNextProject } from 'teleport-generators'
+import createVueGenerator from 'teleport-generators/dist/component-generators/vue/vue-component'
 
 import authorCardUIDL from '../inputs/component-author-card.json'
 import tabSelectorUIDL from '../inputs/component-tab-selector.json'
 import cardListUIDL from '../inputs/component-card-list.json'
-import { ComponentUIDL } from '../libraries/uidl-definitions/types'
 
-const uidlSamples: Record<string, ComponentUIDL> = {
+const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'author-card': authorCardUIDL,
   'card-list': cardListUIDL,
   'tab-selector': tabSelectorUIDL,
@@ -83,7 +80,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       return
     }
 
-    const validationResult = validateComponent(jsonValue)
+    const validationResult = UIDLValidators.validateComponent(jsonValue)
     if (validationResult !== true) {
       // tslint:disable-next-line:no-console
       console.error(validationResult)
@@ -96,7 +93,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       case 'react.JSS':
       case 'react.CSSModules':
         try {
-          const { code, dependencies } = await generateReactComponent(
+          const { code, dependencies } = await createReactGenerator(
             jsonValue,
             targetLibrary.replace('react.', '')
           )
