@@ -7,7 +7,7 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 import { JsonInputChooser } from '../components/JsonInputChooser'
 
-import { UIDLValidators, UIDLTypes, createReactNextProject } from 'teleport-generators'
+import { UIDLValidators, UIDLTypes, createReactGenerator } from 'teleport-generators'
 import createVueGenerator from 'teleport-generators/dist/component-generators/vue/vue-component'
 
 import authorCardUIDL from '../inputs/component-author-card.json'
