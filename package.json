@@ -24,12 +24,12 @@
     "jss-preset-default": "^4.5.0",
     "lodash.throttle": "^4.1.1",
     "monaco-editor": "^0.14.3",
-    "next": "7.0.2",
+    "next": "^7.0.2",
     "next-compose-plugins": "^2.1.1",
-    "react": "16.6.3",
-    "react-dom": "16.6.3",
-    "uuid": "^3.3.2",
-    "teleport-generators": "git+ssh://git@gitlab.com/teleporthq/teleport-generators"
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
+    "teleport-generators": "git+ssh://git@gitlab.com/teleporthq/teleport-generators",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",

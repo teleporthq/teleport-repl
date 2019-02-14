@@ -66,15 +66,15 @@ require(['vs/editor/editor.main'], function() {
       fileMatch: [modelUri.toString()],
       schema: {
         "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Component UIDL",
         "type": "object",
-        "title": "Component Definition",
-        "required": [
-          "name",
-          "content",
-          "version"
-        ],
+        "required": ["name", "content"],
         "additionalProperties": false,
         "properties": {
+          "$schema": {
+            "type": "string",
+            "format": "uri"
+          },
           "name": {
             "type": "string",
             "default": "MyComponent"
@@ -82,37 +82,14 @@ require(['vs/editor/editor.main'], function() {
           "content": {
             "$ref": "#/definitions/content"
           },
-          "version": {
-            "type": "string",
-            "default": "v1"
-          },
           "meta": {
             "type": "object"
           },
+          "stateDefinitions": {
+            "$ref": "#/definitions/stateDefinitions"
+          },
           "propDefinitions": {
-            "type": "object",
-            "patternProperties": {
-              ".*": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "properties": {
-                    "type": {"type": "string"},
-                    "defaultValue": {
-                      "oneOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "boolean"
-                        }
-                      ]
-                    }
-                  }
-              }
-            }
+            "$ref": "#/definitions/propDefinitions"
           }
         },
         "definitions": {
@@ -120,27 +97,102 @@ require(['vs/editor/editor.main'], function() {
             "type": "object",
             "required": [
               "type",
-              "name"
+              "key"
             ],
             "additionalProperties": false,
             "properties": {
               "type": {
                 "type": "string",
                 "examples": [
-                  "Text",
-                  "View"
+                  "text",
+                  "view",
+                  "states"
                 ]
+              },
+              "key": {
+                "type": "string",
+                "default": "node-key"
+              },
+              "states": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["value", "content"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": ["matchingCriteria", "conditions"],
+                          "properties": {
+                            "conditions": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": ["operation"],
+                                "additionalProperties": false,
+                                "properties": {
+                                  "operation": { "type": "string" },
+                                  "operand": { }
+                                }
+                              }
+                            },
+                            "matchingCriteria": { "type": "string" }
+                          }
+                        },
+                        { "type": "boolean" },
+                        { "type": "number" },
+                        { "type": "string" }
+                      ]
+                    },
+                    "content": {
+                      "oneOf": [
+                        { "$ref": "#/definitions/content" },
+                        { "type": "string" }
+                      ]
+                    }
+                  }
+                }
+              },
+              "repeat": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["content", "dataSource"],
+                "properties": {
+                  "content": { "$ref": "#/definitions/content" },
+                  "dataSource": {
+                    "oneOf": [
+                      { "type": "string" },
+                      { "type": "array" }
+                    ]
+                  },
+                  "meta": { "type": "object" }
+                }
               },
               "dependency": {
                 "$ref": "#/definitions/dependency"
               },
-              "name": {
-                "type": "string",
-                "default": "MyComponent",
-                "examples": [
-                  "Component",
-                  "View"
-                ]
+              "events": {
+                "type": "object",
+                "patternProperties": {
+                  ".*": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["type"],
+                      "additionalProperties": false,
+                      "properties": {
+                        "type": { "type": "string", "enum": ["stateChange", "propCall"] },
+                        "modifies": { "type": "string" },
+                        "newState": { },
+                        "calls": { "type": "string" },
+                        "args": { "type": "array" }
+                      }
+                    }
+                  }
+                }
               },
               "style": {
                 "$ref": "#/definitions/style"
@@ -149,21 +201,14 @@ require(['vs/editor/editor.main'], function() {
                 "type": "object"
               },
               "children": {
-                "oneOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "oneOf": [
-                        { "$ref": "#/definitions/content" },
-                        { "type": "string" }
-                      ]
-                    },
-                    "default": []
-                  },
-                  {
-                    "type": "string"
-                  }
-                ]
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    { "$ref": "#/definitions/content" },
+                    { "type": "string" }
+                  ]
+                },
+                "default": []
               }
             }
           },
@@ -230,14 +275,61 @@ require(['vs/editor/editor.main'], function() {
             "required": ["type"],
             "properties": {
               "type": {"type": "string", "examples": ["package", "local", "library"]},
+              "path": {"type": "string"},
+              "version": {"type": "string", "default": "1.0.0"},
               "meta": {
                 "type": "object", 
                 "additionalProperties": false,
                 "properties": {
-                  "path": {"type": "string"},
-                  "version": {"type": "string", "default": "1.0.0"},
                   "namedImport": {"type": "boolean", "default": false},
                   "originalName": {"type": "string"}
+                }
+              }
+            }
+          },
+          "propDefinitions": {
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["type"],
+                "properties": {
+                  "type": {"type": "string"},
+                  "defaultValue": {}
+                }
+              }
+            }
+          },
+          "stateDefinitions": {
+            "type": "object",
+            "patternProperties": {
+              ".*": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["type", "defaultValue"],
+                "properties": {
+                  "type": {"type": "string"},
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {},
+                        "meta": { 
+                          "type": "object",
+                          "properties": {
+                            "componentName": { "type": "string" },
+                            "path": { "type": "string" },
+                            "fileName": { "type": "string" }
+                          }
+                        },
+                        "transitions": { "type": "object" }
+                      }
+                    }
+                  },
+                  "defaultValue": {},
+                  "actions": {"type": "array"}
                 }
               }
             }
