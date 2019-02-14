@@ -50,7 +50,7 @@
         }
       },
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "container",
         "repeat": {
           "content": {
@@ -77,7 +77,7 @@
           }
         },
         "children": [{
-          "type": "view",
+          "type": "container",
           "key": "add-new",
           "children": [{
             "type": "textinput",
@@ -114,7 +114,7 @@
         }
       },
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "todo-item",
         "style": {
           "margin": "10px",

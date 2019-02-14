@@ -1,6 +1,14 @@
 {
   "$schema": "https://raw.githubusercontent.com/teleporthq/uidl-definitions/master/project.json",
   "name": "myVueProject",
+  "globals": {
+    "settings": {
+      "language": "en",
+      "title": "Router Project"
+    },
+    "assets": [],
+    "meta": []
+  },
   "root": {
     "name": "App",
     "stateDefinitions": {
@@ -33,7 +41,7 @@
         {
           "value": "home",
           "content": {
-            "type": "view",
+            "type": "container",
             "key": "container",
             "children": [
               {
@@ -74,7 +82,7 @@
                 "children": ["Who"]
               },
               {
-                "type": "view",
+                "type": "container",
                 "key": "adiv",
                 "children": ["are"]
               },

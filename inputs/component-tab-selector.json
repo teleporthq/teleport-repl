@@ -8,11 +8,11 @@
     }
   },
   "content": {
-    "type": "view",
+    "type": "container",
     "key": "container",
     "children": [
       {
-        "type": "view",
+        "type": "container",
         "key": "tabs",
         "children": [
           {
@@ -82,7 +82,7 @@
         ]
       },
       {
-        "type": "view",
+        "type": "container",
         "key": "text",
         "style": {
           "width": 100,

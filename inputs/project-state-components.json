@@ -101,7 +101,7 @@
             "key": "container",
             "children": [
               {
-                "type": "view",
+                "type": "container",
                 "key": "accordions",
                 "style": {
                   "width": "100%",
@@ -144,7 +144,7 @@
                 ]
               },
               {
-                "type": "view",
+                "type": "container",
                 "key": "tab-selector",
                 "style": {
                   "width": "100%",
@@ -161,7 +161,7 @@
                 ]
               },
               {
-                "type": "view",
+                "type": "container",
                 "key": "modal-window",
                 "style": {
                   "width": "100%",
@@ -178,7 +178,7 @@
                 ]
               },
               {
-                "type": "view",
+                "type": "container",
                 "key": "lists",
                 "style": {
                   "width": "100%",
@@ -203,7 +203,7 @@
                 ]
               },
               {
-                "type": "view",
+                "type": "container",
                 "key": "cards-container",
                 "style": {
                   "width": "100%",
@@ -219,6 +219,67 @@
                     "dependency": {
                       "type": "local"
                     }
+                  }
+                ]
+              },
+              {
+                "type": "container",
+                "key": "form-container",
+                "style": {
+                  "width": "100%",
+                  "border": "1px solid red"
+                },
+                "children": [
+                  {
+                    "type": "form",
+                    "key": "form",
+                    "attrs": {
+                      "type": "GET",
+                      "url": "/"
+                    },
+                    "children": [
+                      {
+                        "type": "container",
+                        "key": "email-group",
+                        "children": [
+                          {
+                            "type": "label",
+                            "key": "email-label",
+                            "children": ["Email:"]
+                          },
+                          {
+                            "type": "textinput",
+                            "key": "email-input",
+                            "attrs": {
+                              "name": "email"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "container",
+                        "key": "pass-group",
+                        "children": [
+                          {
+                            "type": "label",
+                            "key": "pass-label",
+                            "children": ["Password:"]
+                          },
+                          {
+                            "type": "passwordinput",
+                            "key": "pass-input",
+                            "attrs": {
+                              "name": "pass"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "key": "submit",
+                        "children": ["Login"]
+                      }
+                    ]
                   }
                 ]
               }
@@ -248,7 +309,7 @@
         }
       },
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "container",
         "children": [
           {
@@ -290,7 +351,7 @@
               {
                 "value": true,
                 "content": {
-                  "type": "view",
+                  "type": "container",
                   "key": "expanded-area",
                   "children": ["$props.text"]
                 }
@@ -309,11 +370,11 @@
         }
       },
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "container",
         "children": [
           {
-            "type": "view",
+            "type": "container",
             "key": "tabs",
             "children": [
               {
@@ -383,7 +444,7 @@
             ]
           },
           {
-            "type": "view",
+            "type": "container",
             "key": "text",
             "style": {
               "width": 100,
@@ -511,7 +572,7 @@
         }
       },
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "container",
         "children": [
           {
@@ -542,7 +603,7 @@
         }
       },
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "card",
         "style": {
           "margin": "10px",
@@ -561,7 +622,7 @@
         }
       },
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "cards-container",
         "style": {
           "width": "100%",
@@ -575,7 +636,7 @@
         }],
         "repeat": {
           "content": {
-            "type": "view",
+            "type": "container",
             "key": "card-container",
             "style": {
               "backgroundColor": "royalblue",

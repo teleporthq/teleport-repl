@@ -8,7 +8,7 @@
     }
   },
   "content": {
-    "type": "view",
+    "type": "container",
     "key": "cards-container",
     "style": {
       "width": "100%",
@@ -22,7 +22,7 @@
     }],
     "repeat": {
       "content": {
-        "type": "view",
+        "type": "container",
         "key": "card-container",
         "style": {
           "backgroundColor": "royalblue",
