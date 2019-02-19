@@ -7,7 +7,7 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 import { JsonInputChooser } from '../components/JsonInputChooser'
 
-import { UIDLValidators, UIDLTypes, createReactGenerator } from 'teleport-generators'
+import { UIDLValidators, UIDLTypes, createReactComponent } from 'teleport-generators'
 import createVueGenerator from 'teleport-generators/dist/component-generators/vue/vue-component'
 
 import authorCardUIDL from '../inputs/component-author-card.json'
@@ -20,7 +20,7 @@ const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'tab-selector': tabSelectorUIDL,
 }
 
-const generateVueComponent = createVueGenerator()
+const vueGenerator = createVueGenerator()
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
@@ -93,7 +93,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       case 'react.JSS':
       case 'react.CSSModules':
         try {
-          const { code, dependencies } = await createReactGenerator(
+          const { code, dependencies } = await createReactComponent(
             jsonValue,
             targetLibrary.replace('react.', '')
           )
@@ -116,7 +116,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
 
       case 'vue-ast':
         try {
-          const { code, dependencies } = await generateVueComponent(jsonValue)
+          const { code, dependencies } = await vueGenerator.generateComponent(jsonValue)
 
           // tslint:disable-next-line:no-console
           console.info('output dependencies: ', dependencies)
