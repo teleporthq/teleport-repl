@@ -103,7 +103,7 @@
               {
                 "type": "container",
                 "key": "accordions",
-                "style": {
+                "styles": {
                   "width": "100%",
                   "border": "1px solid red"
                 },
@@ -146,7 +146,7 @@
               {
                 "type": "container",
                 "key": "tab-selector",
-                "style": {
+                "styles": {
                   "width": "100%",
                   "border": "1px solid red"
                 },
@@ -163,7 +163,7 @@
               {
                 "type": "container",
                 "key": "modal-window",
-                "style": {
+                "styles": {
                   "width": "100%",
                   "border": "1px solid red"
                 },
@@ -180,7 +180,7 @@
               {
                 "type": "container",
                 "key": "lists",
-                "style": {
+                "styles": {
                   "width": "100%",
                   "border": "1px solid red"
                 },
@@ -205,7 +205,7 @@
               {
                 "type": "container",
                 "key": "cards-container",
-                "style": {
+                "styles": {
                   "width": "100%",
                   "border": "1px solid red"
                 },
@@ -225,7 +225,7 @@
               {
                 "type": "container",
                 "key": "form-container",
-                "style": {
+                "styles": {
                   "width": "100%",
                   "border": "1px solid red"
                 },
@@ -381,7 +381,7 @@
                 "type": "button",
                 "key": "tab1",
                 "children": ["Click"],
-                "style": {
+                "styles": {
                   "border": "1px solid black",
                   "padding": "5px 10px"
                 },
@@ -397,7 +397,7 @@
                 "type": "button",
                 "key": "tab2",
                 "children": ["any"],
-                "style": {
+                "styles": {
                   "border": "1px solid black",
                   "padding": "5px 10px"
                 },
@@ -413,7 +413,7 @@
                 "type": "button",
                 "key": "tab3",
                 "children": ["of"],
-                "style": {
+                "styles": {
                   "border": "1px solid black",
                   "padding": "5px 10px"
                 },
@@ -429,7 +429,7 @@
                 "type": "button",
                 "key": "tab4",
                 "children": ["these"],
-                "style": {
+                "styles": {
                   "border": "1px solid black",
                   "padding": "5px 10px"
                 },
@@ -446,7 +446,7 @@
           {
             "type": "container",
             "key": "text",
-            "style": {
+            "styles": {
               "width": 100,
               "height": 50,
               "display": "flex",
@@ -581,6 +581,20 @@
             "children": ["$props.message"]
           },
           {
+            "type": "image",
+            "key": "image",
+            "attrs": {
+              "url": "/playground_assets/image.jpg"
+            }
+          },
+          {
+            "type": "container",
+            "key": "container",
+            "styles": {
+              "background": "#ffffff url(\"/playground_assets/image.png\") no-repeat right top;"
+            }
+          },
+          {
             "type": "button",
             "key": "close",
             "children": ["Close me"],
@@ -605,7 +619,7 @@
       "content": {
         "type": "container",
         "key": "card",
-        "style": {
+        "styles": {
           "margin": "10px",
           "padding": "10px",
           "border": "1px solid black"
@@ -624,7 +638,7 @@
       "content": {
         "type": "container",
         "key": "cards-container",
-        "style": {
+        "styles": {
           "width": "100%",
           "border": "1px solid red",
           "display": "flex"
@@ -638,7 +652,7 @@
           "content": {
             "type": "container",
             "key": "card-container",
-            "style": {
+            "styles": {
               "backgroundColor": "royalblue",
               "color": "white",
               "margin": "10px",

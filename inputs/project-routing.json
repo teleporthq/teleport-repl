@@ -112,7 +112,7 @@
       "content": {
         "type": "text",
         "key": "node-key",
-        "style": {
+        "styles": {
           "color": "red"
         },
         "children": ["$props.message"]

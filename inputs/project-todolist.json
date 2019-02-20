@@ -116,7 +116,7 @@
       "content": {
         "type": "container",
         "key": "todo-item",
-        "style": {
+        "styles": {
           "margin": "10px",
           "width": "150px;",
           "border-bottom": "1px solid gray"
@@ -126,7 +126,7 @@
           {
             "type": "button",
             "key": "delete",
-            "style": {
+            "styles": {
               "float": "right"
             },
             "events": {
