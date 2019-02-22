@@ -7,8 +7,12 @@ import { PannelTitle } from '../components/PannelTitle'
 import { PreviewFrame } from '../components/PreviewFrame'
 import { JsonInputChooser } from '../components/JsonInputChooser'
 
-import { UIDLValidators, UIDLTypes, createReactComponent } from 'teleport-generators'
-import createVueGenerator from 'teleport-generators/dist/component-generators/vue/vue-component'
+import {
+  UIDLValidators,
+  UIDLTypes,
+  createReactComponent,
+  createVueComponentGenerator,
+} from '@teleporthq/teleport-code-generators'
 
 import authorCardUIDL from '../inputs/component-author-card.json'
 import tabSelectorUIDL from '../inputs/component-tab-selector.json'
@@ -20,7 +24,7 @@ const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'tab-selector': tabSelectorUIDL,
 }
 
-const vueGenerator = createVueGenerator()
+const vueGenerator = createVueComponentGenerator()
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
