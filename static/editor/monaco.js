@@ -6,7 +6,7 @@ let editor = null
 
 // Each editor must have a specific name
 // It will be used to post messages back to the parent window
-let name = null
+let name = 'json-editor'
 
 // listen to messages form parent window
 window.addEventListener('message', onMessage, false)
@@ -352,9 +352,7 @@ require(['vs/editor/editor.main'], function() {
   editor.getModel().updateOptions({ tabSize: 2 })
 
   editor.model.onDidChangeContent((event) => {
-    // console.log('event', name)
     try {
-      // console.log(window.parent.editors[name])
       window.parent.editors[name].post({
         event: 'onDidChangeContent',
         value: editor.getValue(),
