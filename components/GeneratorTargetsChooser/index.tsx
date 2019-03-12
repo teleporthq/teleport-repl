@@ -12,7 +12,7 @@ const GeneratorTargetsChooser: React.SFC<GeneratorTargetsChooserProps> = (props)
       <option value="react.StyledJSX">React StyledJSX</option>
       <option value="react.JSS">React JSS</option>
       <option value="react.CSSModules">React CSS Modules</option>
-      <option value="vue-ast">Vue Basic</option>
+      <option value="vue">Vue Basic</option>
       {/* <option value='angular'>Angular</option> */}
     </select>
   )

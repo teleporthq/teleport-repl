@@ -10,7 +10,8 @@ import { JsonInputChooser } from '../components/JsonInputChooser'
 import {
   UIDLValidators,
   UIDLTypes,
-  createReactComponent,
+  GeneratorTypes,
+  createReactComponentGenerator,
   createVueComponentGenerator,
 } from '@teleporthq/teleport-code-generators'
 
@@ -24,7 +25,20 @@ const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'tab-selector': tabSelectorUIDL,
 }
 
+const {
+  InlineStyles,
+  JSS,
+  StyledJSX,
+  CSSModules,
+} = GeneratorTypes.ReactComponentStylingFlavors
+
 const vueGenerator = createVueComponentGenerator()
+const reactInlineStylesGenerator = createReactComponentGenerator({
+  variation: InlineStyles,
+})
+const reactJSSGenerator = createReactComponentGenerator({ variation: JSS })
+const reactStyledJSXGenerator = createReactComponentGenerator({ variation: StyledJSX })
+const reactCSSModulesGenerator = createReactComponentGenerator({ variation: CSSModules })
 
 // TODO move into utils file
 const postData = (url: string = ``, data: string = ``) => {
@@ -91,52 +105,23 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       return
     }
 
-    switch (targetLibrary) {
-      case 'react.InlineStyles':
-      case 'react.StyledJSX':
-      case 'react.JSS':
-      case 'react.CSSModules':
-        try {
-          const { code, dependencies } = await createReactComponent(
-            jsonValue,
-            targetLibrary.replace('react.', '')
-          )
+    try {
+      const generator = chooseGenerator(targetLibrary)
+      const { code, dependencies } = await generator.generateComponent(jsonValue)
 
-          // tslint:disable-next-line:no-console
-          console.info('output dependencies: ', dependencies)
-          this.setState(
-            {
-              generatedCode: code.toString(),
-            },
-            () => {
-              postData(this.getPreviewerUrl() + '/preview', code.toString())
-            }
-          )
-        } catch (err) {
-          // tslint:disable-next-line:no-console
-          console.error('generateReactComponent', err)
+      // tslint:disable-next-line:no-console
+      console.info('output dependencies: ', dependencies)
+      this.setState(
+        {
+          generatedCode: code.toString(),
+        },
+        () => {
+          postData(this.getPreviewerUrl() + '/preview', code.toString())
         }
-        return
-
-      case 'vue-ast':
-        try {
-          const { code, dependencies } = await vueGenerator.generateComponent(jsonValue)
-
-          // tslint:disable-next-line:no-console
-          console.info('output dependencies: ', dependencies)
-          this.setState(
-            {
-              generatedCode: code,
-            },
-            () => {
-              postData(this.getPreviewerUrl() + '/preview', code)
-            }
-          )
-        } catch (err) {
-          // tslint:disable-next-line:no-console
-          console.error('generateVueComponent', err)
-        }
-        return
+      )
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.error('generateReactComponent', err)
     }
   }
 
@@ -157,7 +142,7 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
       case 'react.JSS':
       case 'react.CSSModules':
         return 'http://localhost:3031'
-      case 'vue-ast':
+      case 'vue':
         return 'http://localhost:3032'
       default:
         // tslint:disable-next-line:no-console
@@ -241,5 +226,22 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
         </div>
       </AppPage>
     )
+  }
+}
+
+const chooseGenerator = (flavor: string) => {
+  switch (flavor) {
+    case 'react.InlineStyles':
+      return reactInlineStylesGenerator
+    case 'react.StyledJSX':
+      return reactStyledJSXGenerator
+    case 'react.JSS':
+      return reactJSSGenerator
+    case 'react.CSSModules':
+      return reactCSSModulesGenerator
+    case 'vue':
+      return vueGenerator
+    default:
+      return reactInlineStylesGenerator
   }
 }
