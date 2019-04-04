@@ -29,7 +29,10 @@ export default class MyApp extends App {
           <meta charSet="utf-8" />
           <meta httpEquiv="Content-type" content="text/html;charset=UTF-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-          <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+          <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,maximum-scale=1"
+          />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
@@ -38,7 +41,10 @@ export default class MyApp extends App {
           {/*  <!-- End General Meta Tags --> */}
 
           {/* <!-- Font from google. Used in AppPage component --> */}
-          <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+          <link
+            href="https://fonts.googleapis.com/css?family=Open+Sans"
+            rel="stylesheet"
+          />
         </Head>
         <Component {...pageProps} />
       </Container>
