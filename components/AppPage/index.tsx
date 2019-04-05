@@ -23,7 +23,7 @@ const AppPage: React.SFC = (props) => {
           height: 100%;
           width: 100%;
           overflow: hidden;
-          background-color: var(--main-bg-dark);
+          background-color: var(--main-bg-white);
           color: var(--main-text-color);
         }
         input,

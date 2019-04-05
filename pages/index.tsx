@@ -138,6 +138,31 @@ export default class PlaygroundPage extends React.Component<{}, PlaygroundPageSt
     return (
       <AppPage>
         <TopBar />
+        <div className="main-content">
+          <div className="editor">
+            <CodeEditor />
+          </div>
+          <div className="editor">
+            <CodeEditor />
+          </div>
+        </div>
+        <style jsx>{`
+          .main-content {
+            display: flex;
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+            justify-content: space-around;
+          }
+
+          .editor {
+            border-radius: 10px;
+            width: 45%;
+            height: 80%;
+            background: red;
+            overflow: hidden;
+          }
+        `}</style>
       </AppPage>
     )
 

@@ -41,6 +41,7 @@ const TopBar: React.SFC = () => {
           height: 70px;
           background-color: var(--main-bg-white);
           justify-content: space-between;
+          border-bottom: 1px solid #00000010;
         }
         .menu-logo-item {
           display: flex;
