@@ -90,7 +90,7 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
     const generator = chooseGenerator(targetLibrary)
 
     try {
-      const { files } = await generator.generateComponent(jsonValue).catch((e) => {
+      const { files } = await generator.generateComponent(jsonValue).catch((e: Error) => {
         // tslint:disable-next-line:no-console
         console.error(e)
         return
