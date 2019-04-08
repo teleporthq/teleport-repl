@@ -12,6 +12,7 @@ const AppPage: React.SFC = (props) => {
           --main-text-font-size: 14px;
           --main-font-family: 'Open Sans', Verdana, sans-serif;
           --color-purple: #822cec;
+          --editor-bg-black: #272822;
         }
 
         html,
@@ -22,8 +23,11 @@ const AppPage: React.SFC = (props) => {
           font-size: var(--main-text-font-size);
           background-color: var(--main-bg-white);
           color: var(--main-text-color);
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
           margin: 0;
-          padding: 0;
+          padding: 0 0 20px 0;
         }
         input,
         textarea {

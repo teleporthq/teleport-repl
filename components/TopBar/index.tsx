@@ -3,31 +3,33 @@ import Link from 'next/link'
 
 const TopBar: React.SFC = () => {
   return (
-    <div>
-      <div className="top-bar">
-        <Link href="https://teleporthq.io/">
-          <a>
-            <img alt="logo" src="/static/svg/teleport.svg" width="139" height="33" />
+    <div className="top-bar">
+      <Link href="https://teleporthq.io/">
+        <a>
+          <img alt="logo" src="/static/svg/teleport.svg" width="139" height="33" />
+        </a>
+      </Link>
+      <div className="menu-items">
+        <Link href={'https://docs-git-master.teleport-dev.now.sh'}>
+          <a target="_blank" className="menu-item selected">
+            DOCS
           </a>
         </Link>
-        <div className="menu-items">
-          <Link href={'https://docs-git-master.teleport-dev.now.sh'}>
-            <a className="menu-item selected">DOCS</a>
-          </Link>
-          <Link href="https://github.com/teleporthq/teleport-code-generators">
-            <a target="_blank" rel="noopener" className="menu-item">
-              <img alt="github" src="/static/svg/github.svg" width="20" height="20" />
-            </a>
-          </Link>
-        </div>
+        <Link href="https://github.com/teleporthq/teleport-code-generators">
+          <a target="_blank" rel="noopener" className="menu-item">
+            <img alt="github" src="/static/svg/github.svg" width="20" height="20" />
+          </a>
+        </Link>
       </div>
       <style jsx>{`
         .top-bar {
           display: flex;
+          width: 100%;
           background: var(--main-bg-white);
           justify-content: space-between;
           align-items: center;
           padding: 0 20px;
+          box-sizing: border-box;
           border-bottom: 1px solid #00000010;
         }
         .menu-items {
