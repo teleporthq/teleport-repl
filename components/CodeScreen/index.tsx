@@ -2,14 +2,11 @@ import React from 'react'
 import dynamic from 'next/dynamic'
 import Prism from 'prismjs'
 
-const CodeEditor = dynamic(import('../CodeEditor'), {
-  ssr: false,
-})
-
 import {
   createReactComponentGenerator,
   createVueComponentGenerator,
   UIDLTypes,
+  GeneratorTypes,
 } from '@teleporthq/teleport-code-generators'
 import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
 
@@ -18,9 +15,11 @@ import tabSelectorUIDL from '../../inputs/component-tab-selector.json'
 import cardListUIDL from '../../inputs/component-card-list.json'
 import newComponentUIDL from '../../inputs/new-component.json'
 
-// import { GeneratorTargetsChooser } from '../GeneratorTargetsChooser'
-// import { PannelTitle } from '../PannelTitle'
-// import { JsonInputChooser } from '../JsonInputChooser'
+const CodeEditor = dynamic(import('../CodeEditor'), {
+  ssr: false,
+})
+
+import { DropDown } from '../DropDown'
 
 const vueGenerator = createVueComponentGenerator()
 const reactInlineStylesGenerator = createReactComponentGenerator({
@@ -59,14 +58,14 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
     super(props)
     this.state = {
       generatedCode: '',
-      inputJson: '',
-      targetLibrary: 'react.InlineStyles',
-      sourceJSON: jsonPrettify(uidlSamples['new-component']),
+      sourceJSON: 'new-component',
+      inputJson: jsonPrettify(uidlSamples['new-component']),
+      targetLibrary: 'vue',
     }
   }
 
   public componentDidMount() {
-    this.setState({ inputJson: this.state.sourceJSON }, this.handleInputChange)
+    this.handleInputChange()
   }
 
   public handleJSONUpdate = (inputJson: string) => {
@@ -74,7 +73,7 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
       return false
     }
 
-    this.setState({ inputJson, sourceJSON: inputJson }, this.handleInputChange)
+    this.setState({ inputJson }, this.handleInputChange)
   }
 
   public handleInputChange = async () => {
@@ -90,75 +89,127 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
     const generator = chooseGenerator(targetLibrary)
 
     try {
-      const { files } = await generator.generateComponent(jsonValue).catch((e: Error) => {
-        // tslint:disable-next-line:no-console
-        console.error(e)
-        return
-      })
+      const result: GeneratorTypes.CompiledComponent = await generator.generateComponent(
+        jsonValue
+      )
 
-      const component = files[0]
+      const component = result.files[0]
+
       if (!component) {
         // tslint:disable-next-line:no-console
-        console.error('no content')
+        console.log('no content')
         return
       }
       this.setState({ generatedCode: component.content }, Prism.highlightAll)
     } catch (err) {
+      this.setState({ generatedCode: '' })
       // tslint:disable-next-line:no-console
       console.error('generateReactComponent', err)
     }
   }
 
+  public handleSourceChange = (source: { target: { value: string } }): void => {
+    const {
+      target: { value },
+    } = source
+
+    const sourceJSON = jsonPrettify(uidlSamples[value])
+    this.setState({ inputJson: sourceJSON, sourceJSON: value }, this.handleInputChange)
+  }
+
   public render() {
     return (
       <div className="main-content">
-        {/* <JsonInputChooser
-          options={Object.keys(uidlSamples)}
-          value={this.state.sourceJSON}
-          onChoose={this.handleJSONChoose}
-        /> */}
         <div className="editor">
+          <div className="editor-header">
+            <div className="header-list with-offset">
+              <DropDown
+                list={Object.keys(uidlSamples)}
+                onChoose={this.handleSourceChange}
+                value={this.state.sourceJSON}
+              />
+            </div>
+          </div>
           <CodeEditor
             editorDomId={'json-editor'}
             mode={'json'}
-            value={this.state.sourceJSON}
+            value={this.state.inputJson}
             onChange={this.handleJSONUpdate}
           />
         </div>
         <div className="editor">
+          <div className="editor-header">
+            <ul className="header-list">
+              <li className="selected">React</li>
+              <li>Vue</li>
+            </ul>
+          </div>
           <pre className="code-previewer">
             <code className={`language-jsx`}>{this.state.generatedCode}</code>
           </pre>
-          {/* <CodeEditor
-            editorDomId={'code-previewer'}
-            mode={'jsx'}
-            readOnly
-            value={this.state.generatedCode}
-          /> */}
         </div>
         <style jsx>{`
             .main-content {
               display: flex;
               padding-top 20px;
               padding-bottom 20px;
-
               width: 100%;
               height: calc(100% - 71px);
               justify-content: space-around;
               box-sizing: border-box;
             }
-
             .editor {
               border-radius: 10px;
               width: 48%;
               background: var(--editor-bg-black);
               overflow: hidden;
               z-index: 3;
+              padding: 0 0 30px 0;
+            }
+            .editor-header {
+              height: 50px;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              border-bottom: solid 1px #cccccc20;
+            }
+
+            .with-offset {
+              margin-left: 50px;
+            }
+
+            .header-list {
+              align-items: center;
+              display: flex;
+              list-style-type: none;
+              padding: 10px;
+              color: #ccc;
+            }
+
+            .header-list > li {
+              padding: 5px 10px;
+              margin-right: 3px;
+            }
+
+            .header-list > li.selected {
+              background-color: var( --main-bg-white);
+              color: var(--editor-bt-text-color);
+              cursor: default;
+              border-radius: 3px;
+            }
+
+            .header-list {
+              cursor: pointer;
+            }
+
+            .file-chooser {
+              height: 40px;
             }
 
             .code-previewer {
-              height: 100%;
+              height: calc(100% - 50px);
             }
+
           `}</style>
       </div>
     )

@@ -14,6 +14,8 @@ interface EditorProps {
   onChange: (value: string) => void
   value?: string
   readOnly?: boolean
+  focus?: boolean
+  fontSize?: number
 }
 
 class CodeEditor extends React.Component<EditorProps, {}> {
@@ -29,7 +31,7 @@ class CodeEditor extends React.Component<EditorProps, {}> {
   }
 
   public render() {
-    const { mode, editorDomId, readOnly, value } = this.props
+    const { mode, editorDomId, readOnly, value, focus, fontSize } = this.props
     return (
       <AceEditor
         mode={mode}
@@ -40,6 +42,8 @@ class CodeEditor extends React.Component<EditorProps, {}> {
         style={{ width: '100%', height: '100%', zIndex: 1 }}
         setOptions={{ readOnly: readOnly || false }}
         value={value || ''}
+        focus={focus || false}
+        fontSize={fontSize || 14}
       />
     )
   }
