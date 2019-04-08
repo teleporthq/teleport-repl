@@ -44,6 +44,10 @@
                 "content": "Hello World!"
               },
               {
+                "type": "static",
+                "content": "Hello World!"
+              },
+              {
                 "type": "dynamic",
                 "content": {
                   "referenceType": "prop",
@@ -118,6 +122,10 @@
               }
             }
           }
+        },
+        {
+          "type": "slot",
+          "content": {}
         },
         {
           "type": "element",

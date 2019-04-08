@@ -1,45 +1,46 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
+import Prism from 'prismjs'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
 })
 
 import {
-  UIDLValidators,
-  UIDLTypes,
-  GeneratorTypes,
   createReactComponentGenerator,
   createVueComponentGenerator,
+  UIDLTypes,
 } from '@teleporthq/teleport-code-generators'
+import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
 
 import authorCardUIDL from '../../inputs/component-author-card.json'
 import tabSelectorUIDL from '../../inputs/component-tab-selector.json'
 import cardListUIDL from '../../inputs/component-card-list.json'
+import newComponentUIDL from '../../inputs/new-component.json'
 
-import { GeneratorTargetsChooser } from '../GeneratorTargetsChooser'
-import { PannelTitle } from '../PannelTitle'
-import { JsonInputChooser } from '../JsonInputChooser'
-
-const {
-  InlineStyles,
-  JSS,
-  StyledJSX,
-  CSSModules,
-} = GeneratorTypes.ReactComponentStylingFlavors
+// import { GeneratorTargetsChooser } from '../GeneratorTargetsChooser'
+// import { PannelTitle } from '../PannelTitle'
+// import { JsonInputChooser } from '../JsonInputChooser'
 
 const vueGenerator = createVueComponentGenerator()
 const reactInlineStylesGenerator = createReactComponentGenerator({
-  variation: InlineStyles,
+  variation: ReactComponentStylingFlavors.InlineStyles,
 })
-const reactJSSGenerator = createReactComponentGenerator({ variation: JSS })
-const reactStyledJSXGenerator = createReactComponentGenerator({ variation: StyledJSX })
-const reactCSSModulesGenerator = createReactComponentGenerator({ variation: CSSModules })
+const reactJSSGenerator = createReactComponentGenerator({
+  variation: ReactComponentStylingFlavors.JSS,
+})
+const reactStyledJSXGenerator = createReactComponentGenerator({
+  variation: ReactComponentStylingFlavors.StyledJSX,
+})
+const reactCSSModulesGenerator = createReactComponentGenerator({
+  variation: ReactComponentStylingFlavors.CSSModules,
+})
 
 const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'author-card': authorCardUIDL,
   'card-list': cardListUIDL,
   'tab-selector': tabSelectorUIDL,
+  'new-component': newComponentUIDL,
 }
 
 interface CodeScreenState {
@@ -60,7 +61,7 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
       generatedCode: '',
       inputJson: '',
       targetLibrary: 'react.InlineStyles',
-      sourceJSON: jsonPrettify(uidlSamples['card-list']),
+      sourceJSON: jsonPrettify(uidlSamples['new-component']),
     }
   }
 
@@ -68,27 +69,13 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
     this.setState({ inputJson: this.state.sourceJSON }, this.handleInputChange)
   }
 
-  // public handleGeneratorTypeChange = (ev: { target: { value: string } }) => {
-  //   this.setState({ targetLibrary: ev.target.value }, this.handleInputChange)
-  // }
+  public handleJSONUpdate = (inputJson: string) => {
+    if (!inputJson) {
+      return false
+    }
 
-  // public handleJSONUpdate = (updateEvent: MonacoUpdateEventPackage) => {
-  //   if (!updateEvent.value) {
-  //     return false
-  //   }
-
-  //   this.setState({ inputJson: updateEvent.value }, this.handleInputChange)
-  // }
-
-  // public handleJSONChoose = (ev: { target: { value: string } }) => {
-  //   const newValue = ev.target.value
-  //   const uidl = uidlSamples[newValue]
-
-  //   if (this.codeEditorRef && this.codeEditorRef.current) {
-  //     this.codeEditorRef.current.setValue(JSON.stringify(uidl, null, 2))
-  //     this.setState({ sourceJSON: newValue })
-  //   }
-  // }
+    this.setState({ inputJson, sourceJSON: inputJson }, this.handleInputChange)
+  }
 
   public handleInputChange = async () => {
     const { targetLibrary, inputJson } = this.state
@@ -100,22 +87,22 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
       return
     }
 
-    const validationResult = UIDLValidators.validateComponent(jsonValue)
-    if (validationResult !== true) {
-      // tslint:disable-next-line:no-console
-      console.error(validationResult)
-      return
-    }
+    const generator = chooseGenerator(targetLibrary)
 
     try {
-      const generator = chooseGenerator(targetLibrary)
-      const { code, dependencies } = await generator.generateComponent(jsonValue)
-
-      // tslint:disable-next-line:no-console
-      console.info('output dependencies: ', dependencies)
-      this.setState({
-        generatedCode: code.toString(),
+      const { files } = await generator.generateComponent(jsonValue).catch((e) => {
+        // tslint:disable-next-line:no-console
+        console.error(e)
+        return
       })
+
+      const component = files[0]
+      if (!component) {
+        // tslint:disable-next-line:no-console
+        console.error('no content')
+        return
+      }
+      this.setState({ generatedCode: component.content }, Prism.highlightAll)
     } catch (err) {
       // tslint:disable-next-line:no-console
       console.error('generateReactComponent', err)
@@ -135,15 +122,19 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
             editorDomId={'json-editor'}
             mode={'json'}
             value={this.state.sourceJSON}
+            onChange={this.handleJSONUpdate}
           />
         </div>
         <div className="editor">
-          <CodeEditor
+          <pre className="code-previewer">
+            <code className={`language-jsx`}>{this.state.generatedCode}</code>
+          </pre>
+          {/* <CodeEditor
             editorDomId={'code-previewer'}
-            mode={'javascript'}
+            mode={'jsx'}
             readOnly
             value={this.state.generatedCode}
-          />
+          /> */}
         </div>
         <style jsx>{`
             .main-content {
@@ -163,6 +154,10 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
               background: var(--editor-bg-black);
               overflow: hidden;
               z-index: 3;
+            }
+
+            .code-previewer {
+              height: 100%;
             }
           `}</style>
       </div>

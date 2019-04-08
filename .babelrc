@@ -2,5 +2,13 @@
   "presets": [
     "next/babel",
     "@zeit/next-typescript/babel"
+  ],
+  "plugins": [
+    ["prismjs", {
+        "languages": ["javascript", "css", "jsx"],
+        "plugins": ["line-numbers"],
+        "theme": "tomorrow",
+        "css": true
+    }]
   ]
 }
