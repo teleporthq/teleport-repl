@@ -8,7 +8,7 @@
     "build": "next build",
     "lint": "tslint -p ./",
     "export": "next export",
-    "now-build": "npm run build && npm run export"
+    "now-build": "ls ./node_modules/@teleporthq/teleport-code-generators && cat ./node_modules/@teleporthq/teleport-code-generators && npm run build && npm run export"
   },
   "husky": {
     "hooks": {
