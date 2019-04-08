@@ -7,7 +7,7 @@ const DEFAULT_DESCRIPTION = 'Teleport Component Playground'
 const DEFAULT_KEYWORDS = 'Teleport Component Playground'
 
 export default class MyApp extends App {
-  public static async getInitialProps({ Component, ctx }) {
+  public static async getInitialProps({ Component, ctx }: any) {
     let pageProps = {}
 
     if (Component.getInitialProps) {
