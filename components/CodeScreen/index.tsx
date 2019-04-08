@@ -20,6 +20,7 @@ const CodeEditor = dynamic(import('../CodeEditor'), {
 })
 
 import { DropDown } from '../DropDown'
+import { Tabs } from '../Tabs'
 
 const vueGenerator = createVueComponentGenerator()
 const reactInlineStylesGenerator = createReactComponentGenerator({
@@ -47,6 +48,7 @@ interface CodeScreenState {
   targetLibrary: string
   inputJson: string
   sourceJSON: string
+  libraryFlavor: string
 }
 
 const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
@@ -60,7 +62,8 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
       generatedCode: '',
       sourceJSON: 'new-component',
       inputJson: jsonPrettify(uidlSamples['new-component']),
-      targetLibrary: 'vue',
+      targetLibrary: 'react',
+      libraryFlavor: 'StyledJSX',
     }
   }
 
@@ -77,7 +80,7 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
   }
 
   public handleInputChange = async () => {
-    const { targetLibrary, inputJson } = this.state
+    const { targetLibrary, inputJson, libraryFlavor } = this.state
     let jsonValue: any = null
 
     try {
@@ -86,7 +89,9 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
       return
     }
 
-    const generator = chooseGenerator(targetLibrary)
+    const generatorSelectorString =
+      libraryFlavor.length > 0 ? `${targetLibrary}.${libraryFlavor}` : targetLibrary
+    const generator = chooseGenerator(generatorSelectorString)
 
     try {
       const result: GeneratorTypes.CompiledComponent = await generator.generateComponent(
@@ -117,6 +122,11 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
     this.setState({ inputJson: sourceJSON, sourceJSON: value }, this.handleInputChange)
   }
 
+  public handleTargetChange = (target: string) => {
+    const libraryFlavor = target === 'react' ? 'StyledJSX' : ''
+    this.setState({ targetLibrary: target, libraryFlavor }, this.handleInputChange)
+  }
+
   public render() {
     return (
       <div className="main-content">
@@ -139,10 +149,11 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
         </div>
         <div className="editor">
           <div className="editor-header">
-            <ul className="header-list">
-              <li className="selected">React</li>
-              <li>Vue</li>
-            </ul>
+            <Tabs
+              options={generators}
+              selected={this.state.targetLibrary}
+              onChoose={this.handleTargetChange}
+            />
           </div>
           <pre className="code-previewer">
             <code className={`language-jsx`}>{this.state.generatedCode}</code>
@@ -217,6 +228,8 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
 }
 
 export { CodeScreen }
+
+const generators = ['react', 'vue']
 
 const chooseGenerator = (flavor: string) => {
   switch (flavor) {
