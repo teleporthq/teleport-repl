@@ -1,6 +1,6 @@
 .next
 .idea
-
+out
 server/tmp
 lib/teleport-services-sdk
 
