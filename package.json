@@ -8,7 +8,7 @@
     "build": "next build",
     "lint": "tslint -p ./",
     "export": "next export",
-    "now-build": "npm run build --prefix ./node_modules/@teleporthq/teleport-code-generators && npm run build && npm run export"
+    "now-build": "npm run build && npm run export"
   },
   "husky": {
     "hooks": {
@@ -19,7 +19,7 @@
   "license": "ISC",
   "repository": "https://gitlab.com/teleporthq/teleport-component-playground",
   "dependencies": {
-    "@teleporthq/teleport-code-generators": "git+https://gitlab.com/teleporthq/teleport-component-mirror.git#master",
+    "@teleporthq/teleport-code-generators": "0.6.0",
     "brace": "^0.11.1",
     "next": "^8.0.4",
     "prismjs": "^1.16.0",
