@@ -2,9 +2,9 @@ import App, { Container } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 
-const DEFAULT_TITLE = 'Teleport Component Playground'
-const DEFAULT_DESCRIPTION = 'Teleport Component Playground'
-const DEFAULT_KEYWORDS = 'Teleport Component Playground'
+const DEFAULT_TITLE = 'Teleport REPL'
+const DEFAULT_DESCRIPTION = 'Teleport REPL'
+const DEFAULT_KEYWORDS = 'Teleport REPL'
 
 export default class MyApp extends App {
   public static async getInitialProps({ Component, ctx }: any) {

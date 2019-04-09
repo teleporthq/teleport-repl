@@ -5,15 +5,16 @@ const TopBar: React.SFC = () => {
   return (
     <div className="top-bar">
       <Link href="https://teleporthq.io/">
-        <a>
+        <a className="logo">
           <img alt="logo" src="/static/svg/teleport.svg" width="139" height="33" />
         </a>
       </Link>
       <div className="menu-items">
-        <Link href={'https://docs-git-master.teleport-dev.now.sh'}>
-          <a target="_blank" className="menu-item selected">
-            DOCS
-          </a>
+        <Link href={'/'}>
+          <a className="menu-item selected">REPL</a>
+        </Link>
+        <Link href={'https://docs.teleporthq.io'}>
+          <a className="menu-item">DOCS</a>
         </Link>
         <Link href="https://github.com/teleporthq/teleport-code-generators">
           <a target="_blank" rel="noopener" className="menu-item">
@@ -48,6 +49,9 @@ const TopBar: React.SFC = () => {
         }
         .selected {
           border-color: var(--color-purple);
+        }
+        .logo {
+          line-height: 0;
         }
       `}</style>
     </div>
