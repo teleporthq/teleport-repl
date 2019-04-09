@@ -206,15 +206,23 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     )
   }
 
-  public render() {
+  public getSamplesName = () => {
+    const samples = Object.keys(uidlSamples)
     const { externalLink } = this.state
-    const sampleValues = [...Object.keys(uidlSamples), externalLink ? 'externalLink' : '']
+    if (externalLink) {
+      samples.push('externalLink')
+    }
+
+    return samples
+  }
+
+  public render() {
     return (
       <div className="main-content">
         <div className="editor">
           <div className="editor-header with-offset">
             <DropDown
-              list={sampleValues}
+              list={this.getSamplesName()}
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
