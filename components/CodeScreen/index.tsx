@@ -50,7 +50,7 @@ interface CodeScreenState {
   inputJson: string
   sourceJSON: string
   libraryFlavor: string
-  fromExternalLink: boolean
+  externalLink: boolean
 }
 
 const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
@@ -70,36 +70,56 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       inputJson: jsonPrettify(uidlSamples['new-component']),
       targetLibrary: 'react',
       libraryFlavor: 'StyledJSX',
-      fromExternalLink: false,
+      externalLink: false,
     }
   }
 
   public componentDidMount() {
-    // this.checkForExternalJSON()
+    this.initREPL()
+  }
+
+  public initREPL = async () => {
+    const linkLoaded = await this.checkForExternalJSON()
+    if (linkLoaded) {
+      return
+    }
+
     this.handleInputChange()
   }
 
-  public checkForExternalJSON = () => {
+  public checkForExternalJSON = async () => {
     const {
       router: { query },
     } = this.props
+
     const { uidlLink } = query
-    if (uidlLink) {
-      this.fetchJSONData(uidlLink)
+    if (!uidlLink) {
+      return false
     }
+
+    return this.fetchJSONDataAndLoad(uidlLink)
   }
 
-  public fetchJSONData = async (uidlLink: string) => {
+  public fetchJSONDataAndLoad = async (uidlLink: string) => {
     const result = await fetch(uidlLink)
     try {
+      if (result.status !== 200) throw new Error(result.statusText)
+
       const jsonData = await result.json()
       this.setState(
-        { inputJson: jsonPrettify(jsonData), fromExternalLink: true },
+        {
+          inputJson: jsonPrettify(jsonData),
+          externalLink: true,
+          sourceJSON: 'externalLink',
+        },
         this.handleInputChange
       )
+
+      return true
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.error('Cannot fetch UIDL', error)
+      return false
     }
   }
 
@@ -149,6 +169,11 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       target: { value },
     } = source
 
+    if (value === 'externalLink') {
+      this.checkForExternalJSON()
+      return
+    }
+
     const sourceJSON = jsonPrettify(uidlSamples[value])
     this.setState({ inputJson: sourceJSON, sourceJSON: value }, this.handleInputChange)
   }
@@ -182,12 +207,14 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public render() {
+    const { externalLink } = this.state
+    const sampleValues = [...Object.keys(uidlSamples), externalLink ? 'externalLink' : '']
     return (
       <div className="main-content">
         <div className="editor">
           <div className="editor-header with-offset">
             <DropDown
-              list={Object.keys(uidlSamples)}
+              list={sampleValues}
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
