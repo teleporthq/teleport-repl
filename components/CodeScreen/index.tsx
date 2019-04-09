@@ -99,7 +99,6 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
       )
 
       const component = result.files[0]
-
       if (!component) {
         // tslint:disable-next-line:no-console
         console.log('no content')
@@ -127,6 +126,29 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
     this.setState({ targetLibrary: target, libraryFlavor }, this.handleInputChange)
   }
 
+  public handleFlavourChange = (flavor: { target: { value: string } }) => {
+    const {
+      target: { value },
+    } = flavor
+
+    this.setState({ libraryFlavor: value }, this.handleInputChange)
+  }
+
+  public renderDropDownFlavour = () => {
+    const { targetLibrary } = this.state
+    if (targetLibrary !== 'react') {
+      return null
+    }
+
+    return (
+      <DropDown
+        list={Object.values(ReactComponentStylingFlavors)}
+        onChoose={this.handleFlavourChange}
+        value={this.state.libraryFlavor}
+      />
+    )
+  }
+
   public render() {
     return (
       <div className="main-content">
@@ -148,12 +170,13 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
           />
         </div>
         <div className="editor">
-          <div className="editor-header">
+          <div className="editor-header previewer-header">
             <Tabs
               options={generators}
               selected={this.state.targetLibrary}
               onChoose={this.handleTargetChange}
             />
+            {this.renderDropDownFlavour()}
           </div>
           <pre className="code-previewer">
             <code className={`language-jsx`}>{this.state.generatedCode}</code>
@@ -180,9 +203,15 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
             .editor-header {
               height: 50px;
               display: flex;
-              flex-direction: column;
-              justify-content: center;
+              flex-direction: row;
               border-bottom: solid 1px #cccccc20;
+              padding-right: 10px;
+              padding-left: 10px;
+            }
+
+            .previewer-header {
+              justify-content: space-between;
+              align-items: center;
             }
 
             .with-offset {
@@ -193,7 +222,6 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
               align-items: center;
               display: flex;
               list-style-type: none;
-              padding: 10px;
               color: #ccc;
             }
 

@@ -30,8 +30,8 @@ const Tabs: React.SFC<TabsProps> = (props) => {
             align-items: center;
             display: flex;
             list-style-type: none;
-            padding: 10px;
             color: #ccc;
+            padding: 0;
           }
 
           .header-list > li {
