@@ -75,8 +75,8 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public componentDidMount() {
-    this.checkForExternalJSON()
-    // this.handleInputChange()
+    // this.checkForExternalJSON()
+    this.handleInputChange()
   }
 
   public checkForExternalJSON = () => {
