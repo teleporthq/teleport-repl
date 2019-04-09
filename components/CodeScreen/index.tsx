@@ -22,6 +22,7 @@ const CodeEditor = dynamic(import('../CodeEditor'), {
 
 import { DropDown } from '../DropDown'
 import { Tabs } from '../Tabs'
+import { ErrorPanel } from '../ErrorPanel'
 
 const vueGenerator = createVueComponentGenerator()
 const reactInlineStylesGenerator = createReactComponentGenerator({
@@ -51,10 +52,8 @@ interface CodeScreenState {
   sourceJSON: string
   libraryFlavor: string
   externalLink: boolean
-}
-
-const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
-  return JSON.stringify(json, null, 2)
+  showErrorPanel: boolean
+  error: any
 }
 
 interface CodeProps {
@@ -71,6 +70,8 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       targetLibrary: 'react',
       libraryFlavor: 'StyledJSX',
       externalLink: false,
+      showErrorPanel: false,
+      error: null,
     }
   }
 
@@ -111,6 +112,8 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           inputJson: jsonPrettify(jsonData),
           externalLink: true,
           sourceJSON: 'externalLink',
+          showErrorPanel: false,
+          error: null,
         },
         this.handleInputChange
       )
@@ -128,7 +131,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       return false
     }
 
-    this.setState({ inputJson }, this.handleInputChange)
+    this.setState(
+      { inputJson, showErrorPanel: false, error: null },
+      this.handleInputChange
+    )
   }
 
   public handleInputChange = async () => {
@@ -158,7 +164,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       }
       this.setState({ generatedCode: component.content }, Prism.highlightAll)
     } catch (err) {
-      this.setState({ generatedCode: '' })
+      this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
       console.error('generateReactComponent', err)
     }
@@ -175,7 +181,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     }
 
     const sourceJSON = jsonPrettify(uidlSamples[value])
-    this.setState({ inputJson: sourceJSON, sourceJSON: value }, this.handleInputChange)
+    this.setState(
+      { inputJson: sourceJSON, sourceJSON: value, showErrorPanel: false, error: null },
+      this.handleInputChange
+    )
   }
 
   public handleTargetChange = (target: string) => {
@@ -235,6 +244,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChange={this.handleJSONUpdate}
             />
           </div>
+          <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <div className="editor">
           <div className="editor-header previewer-header">
@@ -269,6 +279,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               overflow: hidden;
               z-index: 3;
               padding: 0 0 30px 0;
+              position: relative
             }
 
             .editor-header {
@@ -292,7 +303,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             .with-offset {
               padding-left: 50px;
             }
-
           `}</style>
       </div>
     )
@@ -301,6 +311,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
 const CodeScreen = withRouter(Code)
 export { CodeScreen }
+
+const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
+  return JSON.stringify(json, null, 2)
+}
 
 const generators = ['react', 'vue']
 const chooseGenerator = (flavor: string) => {

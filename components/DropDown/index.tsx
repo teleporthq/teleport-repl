@@ -45,7 +45,6 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
           position: absolute;
           pointer-events: none;
         }
-
         .custom-dropdown::after {
           content: '\\25BC';
           height: 1em;
