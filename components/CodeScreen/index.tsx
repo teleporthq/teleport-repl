@@ -1,5 +1,6 @@
 import React from 'react'
 import dynamic from 'next/dynamic'
+import { withRouter } from 'next/router'
 import Prism from 'prismjs'
 
 import {
@@ -49,14 +50,19 @@ interface CodeScreenState {
   inputJson: string
   sourceJSON: string
   libraryFlavor: string
+  fromExternalLink: boolean
 }
 
 const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
   return JSON.stringify(json, null, 2)
 }
 
-class CodeScreen extends React.Component<{}, CodeScreenState> {
-  constructor(props: {}) {
+interface CodeProps {
+  router: any
+}
+
+class Code extends React.Component<CodeProps, CodeScreenState> {
+  constructor(props: CodeProps) {
     super(props)
     this.state = {
       generatedCode: '',
@@ -64,11 +70,37 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
       inputJson: jsonPrettify(uidlSamples['new-component']),
       targetLibrary: 'react',
       libraryFlavor: 'StyledJSX',
+      fromExternalLink: false,
     }
   }
 
   public componentDidMount() {
-    this.handleInputChange()
+    this.checkForExternalJSON()
+    // this.handleInputChange()
+  }
+
+  public checkForExternalJSON = () => {
+    const {
+      router: { query },
+    } = this.props
+    const { uidlLink } = query
+    if (uidlLink) {
+      this.fetchJSONData(uidlLink)
+    }
+  }
+
+  public fetchJSONData = async (uidlLink: string) => {
+    const result = await fetch(uidlLink)
+    try {
+      const jsonData = await result.json()
+      this.setState(
+        { inputJson: jsonPrettify(jsonData), fromExternalLink: true },
+        this.handleInputChange
+      )
+    } catch (error) {
+      // tslint:disable-next-line:no-console
+      console.error('Cannot fetch UIDL', error)
+    }
   }
 
   public handleJSONUpdate = (inputJson: string) => {
@@ -232,6 +264,7 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
   }
 }
 
+const CodeScreen = withRouter(Code)
 export { CodeScreen }
 
 const generators = ['react', 'vue']
