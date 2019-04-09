@@ -153,21 +153,21 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
     return (
       <div className="main-content">
         <div className="editor">
-          <div className="editor-header">
-            <div className="header-list with-offset">
-              <DropDown
-                list={Object.keys(uidlSamples)}
-                onChoose={this.handleSourceChange}
-                value={this.state.sourceJSON}
-              />
-            </div>
+          <div className="editor-header with-offset">
+            <DropDown
+              list={Object.keys(uidlSamples)}
+              onChoose={this.handleSourceChange}
+              value={this.state.sourceJSON}
+            />
           </div>
-          <CodeEditor
-            editorDomId={'json-editor'}
-            mode={'json'}
-            value={this.state.inputJson}
-            onChange={this.handleJSONUpdate}
-          />
+          <div className="code-warpper">
+            <CodeEditor
+              editorDomId={'json-editor'}
+              mode={'json'}
+              value={this.state.inputJson}
+              onChange={this.handleJSONUpdate}
+            />
+          </div>
         </div>
         <div className="editor">
           <div className="editor-header previewer-header">
@@ -178,9 +178,11 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
             />
             {this.renderDropDownFlavour()}
           </div>
-          <pre className="code-previewer">
-            <code className={`language-jsx`}>{this.state.generatedCode}</code>
-          </pre>
+          <div className="code-warpper">
+            <pre>
+              <code className={`language-jsx`}>{this.state.generatedCode}</code>
+            </pre>
+          </div>
         </div>
         <style jsx>{`
             .main-content {
@@ -192,21 +194,27 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
               justify-content: space-around;
               box-sizing: border-box;
             }
+
             .editor {
               border-radius: 10px;
-              width: 48%;
+              width: 49%;
               background: var(--editor-bg-black);
               overflow: hidden;
               z-index: 3;
               padding: 0 0 30px 0;
             }
+
             .editor-header {
-              height: 50px;
+              height: 30px;
               display: flex;
               flex-direction: row;
               border-bottom: solid 1px #cccccc20;
-              padding-right: 10px;
-              padding-left: 10px;
+              padding: 10px 10px;
+            }
+
+            .code-warpper {
+              height: calc(100% - 30px);
+              overflow: auto;
             }
 
             .previewer-header {
@@ -215,38 +223,7 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
             }
 
             .with-offset {
-              margin-left: 50px;
-            }
-
-            .header-list {
-              align-items: center;
-              display: flex;
-              list-style-type: none;
-              color: #ccc;
-            }
-
-            .header-list > li {
-              padding: 5px 10px;
-              margin-right: 3px;
-            }
-
-            .header-list > li.selected {
-              background-color: var( --main-bg-white);
-              color: var(--editor-bt-text-color);
-              cursor: default;
-              border-radius: 3px;
-            }
-
-            .header-list {
-              cursor: pointer;
-            }
-
-            .file-chooser {
-              height: 40px;
-            }
-
-            .code-previewer {
-              height: calc(100% - 50px);
+              padding-left: 50px;
             }
 
           `}</style>
@@ -258,7 +235,6 @@ class CodeScreen extends React.Component<{}, CodeScreenState> {
 export { CodeScreen }
 
 const generators = ['react', 'vue']
-
 const chooseGenerator = (flavor: string) => {
   switch (flavor) {
     case 'react.InlineStyles':

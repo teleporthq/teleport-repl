@@ -34,7 +34,6 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
           border-radius: 3px;
           text-indent: 0.01px;
           text-overflow: '';
-          /*Hiding the select arrow */
           -moz-appearance: none;
           -webkit-appearance: none;
           appearance: none;
@@ -48,7 +47,6 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
         }
 
         .custom-dropdown::after {
-          /*  Custom dropdown arrow */
           content: '\\25BC';
           height: 1em;
           font-size: 0.625em;
@@ -60,7 +58,6 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
         }
 
         custom-dropdown::before {
-          /*  Custom dropdown arrow cover */
           width: 2em;
           right: 0;
           top: 0;
