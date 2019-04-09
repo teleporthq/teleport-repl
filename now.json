@@ -1,0 +1,15 @@
+{
+  "name": "component-playground",
+  "version": 2,
+  "scope": "teleport-dev",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": {
+        "distDir": "out"
+      }
+    }
+  ],
+  "public": false
+}
