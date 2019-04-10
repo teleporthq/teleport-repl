@@ -2,9 +2,9 @@ import App, { Container } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 
-const DEFAULT_TITLE = 'Teleport REPL'
-const DEFAULT_DESCRIPTION = 'Teleport REPL'
-const DEFAULT_KEYWORDS = 'Teleport REPL'
+const DEFAULT_TITLE = 'teleportHQ REPL'
+const DEFAULT_DESCRIPTION = 'teleportHQ REPL'
+const DEFAULT_KEYWORDS = 'teleportHQ REPL'
 
 export default class MyApp extends App {
   public static async getInitialProps({ Component, ctx }: any) {
@@ -22,6 +22,18 @@ export default class MyApp extends App {
     return (
       <Container>
         <Head>
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=UA-116252748-1"
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-116252748-1');`,
+            }}
+          />
           <base href="/" />
 
           <title>{DEFAULT_TITLE}</title>
