@@ -39,7 +39,12 @@ class CodeEditor extends React.Component<EditorProps, {}> {
         onChange={this.onChange}
         name={editorDomId}
         editorProps={{ $blockScrolling: true }}
-        style={{ width: '100%', height: '100%', zIndex: 1 }}
+        style={{
+          width: '100%',
+          height: '100%',
+          zIndex: 1,
+          fontFamily: "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+        }}
         setOptions={{ readOnly: readOnly || false }}
         value={value || ''}
         focus={focus || false}

@@ -25,7 +25,7 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
 
         select {
           background-color: var(--main-bg-white);
-          color: var(--editor-bt-text-color);
+          color: var(--color-purple);
           font-size: inherit;
           padding: 0.5em;
           padding-right: 2.5em;

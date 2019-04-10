@@ -10,7 +10,7 @@ const AppPage: React.SFC = (props) => {
           --main-bg-dark: #1e1e1e;
           --main-text-color: #f3f3f3;
           --main-text-font-size: 14px;
-          --main-font-family: 'Open Sans', Verdana, sans-serif;
+          --main-font-family: 'Roboto', sans-serif;
           --color-purple: #822cec;
           --editor-bg-black: #272822;
           --editor-bt-text-color: #1e6cb3;

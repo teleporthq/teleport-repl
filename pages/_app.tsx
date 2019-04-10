@@ -48,6 +48,12 @@ export default class MyApp extends App {
 
           <meta name="description" content={DEFAULT_DESCRIPTION} />
           <meta name="keywords" content={DEFAULT_KEYWORDS} />
+          <link rel="icon" href="static/favicon.ico" type="image/ico" />
+          <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon" />
+          <link
+            href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700|Source+Code+Pro"
+            rel="stylesheet"
+          />
           {/*  <!-- End General Meta Tags --> */}
 
           {/* <!-- Font from google. Used in AppPage component --> */}
