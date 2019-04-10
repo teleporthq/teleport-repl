@@ -295,6 +295,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             .code-wrapper {
               height: calc(100% - 30px);
               overflow: auto;
+
             }
 
             .code-wrapper::-webkit-scrollbar {
@@ -309,6 +310,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               width: 10px;
               height: 10px;
             }
+
             .code-wrapper pre::-webkit-scrollbar-thumb {
               background: var(--editor-scrollbar-color);
               border-radius: 5px;
@@ -317,6 +319,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             .previewer-header {
               justify-content: space-between;
               align-items: center;
+            }
+
+            .previewer-header .code-wrapper {
+              background-color: #2d2d2d;
             }
 
             .with-offset {

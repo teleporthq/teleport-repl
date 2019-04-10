@@ -10,9 +10,9 @@ const TopBar: React.SFC = () => {
         </a>
       </Link>
       <div className="menu-items">
-        <Link href={'https://docs.teleporthq.io'}>
+        {/* <Link href={'https://docs.teleporthq.io'}>
           <a className="menu-item">DOCS</a>
-        </Link>
+        </Link> */}
         <Link href={'/'}>
           <a className="menu-item selected">REPL</a>
         </Link>
