@@ -11,10 +11,11 @@ import {
 } from '@teleporthq/teleport-code-generators'
 import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
 
-import authorCardUIDL from '../../inputs/component-author-card.json'
-import tabSelectorUIDL from '../../inputs/component-tab-selector.json'
-import cardListUIDL from '../../inputs/component-card-list.json'
 import newComponentUIDL from '../../inputs/new-component.json'
+import oneComponentUIDL from '../../inputs/one-component.json'
+import modalWindowUIDL from '../../inputs/modal-window.json'
+import modalUIDL from '../../inputs/modal.json'
+import expandableArealUIDL from '../../inputs/expandable-area.json'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -39,10 +40,11 @@ const reactCSSModulesGenerator = createReactComponentGenerator({
 })
 
 const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
-  'author-card': authorCardUIDL,
-  'card-list': cardListUIDL,
-  'tab-selector': tabSelectorUIDL,
   'new-component': newComponentUIDL,
+  'one-component': oneComponentUIDL,
+  'modal-window': modalWindowUIDL,
+  modal: modalUIDL,
+  'expandable-area': expandableArealUIDL,
 }
 
 interface CodeScreenState {
