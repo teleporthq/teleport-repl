@@ -10,11 +10,11 @@ const TopBar: React.SFC = () => {
         </a>
       </Link>
       <div className="menu-items">
-        <Link href={'/'}>
-          <a className="menu-item selected">REPL</a>
-        </Link>
         <Link href={'https://docs.teleporthq.io'}>
           <a className="menu-item">DOCS</a>
+        </Link>
+        <Link href={'/'}>
+          <a className="menu-item selected">REPL</a>
         </Link>
         <Link href="https://github.com/teleporthq/teleport-code-generators">
           <a target="_blank" rel="noopener" className="menu-item">

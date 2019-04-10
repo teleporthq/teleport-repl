@@ -43,7 +43,6 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           background-color: #1e1f1b;
           z-index: 3;
           box-sizing: border-box;
-          height: 120px;
         }
         .error-header {
           border-bottom: solid 1px #cccccc20;
@@ -61,7 +60,7 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           text-align: center;
         }
         .error-list-wrapper {
-          height: 100%;
+          max-height: 180px;
           overflow: auto;
         }
         .error-list {
