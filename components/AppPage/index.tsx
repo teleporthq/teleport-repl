@@ -14,6 +14,7 @@ const AppPage: React.SFC = (props) => {
           --color-purple: #822cec;
           --editor-bg-black: #272822;
           --editor-bt-text-color: #1e6cb3;
+          --editor-scrollbar-color: #494646b3;
         }
 
         html,
@@ -34,6 +35,14 @@ const AppPage: React.SFC = (props) => {
         textarea {
           font-family: var(--main-font-family);
           font-size: var(--main-text-font-size);
+        }
+        .ace_scrollbar::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+        .ace_scrollbar::-webkit-scrollbar-thumb {
+          background: var(--editor-scrollbar-color);
+          border-radius: 5px;
         }
       `}</style>
     </>

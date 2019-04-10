@@ -238,7 +238,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               value={this.state.sourceJSON}
             />
           </div>
-          <div className="code-warpper">
+          <div className="code-wrapper">
             <CodeEditor
               editorDomId={'json-editor'}
               mode={'json'}
@@ -257,7 +257,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             />
             {this.renderDropDownFlavour()}
           </div>
-          <div className="code-warpper">
+          <div className="code-wrapper">
             <pre>
               <code className={`language-jsx`}>{this.state.generatedCode}</code>
             </pre>
@@ -292,9 +292,26 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               padding: 10px 10px;
             }
 
-            .code-warpper {
+            .code-wrapper {
               height: calc(100% - 30px);
               overflow: auto;
+            }
+
+            .code-wrapper::-webkit-scrollbar {
+              width: 10px;
+            }
+            .code-wrapper::-webkit-scrollbar-thumb {
+              background: var(--editor-scrollbar-color);
+              border-radius: 5px;
+            }
+
+            .code-wrapper pre::-webkit-scrollbar {
+              width: 10px;
+              height: 10px;
+            }
+            .code-wrapper pre::-webkit-scrollbar-thumb {
+              background: var(--editor-scrollbar-color);
+              border-radius: 5px;
             }
 
             .previewer-header {
