@@ -264,9 +264,13 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             {this.renderDropDownFlavour()}
           </div>
           <div className="code-wrapper">
-            <pre className="previewer">
-              <code className="language-jsx">{this.state.generatedCode}</code>
-            </pre>
+            <div className="preview-scroller-y">
+              <div className="preview-scroller-x">
+                <pre className="previewer">
+                  <code className="language-jsx">{this.state.generatedCode}</code>
+                </pre>
+              </div>
+            </div>
           </div>
         </div>
         <style jsx>{`
@@ -317,24 +321,43 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
             .code-wrapper {
               height: calc(100% - 30px);
+              position: relative;
               overflow: auto;
-
+              background: var(--editor-bg-black);
             }
 
-            .code-wrapper::-webkit-scrollbar {
+            .preview-scroller-y {
+              height: 100%;
+              width: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+              overflow-x: scroll;
+              background: var(--editor-bg-black);
+            }
+
+            .preview-scroller-x {
+              position: absolute;
+              top: 0;
+              left: 0;
+              overflow-y: scroll;
+              background: var(--editor-bg-black);
+            }
+
+            .preview-scroller-x::-webkit-scrollbar-corner,
+            .preview-scroller-y::-webkit-scrollbar-corner {
+              background: var(--editor-bg-black);
+              height: 10px;
               width: 10px;
             }
-            .code-wrapper::-webkit-scrollbar-thumb {
-              background: var(--editor-scrollbar-color);
-              border-radius: 5px;
-            }
 
-            .code-wrapper pre::-webkit-scrollbar {
+            .preview-scroller-x::-webkit-scrollbar,
+            .preview-scroller-y::-webkit-scrollbar {
               width: 10px;
               height: 10px;
             }
 
-            .code-wrapper pre::-webkit-scrollbar-thumb {
+            .preview-scroller-x::-webkit-scrollbar-thumb, .preview-scroller-y::-webkit-scrollbar-thumb {
               background: var(--editor-scrollbar-color);
               border-radius: 5px;
             }
@@ -342,6 +365,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             .code-wrapper .previewer {
               margin: 0;
               padding: 5px 0 0 5px;
+              overflow-y: scroll;
             }
 
             .previewer-header {
