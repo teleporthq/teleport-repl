@@ -258,7 +258,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               selected={this.state.targetLibrary}
               onChoose={this.handleTargetChange}
             />
-            <h3>GENERATED CODE</h3>
+            <div className="editor-header-section">
+              <h3>GENERATED CODE</h3>
+            </div>
             {this.renderDropDownFlavour()}
           </div>
           <div className="code-wrapper">
@@ -302,6 +304,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               width: 100%;
               position: absolute;
               height: 30px;
+              z-index: -1;
             }
 
             .editor h3 {
