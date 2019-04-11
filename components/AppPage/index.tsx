@@ -7,6 +7,7 @@ const AppPage: React.SFC = (props) => {
       <style jsx global>{`
         body {
           --main-bg-white: #fff;
+          --editor-white-50: rgba(255, 255, 255, 0.8);
           --main-bg-dark: #1e1e1e;
           --main-text-color: #f3f3f3;
           --main-text-font-size: 14px;

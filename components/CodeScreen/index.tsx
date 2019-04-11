@@ -231,12 +231,15 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     return (
       <div className="main-content">
         <div className="editor">
-          <div className="editor-header with-offset">
+          <div className="editor-header">
             <DropDown
               list={this.getSamplesName()}
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
+            <div className="editor-header-section">
+              <h3>UIDL</h3>
+            </div>
           </div>
           <div className="code-wrapper">
             <CodeEditor
@@ -255,11 +258,12 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               selected={this.state.targetLibrary}
               onChoose={this.handleTargetChange}
             />
+            <h3>GENERATED CODE</h3>
             {this.renderDropDownFlavour()}
           </div>
           <div className="code-wrapper">
-            <pre>
-              <code className={`language-jsx`}>{this.state.generatedCode}</code>
+            <pre className="previewer">
+              <code className="language-jsx">{this.state.generatedCode}</code>
             </pre>
           </div>
         </div>
@@ -291,6 +295,21 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               border-bottom: solid 1px #cccccc20;
               padding: 10px 10px;
             }
+            .editor-header-section {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+              position: absolute;
+              height: 30px;
+            }
+
+            .editor h3 {
+              margin: 0;
+              padding: 0;
+              color:  var(--editor-white-50);
+              font-weight: 300;
+            }
 
             .code-wrapper {
               height: calc(100% - 30px);
@@ -314,6 +333,11 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             .code-wrapper pre::-webkit-scrollbar-thumb {
               background: var(--editor-scrollbar-color);
               border-radius: 5px;
+            }
+
+            .code-wrapper .previewer {
+              margin: 0;
+              padding: 5px 0 0 5px;
             }
 
             .previewer-header {

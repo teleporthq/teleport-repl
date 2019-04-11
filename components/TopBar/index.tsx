@@ -53,6 +53,7 @@ const TopBar: React.SFC = () => {
           transition: color 0.2s;
           border-bottom: solid 3px transparent;
           color: #000;
+          font-weight: 300;
         }
         .menu-item.gitHub-logo {
           width: 20px;
