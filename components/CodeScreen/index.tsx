@@ -309,6 +309,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               padding: 0;
               color:  var(--editor-white-50);
               font-weight: 300;
+              font-size: 14px;
             }
 
             .code-wrapper {
@@ -351,6 +352,13 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
             .with-offset {
               padding-left: 50px;
+            }
+
+            @media screen and (max-width: 992px) {
+              .editor h3 {
+                display: none;
+              }
+
             }
           `}</style>
       </div>
