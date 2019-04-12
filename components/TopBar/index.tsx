@@ -23,7 +23,8 @@ const TopBar: React.SFC = () => {
           </a> */}
           <a target="_blank" className="menu-item gitHub-logo">
             <p className="github-label">
-              CHECK OUT OUR <br />
+              CHECK OUT OUR
+              <br />
               CODE GENERATORS
             </p>
             <svg
@@ -53,7 +54,7 @@ const TopBar: React.SFC = () => {
           display: flex;
         }
         .menu-item {
-          padding: 22px;
+          padding: 10px;
           text-decoration: none;
           transition: color 0.2s;
           border-bottom: solid 3px transparent;
