@@ -13,16 +13,21 @@ const TopBar: React.SFC = () => {
         {/* <Link href={'https://docs.teleporthq.io'}>
           <a className="menu-item">DOCS</a>
         </Link> */}
-        <Link href={'/'}>
+        {/* <Link href={'/'}>
           <a className="menu-item selected">REPL</a>
-        </Link>
+        </Link> */}
+
         <Link href="https://github.com/teleporthq/teleport-code-generators">
           {/* <a target="_blank" rel="noopener" className="menu-item">
             <img alt="github" src="/static/svg/github.svg" width="20" height="20" />
           </a> */}
           <a target="_blank" className="menu-item gitHub-logo">
+            <p className="github-label">
+              CHECK OUT OUR <br />
+              CODE GENERATORS
+            </p>
             <svg
-              className="githubIcon"
+              className="github-icon"
               role="img"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
@@ -55,10 +60,22 @@ const TopBar: React.SFC = () => {
           color: #000;
           font-weight: 300;
         }
+
         .menu-item.gitHub-logo {
-          width: 20px;
+          display: flex;
+          align-items: center;
         }
-        a:not(.selected):hover {
+        .github-icon {
+          width: 24px;
+          margin-left: 24px;
+        }
+        .github-label {
+          text-align: right;
+          font-size: 12px;
+          color: #24272e;
+          display: flex;
+        }
+        a:hover {
           color: var(--color-purple);
           fill: var(--color-purple);
         }
