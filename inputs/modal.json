@@ -16,16 +16,34 @@
           "content": {
             "elementType": "button",
             "name": "openmodal",
-            "children": [{
-              "type": "static",
-              "content": "Show Popup"
-            }],
+            "style": {
+              "color": {
+                "type": "static",
+                "content": "red"
+              },
+              "padding": {
+                "type": "static",
+                "content": "10px"
+              },
+              "margin": {
+                "type": "static",
+                "content": "2px"
+              }
+            },
+            "children": [
+              {
+                "type": "static",
+                "content": "Show Popup"
+              }
+            ],
             "events": {
-              "click": [{
-                "type": "stateChange",
-                "modifies": "isOpen",
-                "newState": true
-              }]
+              "click": [
+                {
+                  "type": "stateChange",
+                  "modifies": "isOpen",
+                  "newState": true
+                }
+              ]
             }
           }
         },
@@ -41,11 +59,13 @@
                   "type": "local"
                 },
                 "events": {
-                  "onClose": [{
-                    "type": "stateChange",
-                    "modifies": "isOpen",
-                    "newState": false
-                  }]
+                  "onClose": [
+                    {
+                      "type": "stateChange",
+                      "modifies": "isOpen",
+                      "newState": false
+                    }
+                  ]
                 }
               }
             },

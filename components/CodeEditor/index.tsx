@@ -49,6 +49,7 @@ class CodeEditor extends React.Component<EditorProps, {}> {
         value={value || ''}
         focus={focus || false}
         fontSize={fontSize || 14}
+        tabSize={2}
       />
     )
   }

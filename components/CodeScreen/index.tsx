@@ -10,6 +10,7 @@ import {
   GeneratorTypes,
 } from '@teleporthq/teleport-code-generators'
 import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
+import nextMapping from '@teleporthq/teleport-code-generators/dist/project-generators/react-next/next-mapping.json'
 
 import newComponentUIDL from '../../inputs/new-component.json'
 import oneComponentUIDL from '../../inputs/one-component.json'
@@ -28,15 +29,19 @@ import { ErrorPanel } from '../ErrorPanel'
 const vueGenerator = createVueComponentGenerator()
 const reactInlineStylesGenerator = createReactComponentGenerator({
   variation: ReactComponentStylingFlavors.InlineStyles,
+  customMapping: nextMapping,
 })
 const reactJSSGenerator = createReactComponentGenerator({
   variation: ReactComponentStylingFlavors.JSS,
+  customMapping: nextMapping,
 })
 const reactStyledJSXGenerator = createReactComponentGenerator({
   variation: ReactComponentStylingFlavors.StyledJSX,
+  customMapping: nextMapping,
 })
 const reactCSSModulesGenerator = createReactComponentGenerator({
   variation: ReactComponentStylingFlavors.CSSModules,
+  customMapping: nextMapping,
 })
 
 const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
