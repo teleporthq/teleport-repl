@@ -332,7 +332,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               position: absolute;
               top: 0;
               left: 0;
-              overflow-x: scroll;
               background: var(--editor-bg-black);
             }
 
@@ -340,7 +339,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               position: absolute;
               top: 0;
               left: 0;
-              overflow-y: scroll;
               background: var(--editor-bg-black);
             }
 
@@ -365,7 +363,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             .code-wrapper .previewer {
               margin: 0;
               padding: 5px 0 0 10px;
-              overflow-y: scroll;
             }
 
             .previewer-header {
