@@ -1,4 +1,4 @@
-# Component Playground
+# REPL
 
 ## Purpose
 
@@ -11,3 +11,7 @@ components (for now, in the future maybe entire projects).
 $ npm i
 $ npm run dev
 ```
+
+## Production deploy
+
+Pushing to master will automatically deploy to production env at: [https://repl.teleporthq.io](https://repl.teleporthq.io)

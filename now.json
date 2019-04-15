@@ -1,5 +1,5 @@
 {
-  "name": "component-playground",
+  "name": "repl",
   "version": 2,
   "scope": "teleport-dev",
   "alias":["repl.teleporthq.io"],
