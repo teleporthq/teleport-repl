@@ -41,7 +41,7 @@ const Tabs: React.SFC<TabsProps> = (props) => {
 
           .header-list > li.selected {
             background-color: var(--main-bg-white);
-            color: var(--editor-bt-text-color);
+            color: var(--color-purple);
             cursor: default;
             border-radius: 3px;
           }

@@ -7,13 +7,15 @@ const AppPage: React.SFC = (props) => {
       <style jsx global>{`
         body {
           --main-bg-white: #fff;
+          --editor-white-50: rgba(255, 255, 255, 0.5);
           --main-bg-dark: #1e1e1e;
           --main-text-color: #f3f3f3;
           --main-text-font-size: 14px;
-          --main-font-family: 'Open Sans', Verdana, sans-serif;
+          --main-font-family: 'Roboto', sans-serif;
           --color-purple: #822cec;
-          --editor-bg-black: #272822;
+          --editor-bg-black: #2d2d2d;
           --editor-bt-text-color: #1e6cb3;
+          --editor-scrollbar-color: #494646b3;
         }
 
         html,
@@ -34,6 +36,17 @@ const AppPage: React.SFC = (props) => {
         textarea {
           font-family: var(--main-font-family);
           font-size: var(--main-text-font-size);
+        }
+        .ace_scroller {
+          background-color: var(--editor-bg-black) !important;
+        }
+        .ace_scrollbar::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+        .ace_scrollbar::-webkit-scrollbar-thumb {
+          background: var(--editor-scrollbar-color);
+          border-radius: 5px;
         }
       `}</style>
     </>

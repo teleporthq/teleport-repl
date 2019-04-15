@@ -1,0 +1,124 @@
+{
+  "name": "ExpandableArea",
+  "propDefinitions": {
+    "title": {
+      "type": "string",
+      "defaultValue": "Hello"
+    },
+    "text": {
+      "type": "string",
+      "defaultValue": "Is it me you're looking for?"
+    }
+  },
+  "stateDefinitions": {
+    "isExpanded": {
+      "type": "boolean",
+      "defaultValue": false
+    }
+  },
+  "node": {
+    "type": "element",
+    "content": {
+      "elementType": "container",
+      "style": {
+        "border": {
+          "type": "static",
+          "content": "1px solid green"
+        },
+        "margin": {
+          "type": "static",
+          "content": "10px"
+        }
+      },
+      "children": [
+        {
+          "type": "element",
+          "content": {
+            "elementType": "text",
+            "children": [{
+              "type": "dynamic",
+              "content": {
+                "referenceType": "prop",
+                "id": "title"
+              }
+            }]
+          }
+        },
+        {
+          "type": "element",
+          "content": {
+            "elementType": "button",
+            "children": [{
+              "type": "conditional",
+              "content": {
+                "node": {
+                  "type": "static",
+                  "content": "Hide me"
+                },
+                "value": true,
+                "reference": {
+                  "type": "dynamic",
+                  "content": {
+                    "referenceType": "state",
+                    "id": "isExpanded"
+                  }
+                }
+              }
+            },{
+              "type": "conditional",
+              "content": {
+                "node": {
+                  "type": "static",
+                  "content": "Show me"
+                },
+                "value": false,
+                "reference": {
+                  "type": "dynamic",
+                  "content": {
+                    "referenceType": "state",
+                    "id": "isExpanded"
+                  }
+                }
+              }
+            }],
+            "events": {
+              "click": [
+                {
+                  "type": "stateChange",
+                  "modifies": "isExpanded",
+                  "newState": "$toggle"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "type": "conditional",
+          "content": {
+            "node": {
+              "type": "element",
+              "content": {
+                "elementType": "text",
+                "children": [{
+                  "type": "dynamic",
+                  "content": {
+                    "referenceType": "prop",
+                    "id": "text"
+                  }
+                }]
+              }
+            },
+            "value": true,
+            "reference": {
+              "type": "dynamic",
+              "content": {
+                "referenceType": "state",
+                "id": "isExpanded"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

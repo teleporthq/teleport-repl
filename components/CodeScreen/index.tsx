@@ -11,10 +11,11 @@ import {
 } from '@teleporthq/teleport-code-generators'
 import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
 
-import authorCardUIDL from '../../inputs/component-author-card.json'
-import tabSelectorUIDL from '../../inputs/component-tab-selector.json'
-import cardListUIDL from '../../inputs/component-card-list.json'
 import newComponentUIDL from '../../inputs/new-component.json'
+import oneComponentUIDL from '../../inputs/one-component.json'
+import modalWindowUIDL from '../../inputs/modal-window.json'
+import modalUIDL from '../../inputs/modal.json'
+import expandableArealUIDL from '../../inputs/expandable-area.json'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -22,6 +23,7 @@ const CodeEditor = dynamic(import('../CodeEditor'), {
 
 import { DropDown } from '../DropDown'
 import { Tabs } from '../Tabs'
+import { ErrorPanel } from '../ErrorPanel'
 
 const vueGenerator = createVueComponentGenerator()
 const reactInlineStylesGenerator = createReactComponentGenerator({
@@ -38,10 +40,11 @@ const reactCSSModulesGenerator = createReactComponentGenerator({
 })
 
 const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
-  'author-card': authorCardUIDL,
-  'card-list': cardListUIDL,
-  'tab-selector': tabSelectorUIDL,
   'new-component': newComponentUIDL,
+  'one-component': oneComponentUIDL,
+  'modal-window': modalWindowUIDL,
+  modal: modalUIDL,
+  'expandable-area': expandableArealUIDL,
 }
 
 interface CodeScreenState {
@@ -50,11 +53,9 @@ interface CodeScreenState {
   inputJson: string
   sourceJSON: string
   libraryFlavor: string
-  fromExternalLink: boolean
-}
-
-const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
-  return JSON.stringify(json, null, 2)
+  externalLink: boolean
+  showErrorPanel: boolean
+  error: any
 }
 
 interface CodeProps {
@@ -70,36 +71,60 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       inputJson: jsonPrettify(uidlSamples['new-component']),
       targetLibrary: 'react',
       libraryFlavor: 'StyledJSX',
-      fromExternalLink: false,
+      externalLink: false,
+      showErrorPanel: false,
+      error: null,
     }
   }
 
   public componentDidMount() {
-    this.checkForExternalJSON()
-    // this.handleInputChange()
+    this.initREPL()
   }
 
-  public checkForExternalJSON = () => {
+  public initREPL = async () => {
+    const linkLoaded = await this.checkForExternalJSON()
+    if (linkLoaded) {
+      return
+    }
+
+    this.handleInputChange()
+  }
+
+  public checkForExternalJSON = async () => {
     const {
       router: { query },
     } = this.props
+
     const { uidlLink } = query
-    if (uidlLink) {
-      this.fetchJSONData(uidlLink)
+    if (!uidlLink) {
+      return false
     }
+
+    return this.fetchJSONDataAndLoad(uidlLink)
   }
 
-  public fetchJSONData = async (uidlLink: string) => {
+  public fetchJSONDataAndLoad = async (uidlLink: string) => {
     const result = await fetch(uidlLink)
     try {
+      if (result.status !== 200) throw new Error(result.statusText)
+
       const jsonData = await result.json()
       this.setState(
-        { inputJson: jsonPrettify(jsonData), fromExternalLink: true },
+        {
+          inputJson: jsonPrettify(jsonData),
+          externalLink: true,
+          sourceJSON: 'externalLink',
+          showErrorPanel: false,
+          error: null,
+        },
         this.handleInputChange
       )
+
+      return true
     } catch (error) {
       // tslint:disable-next-line:no-console
       console.error('Cannot fetch UIDL', error)
+      return false
     }
   }
 
@@ -108,7 +133,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       return false
     }
 
-    this.setState({ inputJson }, this.handleInputChange)
+    this.setState(
+      { inputJson, showErrorPanel: false, error: null },
+      this.handleInputChange
+    )
   }
 
   public handleInputChange = async () => {
@@ -138,7 +166,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       }
       this.setState({ generatedCode: component.content }, Prism.highlightAll)
     } catch (err) {
-      this.setState({ generatedCode: '' })
+      this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
       console.error('generateReactComponent', err)
     }
@@ -149,8 +177,16 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       target: { value },
     } = source
 
+    if (value === 'externalLink') {
+      this.checkForExternalJSON()
+      return
+    }
+
     const sourceJSON = jsonPrettify(uidlSamples[value])
-    this.setState({ inputJson: sourceJSON, sourceJSON: value }, this.handleInputChange)
+    this.setState(
+      { inputJson: sourceJSON, sourceJSON: value, showErrorPanel: false, error: null },
+      this.handleInputChange
+    )
   }
 
   public handleTargetChange = (target: string) => {
@@ -181,18 +217,31 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     )
   }
 
+  public getSamplesName = () => {
+    const samples = Object.keys(uidlSamples)
+    const { externalLink } = this.state
+    if (externalLink) {
+      samples.push('externalLink')
+    }
+
+    return samples
+  }
+
   public render() {
     return (
       <div className="main-content">
         <div className="editor">
-          <div className="editor-header with-offset">
+          <div className="editor-header">
             <DropDown
-              list={Object.keys(uidlSamples)}
+              list={this.getSamplesName()}
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
+            <div className="editor-header-section">
+              <h3>UIDL</h3>
+            </div>
           </div>
-          <div className="code-warpper">
+          <div className="code-wrapper">
             <CodeEditor
               editorDomId={'json-editor'}
               mode={'json'}
@@ -200,6 +249,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChange={this.handleJSONUpdate}
             />
           </div>
+          <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <div className="editor">
           <div className="editor-header previewer-header">
@@ -208,12 +258,19 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               selected={this.state.targetLibrary}
               onChoose={this.handleTargetChange}
             />
+            <div className="editor-header-section">
+              <h3>GENERATED CODE</h3>
+            </div>
             {this.renderDropDownFlavour()}
           </div>
-          <div className="code-warpper">
-            <pre>
-              <code className={`language-jsx`}>{this.state.generatedCode}</code>
-            </pre>
+          <div className="code-wrapper">
+            <div className="preview-scroller-y">
+              <div className="preview-scroller-x">
+                <pre className="previewer">
+                  <code className="language-jsx">{this.state.generatedCode}</code>
+                </pre>
+              </div>
+            </div>
           </div>
         </div>
         <style jsx>{`
@@ -234,6 +291,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               overflow: hidden;
               z-index: 3;
               padding: 0 0 30px 0;
+              position: relative
             }
 
             .editor-header {
@@ -243,10 +301,71 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               border-bottom: solid 1px #cccccc20;
               padding: 10px 10px;
             }
+            .editor-header-section {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+              position: absolute;
+              height: 30px;
+              z-index: -1;
+            }
 
-            .code-warpper {
+            .editor h3 {
+              margin: 0;
+              padding: 0;
+              color:  var(--editor-white-50);
+              font-weight: 300;
+              font-size: 14px;
+            }
+
+            .code-wrapper {
               height: calc(100% - 30px);
+              position: relative;
               overflow: auto;
+              background: var(--editor-bg-black);
+            }
+
+            .preview-scroller-y {
+              height: 100%;
+              width: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+              overflow-x: scroll;
+              background: var(--editor-bg-black);
+            }
+
+            .preview-scroller-x {
+              position: absolute;
+              top: 0;
+              left: 0;
+              overflow-y: scroll;
+              background: var(--editor-bg-black);
+            }
+
+            .preview-scroller-x::-webkit-scrollbar-corner,
+            .preview-scroller-y::-webkit-scrollbar-corner {
+              background: var(--editor-bg-black);
+              height: 10px;
+              width: 10px;
+            }
+
+            .preview-scroller-x::-webkit-scrollbar,
+            .preview-scroller-y::-webkit-scrollbar {
+              width: 10px;
+              height: 10px;
+            }
+
+            .preview-scroller-x::-webkit-scrollbar-thumb, .preview-scroller-y::-webkit-scrollbar-thumb {
+              background: var(--editor-scrollbar-color);
+              border-radius: 5px;
+            }
+
+            .code-wrapper .previewer {
+              margin: 0;
+              padding: 5px 0 0 10px;
+              overflow-y: scroll;
             }
 
             .previewer-header {
@@ -254,10 +373,20 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               align-items: center;
             }
 
+            .previewer-header .code-wrapper {
+              background-color: #2d2d2d;
+            }
+
             .with-offset {
               padding-left: 50px;
             }
 
+            @media screen and (max-width: 992px) {
+              .editor h3 {
+                display: none;
+              }
+
+            }
           `}</style>
       </div>
     )
@@ -266,6 +395,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
 const CodeScreen = withRouter(Code)
 export { CodeScreen }
+
+const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
+  return JSON.stringify(json, null, 2)
+}
 
 const generators = ['react', 'vue']
 const chooseGenerator = (flavor: string) => {

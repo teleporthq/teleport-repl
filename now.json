@@ -2,6 +2,7 @@
   "name": "component-playground",
   "version": 2,
   "scope": "teleport-dev",
+  "alias":["repl.teleporthq.io"],
   "builds": [
     {
       "src": "package.json",

@@ -1,0 +1,52 @@
+{
+  "name": "ModalWindow",
+  "propDefinitions": {
+    "message": {
+      "type": "string",
+      "defaultValue": "Hello"
+    },
+    "onClose": {
+      "type": "func",
+      "defaultValue": "() => {}"
+    }
+  },
+  "stateDefinitions": {
+    "fakeState": {
+      "type": "boolean",
+      "defaultValue": false
+    }
+  },
+  "node": {
+    "type": "element",
+    "content": {
+      "elementType": "container",
+      "children": [{
+        "type": "dynamic",
+        "content": {
+          "referenceType": "prop",
+          "id": "message"
+        }
+      },{
+        "type": "element",
+        "content": {
+          "elementType": "button",
+          "name": "close",
+          "children": [{
+            "type": "static",
+            "content": "Close me"
+          }],
+          "events": {
+            "click": [{
+              "type": "propCall",
+              "calls": "onClose"
+            },{
+              "type": "stateChange",
+              "modifies": "fakeState",
+              "newState": false
+            }]
+          }
+        }
+      }]
+    }
+  }
+}

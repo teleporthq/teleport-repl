@@ -25,7 +25,7 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
 
         select {
           background-color: var(--main-bg-white);
-          color: var(--editor-bt-text-color);
+          color: var(--color-purple);
           font-size: inherit;
           padding: 0.5em;
           padding-right: 2.5em;
@@ -45,7 +45,6 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
           position: absolute;
           pointer-events: none;
         }
-
         .custom-dropdown::after {
           content: '\\25BC';
           height: 1em;
