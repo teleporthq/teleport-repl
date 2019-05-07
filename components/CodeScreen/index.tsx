@@ -12,8 +12,8 @@ import {
 import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
 import nextMapping from '@teleporthq/teleport-code-generators/dist/project-generators/react-next/next-mapping.json'
 
-import newComponentUIDL from '../../inputs/new-component.json'
-import oneComponentUIDL from '../../inputs/one-component.json'
+import simpleComponentUIDL from '../../inputs/simple-component.json'
+import complexComponentUIDL from '../../inputs/complex-component.json'
 import modalWindowUIDL from '../../inputs/modal-window.json'
 import modalUIDL from '../../inputs/modal.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
@@ -45,8 +45,8 @@ const reactCSSModulesGenerator = createReactComponentGenerator({
 })
 
 const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
-  'new-component': newComponentUIDL,
-  'one-component': oneComponentUIDL,
+  'simple-component': simpleComponentUIDL,
+  'complex-component': complexComponentUIDL,
   'modal-window': modalWindowUIDL,
   modal: modalUIDL,
   'expandable-area': expandableArealUIDL,
@@ -72,8 +72,8 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     super(props)
     this.state = {
       generatedCode: '',
-      sourceJSON: 'new-component',
-      inputJson: jsonPrettify(uidlSamples['new-component']),
+      sourceJSON: 'simple-component',
+      inputJson: jsonPrettify(uidlSamples['simple-component']),
       targetLibrary: 'react',
       libraryFlavor: 'StyledJSX',
       externalLink: false,
