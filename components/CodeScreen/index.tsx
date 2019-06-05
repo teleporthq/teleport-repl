@@ -3,14 +3,11 @@ import dynamic from 'next/dynamic'
 import { withRouter } from 'next/router'
 import Prism from 'prismjs'
 
-import {
-  createReactComponentGenerator,
-  createVueComponentGenerator,
-  UIDLTypes,
-  GeneratorTypes,
-} from '@teleporthq/teleport-code-generators'
-import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
-import nextMapping from '@teleporthq/teleport-code-generators/dist/project-generators/react-next/next-mapping.json'
+import { createReactComponentGenerator } from '@teleporthq/teleport-component-generator-react'
+import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
+import { UIDLTypes, GeneratorTypes, ComponentGenerator } from '@teleporthq/teleport-types'
+
+import nextMapping from '@teleporthq/teleport-project-generator-react-next/lib/next-mapping.json'
 
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import complexComponentUIDL from '../../inputs/complex-component.json'
@@ -27,22 +24,17 @@ import { Tabs } from '../Tabs'
 import { ErrorPanel } from '../ErrorPanel'
 
 const vueGenerator = createVueComponentGenerator()
-const reactInlineStylesGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.InlineStyles,
-  customMapping: nextMapping,
-})
-const reactJSSGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.JSS,
-  customMapping: nextMapping,
-})
-const reactStyledJSXGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.StyledJSX,
-  customMapping: nextMapping,
-})
-const reactCSSModulesGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.CSSModules,
-  customMapping: nextMapping,
-})
+
+const reactStylesPlugins = ['InlineStyles', 'JSS', 'StyledJSX', 'CSSModules']
+const reactGenerators: Record<string, ComponentGenerator> = reactStylesPlugins.reduce(
+  (table, plugin) => ({
+    ...table,
+    [plugin]: createReactComponentGenerator(plugin, {
+      mapping: nextMapping,
+    }),
+  }),
+  {}
+)
 
 const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'simple-component': simpleComponentUIDL,
@@ -215,7 +207,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
     return (
       <DropDown
-        list={Object.values(ReactComponentStylingFlavors)}
+        list={reactStylesPlugins}
         onChoose={this.handleFlavourChange}
         value={this.state.libraryFlavor}
       />
@@ -259,7 +251,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         <div className="editor">
           <div className="editor-header previewer-header">
             <Tabs
-              options={generators}
+              options={libraries}
               selected={this.state.targetLibrary}
               onChoose={this.handleTargetChange}
             />
@@ -402,20 +394,16 @@ const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
   return JSON.stringify(json, null, 2)
 }
 
-const generators = ['react', 'vue']
+const libraries = ['react', 'vue']
 const chooseGenerator = (flavor: string) => {
-  switch (flavor) {
-    case 'react.InlineStyles':
-      return reactInlineStylesGenerator
-    case 'react.StyledJSX':
-      return reactStyledJSXGenerator
-    case 'react.JSS':
-      return reactJSSGenerator
-    case 'react.CSSModules':
-      return reactCSSModulesGenerator
-    case 'vue':
-      return vueGenerator
-    default:
-      return reactInlineStylesGenerator
+  const [library, plugin] = flavor.split('.')
+  if (library === 'vue') {
+    return vueGenerator
   }
+
+  if (library === 'react') {
+    return reactGenerators[plugin]
+  }
+
+  return reactGenerators.InlineStyles
 }
