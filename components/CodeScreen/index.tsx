@@ -23,7 +23,13 @@ import { ErrorPanel } from '../ErrorPanel'
 
 const vueGenerator = createVueComponentGenerator()
 
-const reactStylesPlugins = ['InlineStyles', 'JSS', 'StyledJSX', 'CSSModules']
+const reactStylesPlugins = [
+  'InlineStyles',
+  'JSS',
+  'StyledJSX',
+  'CSSModules',
+  'StyledComponents',
+]
 const reactGenerators: Record<string, ComponentGenerator> = reactStylesPlugins.reduce(
   (table, plugin) => ({
     ...table,
