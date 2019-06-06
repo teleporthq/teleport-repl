@@ -7,8 +7,6 @@ import { createReactComponentGenerator } from '@teleporthq/teleport-component-ge
 import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
 import { UIDLTypes, GeneratorTypes, ComponentGenerator } from '@teleporthq/teleport-types'
 
-import nextMapping from '@teleporthq/teleport-project-generator-react-next/lib/next-mapping.json'
-
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import complexComponentUIDL from '../../inputs/complex-component.json'
 import modalWindowUIDL from '../../inputs/modal-window.json'
@@ -29,9 +27,7 @@ const reactStylesPlugins = ['InlineStyles', 'JSS', 'StyledJSX', 'CSSModules']
 const reactGenerators: Record<string, ComponentGenerator> = reactStylesPlugins.reduce(
   (table, plugin) => ({
     ...table,
-    [plugin]: createReactComponentGenerator(plugin, {
-      mapping: nextMapping,
-    }),
+    [plugin]: createReactComponentGenerator(plugin),
   }),
   {}
 )

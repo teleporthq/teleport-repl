@@ -865,19 +865,6 @@
     "@teleporthq/teleport-shared" "^0.7.0"
     "@teleporthq/teleport-types" "^0.7.0"
 
-"@teleporthq/teleport-project-generator-react-next@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-project-generator-react-next/-/teleport-project-generator-react-next-0.7.0.tgz#96c3c2aef65d508d1413ba0ca133938718b0ed72"
-  integrity sha512-poJ9Aal/N/S8q9Jcoq7PNNzMZ91Ix8C6ZzTxuT/FzC1xkjp7CqP0Hw1pYIvaZH6BDZRlFeEdepKuoowGlz4W4A==
-  dependencies:
-    "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-component-generator" "^0.7.0"
-    "@teleporthq/teleport-component-generator-react" "^0.7.0"
-    "@teleporthq/teleport-postprocessor-prettier-js" "^0.7.0"
-    "@teleporthq/teleport-shared" "^0.7.0"
-    "@teleporthq/teleport-types" "^0.7.0"
-    "@teleporthq/teleport-uidl-validator" "^0.7.0"
-
 "@teleporthq/teleport-shared@^0.7.0":
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/@teleporthq/teleport-shared/-/teleport-shared-0.7.0.tgz#a778e7883b202cb7ef591a0b9184c9f206dcf222"
