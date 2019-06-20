@@ -33,7 +33,7 @@
                     "padding": "10px 20px",
                     "transition": "all .15s ease-in-out",
                     "cursor": "pointer",
-                    ":hover": {
+                    "&:hover": {
                       "type": "nested-style",
                       "content": {
                         "color": { "type": "static", "content": "red"},
@@ -63,7 +63,7 @@
                     "padding": "10px 20px",
                     "transition": "all .15s ease-in-out",
                     "cursor": "pointer",
-                    ":hover": {
+                    "&:hover": {
                       "type": "nested-style",
                       "content": {
                         "color": { "type": "static", "content": "red"},
@@ -93,7 +93,7 @@
                     "padding": "10px 20px",
                     "transition": "all .15s ease-in-out",
                     "cursor": "pointer",
-                    ":hover": {
+                    "&:hover": {
                       "type": "nested-style",
                       "content": {
                         "color": { "type": "static", "content": "red"},

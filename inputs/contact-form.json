@@ -155,7 +155,7 @@
               "transition": "all .35s ease-out",
               "border-radius": "3px",
               "cursor": "pointer",
-              ":hover": {
+              "&:hover": {
                 "type": "nested-style",
                 "content": {
                   "background-color": "green",
