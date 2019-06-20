@@ -8,9 +8,10 @@ import { createVueComponentGenerator } from '@teleporthq/teleport-component-gene
 import { UIDLTypes, GeneratorTypes, ComponentGenerator } from '@teleporthq/teleport-types'
 
 import simpleComponentUIDL from '../../inputs/simple-component.json'
+import navbar from '../../inputs/navbar.json'
+import contactForm from '../../inputs/contact-form.json'
+import personSpotlight from '../../inputs/person-spotlight.json'
 import complexComponentUIDL from '../../inputs/complex-component.json'
-import modalWindowUIDL from '../../inputs/modal-window.json'
-import modalUIDL from '../../inputs/modal.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
@@ -40,9 +41,10 @@ const reactGenerators: Record<string, ComponentGenerator> = reactStylesPlugins.r
 
 const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'simple-component': simpleComponentUIDL,
+  navbar,
+  'contact-form': contactForm,
+  'person-spotlight': personSpotlight,
   'complex-component': complexComponentUIDL,
-  'modal-window': modalWindowUIDL,
-  modal: modalUIDL,
   'expandable-area': expandableArealUIDL,
 }
 
