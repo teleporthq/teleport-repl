@@ -1,0 +1,60 @@
+{
+  "name": "PersonList",
+  "node": {
+    "type": "element",
+    "content": {
+      "elementType": "container",
+      "style": {
+        "display": "flex",
+        "flex-wrap": "wrap",
+        "padding": "5px"
+      },
+      "children": [
+        {
+          "type": "repeat",
+          "content": {
+            "node": {
+              "type": "element",
+              "content": {
+                "elementType": "PersonSpotlight",
+                "dependency": {
+                  "type": "local",
+                  "path": "./person-spotlight"
+                },
+                "attrs": {
+                  "name": "$local.person.name",
+                  "flag": "$local.person.flag",
+                  "displayLink": "$local.person.displayLink",
+                  "url": "$local.person.url"
+                }
+              }
+            },
+            "dataSource": {
+              "type": "static",
+              "content": [{
+                "name": "Alice",
+                "flag": "🇩🇪",
+                "displayLink": "@alicecodes",
+                "url": "https://picsum.photos/150?v=alice"
+              },{
+                "name": "Bob",
+                "displayLink": "@bobthebest",
+                 "url": "https://picsum.photos/150?v=bob"
+              },{
+                "name": "Carol",
+                "flag": "🇨🇱",
+                "displayLink": "@oh.carol",
+                "url": "https://picsum.photos/150?v=carol"
+              }]
+            },
+            "meta":{
+              "iteratorName": "person",
+              "useIndex": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+

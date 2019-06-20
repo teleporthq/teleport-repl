@@ -1,5 +1,5 @@
 {
-  "name": "Simple Component",
+  "name": "ContactForm",
   "node": {
     "type": "element",
     "content": {

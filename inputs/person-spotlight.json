@@ -1,9 +1,13 @@
 {
-  "name": "Simple Component",
+  "name": "PersonSpotlight",
   "propDefinitions": {
     "name": {
       "type": "string",
       "defaultValue": "John Doe"
+    },
+    "url": {
+      "type": "string",
+      "defaultValue": "http://lorempixel.com/150/150/"
     },
     "flag": {
       "type": "string",
@@ -29,7 +33,8 @@
       "style": {
         "width": "300px",
         "border": "1px solid #ccc",
-        "padding": "10px"
+        "padding": "10px",
+        "margin": "5px"
       },
       "children": [
         {
@@ -37,7 +42,7 @@
           "content": {
             "elementType": "image",
             "attrs": {
-              "url": "http://lorempixel.com/150/150/"
+              "url": "$props.url"
             },
             "style": {
               "display": "block",
@@ -96,52 +101,48 @@
               "margin": "0",
               "text-align": "center"
             },
-            "children": [{
-              "type": "element",
-              "content": {
-                "elementType": "link",
-                "style": {
-                  "text-decoration": "none",
-                  "color": "#822cec"
-                },
-                "attrs": {
-                  "url": {
-                    "type": "dynamic",
-                    "content": {
-                      "referenceType": "prop",
-                      "id": "link"
+            "children": [
+              {
+                "type": "element",
+                "content": {
+                  "elementType": "link",
+                  "style": {
+                    "text-decoration": "none",
+                    "color": "#822cec"
+                  },
+                  "attrs": {
+                    "url": {
+                      "type": "dynamic",
+                      "content": {
+                        "referenceType": "prop",
+                        "id": "link"
+                      }
                     }
-                  }
-                },
-                "children": ["$props.displayLink"]
+                  },
+                  "children": [
+                    "$props.displayLink"
+                  ]
+                }
               }
-            }]
+            ]
           }
         },
         {
           "type": "element",
           "content": {
             "elementType": "textblock",
-            "children": [{
-              "type": "dynamic",
-              "content": {
-                "referenceType": "prop",
-                "id": "bio"
+            "children": [
+              {
+                "type": "dynamic",
+                "content": {
+                  "referenceType": "prop",
+                  "id": "bio"
+                }
               }
-            }]
+            ]
           }
         }
       ]
     }
   }
 }
-
-
-
-
-
-
-
-
-
-

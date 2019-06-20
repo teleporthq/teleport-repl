@@ -11,6 +11,7 @@ import simpleComponentUIDL from '../../inputs/simple-component.json'
 import navbar from '../../inputs/navbar.json'
 import contactForm from '../../inputs/contact-form.json'
 import personSpotlight from '../../inputs/person-spotlight.json'
+import personList from '../../inputs/person-list.json'
 import complexComponentUIDL from '../../inputs/complex-component.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
 
@@ -44,6 +45,7 @@ const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   navbar,
   'contact-form': contactForm,
   'person-spotlight': personSpotlight,
+  'person-list': personList,
   'complex-component': complexComponentUIDL,
   'expandable-area': expandableArealUIDL,
 }
