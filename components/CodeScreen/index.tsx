@@ -14,6 +14,7 @@ import personSpotlight from '../../inputs/person-spotlight.json'
 import personList from '../../inputs/person-list.json'
 import complexComponentUIDL from '../../inputs/complex-component.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
+import tabSelector from '../../inputs/tab-selector.json'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -48,6 +49,7 @@ const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
   'person-list': personList,
   'complex-component': complexComponentUIDL,
   'expandable-area': expandableArealUIDL,
+  'tab-selector': tabSelector,
 }
 
 interface CodeScreenState {
