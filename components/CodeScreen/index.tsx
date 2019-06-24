@@ -15,6 +15,7 @@ import personList from '../../inputs/person-list.json'
 import complexComponentUIDL from '../../inputs/complex-component.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
 import tabSelector from '../../inputs/tab-selector.json'
+import customMapping from '../../inputs/repl-mapping.json'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -160,7 +161,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
     try {
       const result: GeneratorTypes.CompiledComponent = await generator.generateComponent(
-        jsonValue
+        jsonValue,
+        {
+          mapping: customMapping, // Temporary fix for svg's while the `line` element is converted to `hr` in the generators
+        }
       )
 
       const component = result.files[0]
