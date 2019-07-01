@@ -685,186 +685,186 @@
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@teleporthq/teleport-component-generator-react@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-react/-/teleport-component-generator-react-0.8.0.tgz#2bcc2a79a8f4f0c28b5cd7a836f18d52a0a76293"
+"@teleporthq/teleport-component-generator-react@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-react/-/teleport-component-generator-react-0.8.1.tgz#6902ee09f3d9314cff15919db6dd76f3b8c2166c"
   dependencies:
-    "@teleporthq/teleport-component-generator" "^0.8.0"
-    "@teleporthq/teleport-plugin-import-statements" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-app-routing" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-base-component" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-css-modules" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-inline-styles" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-jss" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-proptypes" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-styled-components" "^0.8.0"
-    "@teleporthq/teleport-plugin-react-styled-jsx" "^0.8.0"
-    "@teleporthq/teleport-postprocessor-prettier-js" "^0.8.0"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-component-generator" "^0.8.1"
+    "@teleporthq/teleport-plugin-import-statements" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-app-routing" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-base-component" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-css-modules" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-inline-styles" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-jss" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-proptypes" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-styled-components" "^0.8.1"
+    "@teleporthq/teleport-plugin-react-styled-jsx" "^0.8.1"
+    "@teleporthq/teleport-postprocessor-prettier-js" "^0.8.1"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-component-generator-vue@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-vue/-/teleport-component-generator-vue-0.8.0.tgz#ece45c65173e8f62d3fc0f46b6a3840979c20e13"
+"@teleporthq/teleport-component-generator-vue@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-vue/-/teleport-component-generator-vue-0.8.1.tgz#fcf30931e919f4a170c98928c5eff01a8beb4b74"
   dependencies:
-    "@teleporthq/teleport-component-generator" "^0.8.0"
-    "@teleporthq/teleport-plugin-import-statements" "^0.8.0"
-    "@teleporthq/teleport-plugin-vue-app-routing" "^0.8.0"
-    "@teleporthq/teleport-plugin-vue-base-component" "^0.8.0"
-    "@teleporthq/teleport-plugin-vue-css" "^0.8.0"
-    "@teleporthq/teleport-postprocessor-prettier-html" "^0.8.0"
-    "@teleporthq/teleport-postprocessor-prettier-js" "^0.8.0"
-    "@teleporthq/teleport-postprocessor-vue-file" "^0.8.0"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-component-generator" "^0.8.1"
+    "@teleporthq/teleport-plugin-import-statements" "^0.8.1"
+    "@teleporthq/teleport-plugin-vue-app-routing" "^0.8.1"
+    "@teleporthq/teleport-plugin-vue-base-component" "^0.8.1"
+    "@teleporthq/teleport-plugin-vue-css" "^0.8.1"
+    "@teleporthq/teleport-postprocessor-prettier-html" "^0.8.1"
+    "@teleporthq/teleport-postprocessor-prettier-js" "^0.8.1"
+    "@teleporthq/teleport-postprocessor-vue-file" "^0.8.1"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-component-generator@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator/-/teleport-component-generator-0.8.0.tgz#a3636a13c9ee9319913d62f9a7caca035033a4a5"
+"@teleporthq/teleport-component-generator@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator/-/teleport-component-generator-0.8.1.tgz#45528ca64a6b10e721d8246583e9871823531114"
   dependencies:
     "@babel/generator" "^7.4.0"
     "@babel/types" "^7.3.3"
     "@starptech/prettyhtml-hast-to-html" "^0.8.17"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
-    "@teleporthq/teleport-uidl-validator" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
+    "@teleporthq/teleport-uidl-validator" "^0.8.1"
     deepmerge "^3.2.1"
 
-"@teleporthq/teleport-plugin-import-statements@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-import-statements/-/teleport-plugin-import-statements-0.8.0.tgz#7ae0faaebbefaee91d33e7ba476602f5f344e957"
+"@teleporthq/teleport-plugin-import-statements@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-import-statements/-/teleport-plugin-import-statements-0.8.1.tgz#f3e0998efb72ae68d5f0bdf3f552a7b1f8ce7942"
   dependencies:
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-app-routing@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-app-routing/-/teleport-plugin-react-app-routing-0.8.0.tgz#7f37b245ad28f6e58487ba831d60831bc1bb36e3"
+"@teleporthq/teleport-plugin-react-app-routing@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-app-routing/-/teleport-plugin-react-app-routing-0.8.1.tgz#57e6127c7a70676071994e64a307044c319eb1a6"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-base-component@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-base-component/-/teleport-plugin-react-base-component-0.8.0.tgz#b6f2bd0d2760d5ca981ac848fbdd5f25e3412568"
+"@teleporthq/teleport-plugin-react-base-component@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-base-component/-/teleport-plugin-react-base-component-0.8.1.tgz#877a18e64abcdf0add115338a5f8e66629bca45d"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-css-modules@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-css-modules/-/teleport-plugin-react-css-modules-0.8.0.tgz#75659d32e34cac2751392449f8af748d7c98b5bf"
+"@teleporthq/teleport-plugin-react-css-modules@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-css-modules/-/teleport-plugin-react-css-modules-0.8.1.tgz#5ca839ece835173ee45a1ccc50789820082ffef5"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-inline-styles@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-inline-styles/-/teleport-plugin-react-inline-styles-0.8.0.tgz#9db232aec27c71636952e18516e660553d9de925"
+"@teleporthq/teleport-plugin-react-inline-styles@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-inline-styles/-/teleport-plugin-react-inline-styles-0.8.1.tgz#93952222ba19b6c005d46ce49d8454ea0322aff9"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-jss@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-jss/-/teleport-plugin-react-jss-0.8.0.tgz#31bfc6ff4402702879dab512dfbac60a08e05a09"
+"@teleporthq/teleport-plugin-react-jss@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-jss/-/teleport-plugin-react-jss-0.8.1.tgz#c678e365e354b9114311d55befc8aada8cd5ae30"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-proptypes@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-proptypes/-/teleport-plugin-react-proptypes-0.8.0.tgz#621eda4c93a4d70e5671cbb4ac1858237ec167dd"
+"@teleporthq/teleport-plugin-react-proptypes@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-proptypes/-/teleport-plugin-react-proptypes-0.8.1.tgz#9e9d705bb74a0e9873cd60a25e31e6145534ae73"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-styled-components@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-components/-/teleport-plugin-react-styled-components-0.8.0.tgz#0a4ff9355a0d84217f43366c93730e89f2b2a465"
+"@teleporthq/teleport-plugin-react-styled-components@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-components/-/teleport-plugin-react-styled-components-0.8.1.tgz#e497af783006f08c963d6aeaa2375e9672b2d954"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-react-styled-jsx@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-jsx/-/teleport-plugin-react-styled-jsx-0.8.0.tgz#104fa0a6ae12a7f8fd559ca551f47bd86487b1eb"
+"@teleporthq/teleport-plugin-react-styled-jsx@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-jsx/-/teleport-plugin-react-styled-jsx-0.8.1.tgz#32c96554323989ae0f48b6f7327277acd55ea1d3"
   dependencies:
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-vue-app-routing@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-app-routing/-/teleport-plugin-vue-app-routing-0.8.0.tgz#434d5b20ece9aa77f93040a0f088ce01fbaec7c6"
-  dependencies:
-    "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
-
-"@teleporthq/teleport-plugin-vue-base-component@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-base-component/-/teleport-plugin-vue-base-component-0.8.0.tgz#43bf3c6b2f56f95227565883dacb34a52e786098"
+"@teleporthq/teleport-plugin-vue-app-routing@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-app-routing/-/teleport-plugin-vue-app-routing-0.8.1.tgz#04cefeb90ca05497c335ccf45c7ae281205160c9"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-plugin-vue-css@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-css/-/teleport-plugin-vue-css-0.8.0.tgz#fa4e825ed629783cbb8b67b56025dd31cd06dedc"
+"@teleporthq/teleport-plugin-vue-base-component@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-base-component/-/teleport-plugin-vue-base-component-0.8.1.tgz#d0c28469d866a676ca6056f3e98792c497c8eb6b"
   dependencies:
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@babel/types" "^7.3.3"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-postprocessor-prettier-html@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-html/-/teleport-postprocessor-prettier-html-0.8.0.tgz#7b719d8a74d14599336367f100e5487bc58b30df"
+"@teleporthq/teleport-plugin-vue-css@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-css/-/teleport-plugin-vue-css-0.8.1.tgz#6269c12e313ff57d6b7efbb748bf157803aa35e6"
   dependencies:
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
+
+"@teleporthq/teleport-postprocessor-prettier-html@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-html/-/teleport-postprocessor-prettier-html-0.8.1.tgz#268076ff91f947c2eb85df6060e6f8ff11cd76ee"
+  dependencies:
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
     prettier "^1.17.0"
 
-"@teleporthq/teleport-postprocessor-prettier-js@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-js/-/teleport-postprocessor-prettier-js-0.8.0.tgz#7ab4d63cd6e705285ffdf69784cabcee169f8f72"
+"@teleporthq/teleport-postprocessor-prettier-js@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-js/-/teleport-postprocessor-prettier-js-0.8.1.tgz#8d31cb8900068a2f43dda27ba5b6619accac4f9e"
   dependencies:
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
     prettier "^1.17.0"
 
-"@teleporthq/teleport-postprocessor-vue-file@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-vue-file/-/teleport-postprocessor-vue-file-0.8.0.tgz#a83da501731569f2476183e6499d1b490668ade9"
+"@teleporthq/teleport-postprocessor-vue-file@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-vue-file/-/teleport-postprocessor-vue-file-0.8.1.tgz#6f32cbcec8b7d651d985410f226f7a08288ad342"
   dependencies:
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
 
-"@teleporthq/teleport-shared@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-shared/-/teleport-shared-0.8.0.tgz#e567ee5e652e0228918e5da6859b4675058ddd42"
+"@teleporthq/teleport-shared@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-shared/-/teleport-shared-0.8.1.tgz#e330df80a3f7d1f7537420bc5ed8e836965c87d3"
   dependencies:
     "@babel/types" "^7.3.3"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-types" "^0.8.1"
     jss "^9.8.7"
     jss-preset-default "^4.5.0"
 
-"@teleporthq/teleport-types@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-types/-/teleport-types-0.8.0.tgz#206f1f5addb632a24b88f91269997a8d339b570f"
+"@teleporthq/teleport-types@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-types/-/teleport-types-0.8.1.tgz#04900568ac14b7ae795a198deed5c1b6ded62fdd"
 
-"@teleporthq/teleport-uidl-validator@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-validator/-/teleport-uidl-validator-0.8.0.tgz#4aa6bb3f2b4f64b6aec24150f7787320ea92d3a1"
+"@teleporthq/teleport-uidl-validator@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-validator/-/teleport-uidl-validator-0.8.1.tgz#19741a6e6bc0367c20e066059ea2979e8ba09cdb"
   dependencies:
-    "@teleporthq/teleport-shared" "^0.8.0"
-    "@teleporthq/teleport-types" "^0.8.0"
+    "@teleporthq/teleport-shared" "^0.8.1"
+    "@teleporthq/teleport-types" "^0.8.1"
     ajv "^6.10.0"
 
 "@types/anymatch@*":
