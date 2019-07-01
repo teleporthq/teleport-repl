@@ -5,14 +5,14 @@ const TopBar: React.SFC = () => {
   return (
     <div className="top-bar">
       <Link href="https://teleporthq.io/">
-        <a className="logo">
-          <img alt="logo" src="/static/svg/teleport.svg" width="139" height="33" />
+        <a>
+          <img className="logo" alt="logo" src="/static/svg/logo.svg" />
         </a>
       </Link>
       <div className="menu-items">
-        {/* <Link href={'https://docs.teleporthq.io'}>
-          <a className="menu-item">DOCS</a>
-        </Link> */}
+        <a className="menu-item" href="https://docs.teleporthq.io">
+          Official Docs
+        </a>
         {/* <Link href={'/'}>
           <a className="menu-item selected">REPL</a>
         </Link> */}
@@ -22,11 +22,7 @@ const TopBar: React.SFC = () => {
             <img alt="github" src="/static/svg/github.svg" width="20" height="20" />
           </a> */}
           <a target="_blank" className="menu-item gitHub-logo">
-            <p className="github-label">
-              CHECK OUT OUR
-              <br />
-              CODE GENERATORS
-            </p>
+            Contribute on GitHub!
             <svg
               className="github-icon"
               role="img"
@@ -46,20 +42,21 @@ const TopBar: React.SFC = () => {
           background: var(--main-bg-white);
           justify-content: space-between;
           align-items: center;
-          padding: 0 20px;
+          padding: 0.7rem 1.5rem;
           box-sizing: border-box;
           border-bottom: 1px solid #00000010;
         }
         .menu-items {
           display: flex;
+          align-items: center;
         }
         .menu-item {
-          padding: 10px;
+          padding: 0 10px;
           text-decoration: none;
           transition: color 0.2s;
-          border-bottom: solid 3px transparent;
-          color: #000;
-          font-weight: 300;
+          color: #2c3e50;
+          font-weight: 500;
+          font-size: 15px;
         }
 
         .menu-item.gitHub-logo {
@@ -68,7 +65,7 @@ const TopBar: React.SFC = () => {
         }
         .github-icon {
           width: 24px;
-          margin-left: 24px;
+          margin-left: 10px;
         }
         .github-label {
           text-align: right;
@@ -84,7 +81,8 @@ const TopBar: React.SFC = () => {
           border-color: var(--color-purple);
         }
         .logo {
-          line-height: 0;
+          height: 2.2rem;
+          vertical-align: middle;
         }
       `}</style>
     </div>
