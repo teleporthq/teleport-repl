@@ -25,9 +25,12 @@
     "brace": "^0.11.1",
     "next": "^8.0.4",
     "prismjs": "^1.16.0",
+    "query-string": "^6.8.2",
     "react": "^16.8.1",
     "react-ace": "^6.4.0",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.8.1",
+    "react-modal": "^3.8.2",
     "react-svg": "^8.0.2"
   },
   "devDependencies": {
@@ -35,6 +38,7 @@
     "@types/next": "^8.0.3",
     "@types/prismjs": "^1.16.0",
     "@types/react": "16.7.1",
+    "@types/react-modal": "^3.8.2",
     "@types/styled-jsx": "^2.2.8",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-typescript": "^1.1.1",
