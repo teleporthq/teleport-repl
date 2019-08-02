@@ -2,6 +2,10 @@ import React from 'react'
 import dynamic from 'next/dynamic'
 import { withRouter } from 'next/router'
 import Prism from 'prismjs'
+import Modal from 'react-modal'
+import queryString from 'query-string'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 
 import { createReactComponentGenerator } from '@teleporthq/teleport-component-generator-react'
 import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
@@ -24,6 +28,7 @@ const CodeEditor = dynamic(import('../CodeEditor'), {
 import { DropDown } from '../DropDown'
 import { Tabs } from '../Tabs'
 import { ErrorPanel } from '../ErrorPanel'
+import Loader from '../Loader'
 
 const vueGenerator = createVueComponentGenerator()
 
@@ -61,6 +66,10 @@ interface CodeScreenState {
   libraryFlavor: string
   externalLink: boolean
   showErrorPanel: boolean
+  showShareableLinkModal: boolean
+  isLoading: boolean
+  shareableLink?: string
+  copied: boolean
   error: any
 }
 
@@ -69,6 +78,23 @@ interface CodeProps {
 }
 
 class Code extends React.Component<CodeProps, CodeScreenState> {
+  public static customStyle: ReactModal.Styles = {
+    overlay: {
+      zIndex: 10,
+    },
+    content: {
+      textAlign: 'center',
+      color: '#000',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      borderRadius: '4px',
+      transform: 'translate(-50%, -50%)',
+    },
+  }
+
   constructor(props: CodeProps) {
     super(props)
     this.state = {
@@ -79,6 +105,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       libraryFlavor: 'StyledJSX',
       externalLink: false,
       showErrorPanel: false,
+      showShareableLinkModal: false,
+      isLoading: false,
+      copied: false,
       error: null,
     }
   }
@@ -106,32 +135,25 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       return false
     }
 
-    return this.fetchJSONDataAndLoad(uidlLink)
-  }
-
-  public fetchJSONDataAndLoad = async (uidlLink: string) => {
-    const result = await fetch(uidlLink)
-    try {
-      if (result.status !== 200) throw new Error(result.statusText)
-
-      const jsonData = await result.json()
-      this.setState(
-        {
-          inputJson: jsonPrettify(jsonData),
-          externalLink: true,
-          sourceJSON: 'externalLink',
-          showErrorPanel: false,
-          error: null,
-        },
-        this.handleInputChange
-      )
-
-      return true
-    } catch (error) {
-      // tslint:disable-next-line:no-console
-      console.error('Cannot fetch UIDL', error)
-      return false
-    }
+    fetchJSONDataAndLoad(uidlLink)
+      .then((response) => {
+        if (response) {
+          this.setState(
+            {
+              inputJson: jsonPrettify(response),
+              externalLink: true,
+              sourceJSON: 'externalLink',
+              showErrorPanel: false,
+              error: null,
+            },
+            this.handleInputChange
+          )
+          return true
+        }
+      })
+      .catch(() => {
+        return false
+      })
   }
 
   public handleJSONUpdate = (inputJson: string) => {
@@ -236,7 +258,29 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     return samples
   }
 
+  public generateSharableLink = () => {
+    this.setState({ showShareableLinkModal: true, isLoading: true }, async () => {
+      try {
+        const response = await uploadUIDLJSON(this.state.inputJson)
+        const { fileName } = response
+        if (fileName) {
+          this.setState({
+            isLoading: false,
+            shareableLink: `https://repl.teleporthq.io/?uidlLink=${fileName}`,
+            showShareableLinkModal: true,
+          })
+        }
+      } catch (err) {
+        this.setState({
+          isLoading: false,
+          showShareableLinkModal: false,
+        })
+      }
+    })
+  }
+
   public render() {
+    const { showShareableLinkModal, isLoading } = this.state
     return (
       <div className="main-content">
         <div className="editor">
@@ -249,6 +293,43 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             <div className="editor-header-section">
               <h3>UIDL</h3>
             </div>
+            <button className="share-button" onClick={() => this.generateSharableLink()}>
+              Share UIDL
+            </button>
+            <Modal
+              isOpen={showShareableLinkModal}
+              style={Code.customStyle}
+              ariaHideApp={false}
+            >
+              <div>
+                {isLoading && <Loader />}
+                {!isLoading && (
+                  <>
+                    <div className="shareable-link">{this.state.shareableLink}</div>
+                    <div>
+                      <CopyToClipboard
+                        text={this.state.shareableLink}
+                        onCopy={() => this.setState({ copied: true })}
+                      >
+                        <button className="close-button">Copy</button>
+                      </CopyToClipboard>
+                      <button
+                        className="close-button"
+                        onClick={() =>
+                          this.setState({
+                            showShareableLinkModal: false,
+                            isLoading: false,
+                          })
+                        }
+                      >
+                        Close
+                      </button>
+                    </div>
+                    {this.state.copied && <div className="copied-text">Copied !!</div>}
+                  </>
+                )}
+              </div>
+            </Modal>
           </div>
           <div className="code-wrapper">
             <CodeEditor
@@ -387,6 +468,48 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               padding-left: 50px;
             }
 
+            .shareable-link {
+              background-color: var(--link-grey);
+              padding: 10px;
+              border-radius: 4px;
+              border: 1px solid var(--editor-scrollbar-color);
+            }
+
+            .close-button {
+              margin-top: 15px;
+              padding: 5px;
+              background-color: var(--color-purple);
+              color: #fff;
+              font-size: 15px;
+              letter-spacing: 0.6px;
+              display: inline-block;
+              border-radius: 4px;
+              cursor: pointer;
+            }
+
+            .share-button {
+              color: var(--color-purple);
+              padding: 6px;
+              margin-left: 15px;
+              background-color: #fff;
+              font-size: 14px;
+              border-radius: 4px;
+              cursor: pointer;
+            }
+
+            .copied-text {
+              padding: 5px;
+              margin-top: 10px;
+              line-height: 10px;
+              font-size; 12px;
+              margin-bottom: 10px;
+              border-radius: 6px;
+              background-color: var(--success-green);
+              border: 1px solid var(--success-green);
+              color: #fff;
+              display: inline-block;
+            }
+
             @media screen and (max-width: 992px) {
               .editor h3 {
                 display: none;
@@ -399,7 +522,17 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 }
 
-const CodeScreen = withRouter(Code)
+const withCustomRouter = (ReplCode) => {
+  return withRouter(({ router, ...props }) => {
+    if (router && router.asPath) {
+      const query = queryString.parse(router.asPath.split(/\?/)[1])
+      router = { ...router, query }
+      return <ReplCode router={router} {...props} />
+    }
+  })
+}
+
+const CodeScreen = withCustomRouter(Code)
 export { CodeScreen }
 
 const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
