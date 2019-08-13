@@ -9,7 +9,15 @@ import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 
 import { createReactComponentGenerator } from '@teleporthq/teleport-component-generator-react'
 import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
-import { UIDLTypes, GeneratorTypes, ComponentGenerator } from '@teleporthq/teleport-types'
+import { createPreactComponentGenerator } from '@teleporthq/teleport-component-generator-preact'
+import { createStencilComponentGenerator } from '@teleporthq/teleport-component-generator-stencil'
+import { createAngularComponentGenerator } from '@teleporthq/teleport-component-generator-angular'
+import {
+  UIDLTypes,
+  GeneratorTypes,
+  ComponentGenerator,
+  GeneratedFile,
+} from '@teleporthq/teleport-types'
 
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import navbar from '../../inputs/navbar.json'
@@ -32,17 +40,32 @@ import Loader from '../Loader'
 
 const vueGenerator = createVueComponentGenerator()
 
-const reactStylesPlugins = [
-  'InlineStyles',
-  'JSS',
-  'StyledJSX',
-  'CSSModules',
+const stencilGenerator = createStencilComponentGenerator()
+
+const angularGenerator = createAngularComponentGenerator()
+
+const reactStylePlugins = [
   'StyledComponents',
+  'StyledJSX',
+  'JSS',
+  'CSSModules',
+  'CSS',
+  'InlineStyles',
 ]
-const reactGenerators: Record<string, ComponentGenerator> = reactStylesPlugins.reduce(
+const reactGenerators: Record<string, ComponentGenerator> = reactStylePlugins.reduce(
   (table, plugin) => ({
     ...table,
     [plugin]: createReactComponentGenerator(plugin),
+  }),
+  {}
+)
+
+const preactStylePlugins = ['CSS', 'CSSModules', 'InlineStyles']
+
+const preactGenerators: Record<string, ComponentGenerator> = preactStylePlugins.reduce(
+  (table, plugin) => ({
+    ...table,
+    [plugin]: createPreactComponentGenerator(plugin),
   }),
   {}
 )
@@ -102,7 +125,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       sourceJSON: 'simple-component',
       inputJson: jsonPrettify(uidlSamples['simple-component']),
       targetLibrary: 'react',
-      libraryFlavor: 'StyledJSX',
+      libraryFlavor: 'CSS',
       externalLink: false,
       showErrorPanel: false,
       showShareableLinkModal: false,
@@ -177,9 +200,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       return
     }
 
-    const generatorSelectorString =
-      libraryFlavor.length > 0 ? `${targetLibrary}.${libraryFlavor}` : targetLibrary
-    const generator = chooseGenerator(generatorSelectorString)
+    const generator = chooseGenerator(targetLibrary, libraryFlavor)
 
     try {
       const result: GeneratorTypes.CompiledComponent = await generator.generateComponent(
@@ -189,13 +210,14 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         }
       )
 
-      const component = result.files[0]
-      if (!component) {
+      const code = concatenateAllFiles(result.files)
+      if (!code) {
         // tslint:disable-next-line:no-console
         console.log('no content')
         return
       }
-      this.setState({ generatedCode: component.content }, Prism.highlightAll)
+
+      this.setState({ generatedCode: code }, Prism.highlightAll)
     } catch (err) {
       this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
@@ -221,8 +243,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public handleTargetChange = (target: string) => {
-    const libraryFlavor = target === 'react' ? 'StyledJSX' : ''
-    this.setState({ targetLibrary: target, libraryFlavor }, this.handleInputChange)
+    this.setState({ targetLibrary: target, libraryFlavor: 'CSS' }, this.handleInputChange)
   }
 
   public handleFlavourChange = (flavor: { target: { value: string } }) => {
@@ -235,13 +256,15 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
   public renderDropDownFlavour = () => {
     const { targetLibrary } = this.state
-    if (targetLibrary !== 'react') {
+    if (targetLibrary !== 'react' && targetLibrary !== 'preact') {
       return null
     }
 
+    const plugins = targetLibrary === 'react' ? reactStylePlugins : preactStylePlugins
+
     return (
       <DropDown
-        list={reactStylesPlugins}
+        list={plugins}
         onChoose={this.handleFlavourChange}
         value={this.state.libraryFlavor}
       />
@@ -539,16 +562,41 @@ const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
   return JSON.stringify(json, null, 2)
 }
 
-const libraries = ['react', 'vue']
-const chooseGenerator = (flavor: string) => {
-  const [library, plugin] = flavor.split('.')
+const libraries = ['angular', 'preact', 'react', 'stencil', 'vue']
+const chooseGenerator = (library: string, stylePlugin: string) => {
   if (library === 'vue') {
     return vueGenerator
   }
 
-  if (library === 'react') {
-    return reactGenerators[plugin]
+  if (library === 'preact') {
+    return preactGenerators[stylePlugin]
   }
 
-  return reactGenerators.InlineStyles
+  if (library === 'angular') {
+    return angularGenerator
+  }
+
+  if (library === 'stencil') {
+    return stencilGenerator
+  }
+
+  if (library === 'react') {
+    return reactGenerators[stylePlugin]
+  }
+
+  return reactGenerators.CSS
+}
+
+const concatenateAllFiles = (files: GeneratedFile[]) => {
+  if (files.length === 1) {
+    return files[0].content
+  }
+
+  return files.reduce((accCode, file) => {
+    accCode += `// ${file.name}.${file.fileType}\n`
+    accCode += file.content
+    accCode += '\n'
+
+    return accCode
+  }, '')
 }
