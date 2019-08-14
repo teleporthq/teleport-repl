@@ -4,9 +4,8 @@ import { withRouter } from 'next/router'
 import Prism from 'prismjs'
 import Modal from 'react-modal'
 import queryString from 'query-string'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
-
+import { copyToClipboard } from 'copy-lite'
 import { createReactComponentGenerator } from '@teleporthq/teleport-component-generator-react'
 import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
 import { createPreactComponentGenerator } from '@teleporthq/teleport-component-generator-preact'
@@ -303,7 +302,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public render() {
-    const { showShareableLinkModal, isLoading } = this.state
+    const { showShareableLinkModal, isLoading, shareableLink } = this.state
     return (
       <div className="main-content">
         <div className="editor">
@@ -328,14 +327,19 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
                 {isLoading && <Loader />}
                 {!isLoading && (
                   <>
-                    <div className="shareable-link">{this.state.shareableLink}</div>
+                    <div className="shareable-link">{shareableLink}</div>
                     <div>
-                      <CopyToClipboard
-                        text={this.state.shareableLink}
-                        onCopy={() => this.setState({ copied: true })}
-                      >
-                        <button className="close-button">Copy</button>
-                      </CopyToClipboard>
+                      {shareableLink && (
+                        <button
+                          className="close-button"
+                          onClick={() => {
+                            copyToClipboard(shareableLink)
+                            this.setState({ copied: true })
+                          }}
+                        >
+                          Copy
+                        </button>
+                      )}
                       <button
                         className="close-button"
                         onClick={() =>
@@ -371,9 +375,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               selected={this.state.targetLibrary}
               onChoose={this.handleTargetChange}
             />
-            <div className="editor-header-section">
-              <h3>GENERATED CODE</h3>
-            </div>
             {this.renderDropDownFlavour()}
           </div>
           <div className="code-wrapper">
