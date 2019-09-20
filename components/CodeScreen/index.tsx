@@ -6,16 +6,14 @@ import Modal from 'react-modal'
 import queryString from 'query-string'
 import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 import { copyToClipboard } from 'copy-lite'
-import { createReactComponentGenerator } from '@teleporthq/teleport-component-generator-react'
 import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
-import { createPreactComponentGenerator } from '@teleporthq/teleport-component-generator-preact'
 import { createStencilComponentGenerator } from '@teleporthq/teleport-component-generator-stencil'
 import { createAngularComponentGenerator } from '@teleporthq/teleport-component-generator-angular'
 import {
-  UIDLTypes,
-  GeneratorTypes,
+  CompiledComponent,
   ComponentGenerator,
   GeneratedFile,
+  ComponentUIDL,
 } from '@teleporthq/teleport-types'
 
 import simpleComponentUIDL from '../../inputs/simple-component.json'
@@ -36,56 +34,50 @@ import { DropDown } from '../DropDown'
 import { Tabs } from '../Tabs'
 import { ErrorPanel } from '../ErrorPanel'
 import Loader from '../Loader'
+import { createAllPreactStyleFlavors, createAllReactStyleFlavors } from './utils'
+import { ReactStyleVariation } from '@teleporthq/teleport-component-generator-react'
+import { PreactStyleVariation } from '@teleporthq/teleport-component-generator-preact'
 
-const vueGenerator = createVueComponentGenerator()
+enum ComponentType {
+  REACT = 'React',
+  VUE = 'Vue',
+  PREACT = 'Preact',
+  STENCIL = 'Stencil',
+  ANGULAR = 'Angular',
+}
 
-const stencilGenerator = createStencilComponentGenerator()
+type GeneratorsCache = Record<
+  ComponentType,
+  ComponentGenerator | Record<string, ComponentGenerator>
+>
 
-const angularGenerator = createAngularComponentGenerator()
+type StyleVariation = ReactStyleVariation | PreactStyleVariation
 
-const reactStylePlugins = [
-  'StyledComponents',
-  'StyledJSX',
-  'JSS',
-  'CSSModules',
-  'CSS',
-  'InlineStyles',
-]
-const reactGenerators: Record<string, ComponentGenerator> = reactStylePlugins.reduce(
-  (table, plugin) => ({
-    ...table,
-    [plugin]: createReactComponentGenerator(plugin),
-  }),
-  {}
-)
+const generatorsCache: GeneratorsCache = {
+  [ComponentType.ANGULAR]: createAngularComponentGenerator(),
+  [ComponentType.VUE]: createVueComponentGenerator(),
+  [ComponentType.STENCIL]: createStencilComponentGenerator(),
+  [ComponentType.REACT]: createAllReactStyleFlavors(),
+  [ComponentType.PREACT]: createAllPreactStyleFlavors(),
+}
 
-const preactStylePlugins = ['CSS', 'CSSModules', 'InlineStyles']
-
-const preactGenerators: Record<string, ComponentGenerator> = preactStylePlugins.reduce(
-  (table, plugin) => ({
-    ...table,
-    [plugin]: createPreactComponentGenerator(plugin),
-  }),
-  {}
-)
-
-const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
-  'simple-component': simpleComponentUIDL,
-  navbar,
-  'contact-form': contactForm,
-  'person-spotlight': personSpotlight,
-  'person-list': personList,
-  'complex-component': complexComponentUIDL,
-  'expandable-area': expandableArealUIDL,
-  'tab-selector': tabSelector,
+const uidlSamples: Record<string, ComponentUIDL> = {
+  'simple-component': simpleComponentUIDL as ComponentUIDL,
+  navbar: (navbar as unknown) as ComponentUIDL,
+  'contact-form': (contactForm as unknown) as ComponentUIDL,
+  'person-spotlight': (personSpotlight as unknown) as ComponentUIDL,
+  'person-list': (personList as unknown) as ComponentUIDL,
+  'complex-component': (complexComponentUIDL as unknown) as ComponentUIDL,
+  'expandable-area': (expandableArealUIDL as unknown) as ComponentUIDL,
+  'tab-selector': (tabSelector as unknown) as ComponentUIDL,
 }
 
 interface CodeScreenState {
   generatedCode: string
-  targetLibrary: string
+  targetLibrary: ComponentType
   inputJson: string
   sourceJSON: string
-  libraryFlavor: string
+  libraryFlavor: StyleVariation
   externalLink: boolean
   showErrorPanel: boolean
   showShareableLinkModal: boolean
@@ -123,8 +115,8 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       generatedCode: '',
       sourceJSON: 'simple-component',
       inputJson: jsonPrettify(uidlSamples['simple-component']),
-      targetLibrary: 'react',
-      libraryFlavor: 'CSS',
+      targetLibrary: ComponentType.REACT,
+      libraryFlavor: ReactStyleVariation.CSSModules,
       externalLink: false,
       showErrorPanel: false,
       showShareableLinkModal: false,
@@ -202,12 +194,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     const generator = chooseGenerator(targetLibrary, libraryFlavor)
 
     try {
-      const result: GeneratorTypes.CompiledComponent = await generator.generateComponent(
-        jsonValue,
-        {
-          mapping: customMapping, // Temporary fix for svg's while the `line` element is converted to `hr` in the generators
-        }
-      )
+      const result: CompiledComponent = await generator.generateComponent(jsonValue, {
+        mapping: customMapping, // Temporary fix for svg's while the `line` element is converted to `hr` in the generators
+      })
 
       const code = concatenateAllFiles(result.files)
       if (!code) {
@@ -242,7 +231,13 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public handleTargetChange = (target: string) => {
-    this.setState({ targetLibrary: target, libraryFlavor: 'CSS' }, this.handleInputChange)
+    this.setState(
+      {
+        targetLibrary: target as ComponentType,
+        libraryFlavor: ReactStyleVariation.CSSModules,
+      },
+      this.handleInputChange
+    )
   }
 
   public handleFlavourChange = (flavor: { target: { value: string } }) => {
@@ -250,20 +245,21 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       target: { value },
     } = flavor
 
-    this.setState({ libraryFlavor: value }, this.handleInputChange)
+    this.setState({ libraryFlavor: value as StyleVariation }, this.handleInputChange)
   }
 
   public renderDropDownFlavour = () => {
     const { targetLibrary } = this.state
-    if (targetLibrary !== 'react' && targetLibrary !== 'preact') {
+    if (targetLibrary !== ComponentType.REACT && targetLibrary !== ComponentType.PREACT) {
       return null
     }
 
-    const plugins = targetLibrary === 'react' ? reactStylePlugins : preactStylePlugins
+    const flavors =
+      targetLibrary === ComponentType.REACT ? ReactStyleVariation : PreactStyleVariation
 
     return (
       <DropDown
-        list={plugins}
+        list={Object.values(flavors)}
         onChoose={this.handleFlavourChange}
         value={this.state.libraryFlavor}
       />
@@ -371,7 +367,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         <div className="editor">
           <div className="editor-header previewer-header">
             <Tabs
-              options={libraries}
+              options={Object.values(ComponentType)}
               selected={this.state.targetLibrary}
               onChoose={this.handleTargetChange}
             />
@@ -559,33 +555,18 @@ const withCustomRouter = (ReplCode) => {
 const CodeScreen = withCustomRouter(Code)
 export { CodeScreen }
 
-const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
+const jsonPrettify = (json: ComponentUIDL): string => {
   return JSON.stringify(json, null, 2)
 }
 
-const libraries = ['angular', 'preact', 'react', 'stencil', 'vue']
-const chooseGenerator = (library: string, stylePlugin: string) => {
-  if (library === 'vue') {
-    return vueGenerator
+const chooseGenerator = (library: ComponentType, stylePlugin: string) => {
+  const generator = generatorsCache[library]
+
+  if (typeof generator.generateComponent === 'function') {
+    return generator as ComponentGenerator
   }
 
-  if (library === 'preact') {
-    return preactGenerators[stylePlugin]
-  }
-
-  if (library === 'angular') {
-    return angularGenerator
-  }
-
-  if (library === 'stencil') {
-    return stencilGenerator
-  }
-
-  if (library === 'react') {
-    return reactGenerators[stylePlugin]
-  }
-
-  return reactGenerators.CSS
+  return (generator as Record<string, ComponentGenerator>)[stylePlugin]
 }
 
 const concatenateAllFiles = (files: GeneratedFile[]) => {
