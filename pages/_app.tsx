@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app'
+import App, { AppContext } from 'next/app'
 import Head from 'next/head'
 import React from 'react'
 
@@ -7,7 +7,7 @@ const DEFAULT_DESCRIPTION = 'teleportHQ REPL'
 const DEFAULT_KEYWORDS = 'teleportHQ REPL'
 
 export default class MyApp extends App {
-  public static async getInitialProps({ Component, ctx }: any) {
+  public static async getInitialProps({ Component, ctx }: AppContext) {
     let pageProps = {}
 
     if (Component.getInitialProps) {
@@ -20,7 +20,7 @@ export default class MyApp extends App {
   public render() {
     const { Component, pageProps } = this.props
     return (
-      <Container>
+      <>
         <Head>
           <script
             async
@@ -63,7 +63,7 @@ export default class MyApp extends App {
           />
         </Head>
         <Component {...pageProps} />
-      </Container>
+      </>
     )
   }
 }

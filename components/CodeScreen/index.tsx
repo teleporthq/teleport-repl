@@ -1,42 +1,40 @@
-import React from 'react'
-import dynamic from 'next/dynamic'
-import { withRouter } from 'next/router'
-import Prism from 'prismjs'
-import Modal from 'react-modal'
-import queryString from 'query-string'
-import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
-import { copyToClipboard } from 'copy-lite'
-import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
-import { createStencilComponentGenerator } from '@teleporthq/teleport-component-generator-stencil'
 import { createAngularComponentGenerator } from '@teleporthq/teleport-component-generator-angular'
+import { PreactStyleVariation } from '@teleporthq/teleport-component-generator-preact'
+import { ReactStyleVariation } from '@teleporthq/teleport-component-generator-react'
+import { createStencilComponentGenerator } from '@teleporthq/teleport-component-generator-stencil'
+import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
 import {
   CompiledComponent,
   ComponentGenerator,
-  GeneratedFile,
   ComponentUIDL,
+  GeneratedFile,
 } from '@teleporthq/teleport-types'
-
-import simpleComponentUIDL from '../../inputs/simple-component.json'
-import navbar from '../../inputs/navbar.json'
-import contactForm from '../../inputs/contact-form.json'
-import personSpotlight from '../../inputs/person-spotlight.json'
-import personList from '../../inputs/person-list.json'
+import { copyToClipboard } from 'copy-lite'
+import dynamic from 'next/dynamic'
+import { withRouter } from 'next/router'
+import Prism from 'prismjs'
+import queryString from 'query-string'
+import React from 'react'
+import Modal from 'react-modal'
 import complexComponentUIDL from '../../inputs/complex-component.json'
+import contactForm from '../../inputs/contact-form.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
-import tabSelector from '../../inputs/tab-selector.json'
+import navbar from '../../inputs/navbar.json'
+import personList from '../../inputs/person-list.json'
+import personSpotlight from '../../inputs/person-spotlight.json'
 import customMapping from '../../inputs/repl-mapping.json'
+import simpleComponentUIDL from '../../inputs/simple-component.json'
+import tabSelector from '../../inputs/tab-selector.json'
+import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
+import { DropDown } from '../DropDown'
+import { ErrorPanel } from '../ErrorPanel'
+import Loader from '../Loader'
+import { Tabs } from '../Tabs'
+import { createAllPreactStyleFlavors, createAllReactStyleFlavors } from './utils'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
 })
-
-import { DropDown } from '../DropDown'
-import { Tabs } from '../Tabs'
-import { ErrorPanel } from '../ErrorPanel'
-import Loader from '../Loader'
-import { createAllPreactStyleFlavors, createAllReactStyleFlavors } from './utils'
-import { ReactStyleVariation } from '@teleporthq/teleport-component-generator-react'
-import { PreactStyleVariation } from '@teleporthq/teleport-component-generator-preact'
 
 enum ComponentType {
   REACT = 'React',
@@ -542,14 +540,16 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 }
 
-const withCustomRouter = (ReplCode) => {
-  return withRouter(({ router, ...props }) => {
-    if (router && router.asPath) {
-      const query = queryString.parse(router.asPath.split(/\?/)[1])
-      router = { ...router, query }
-      return <ReplCode router={router} {...props} />
+const withCustomRouter = (ReplCode: any) => {
+  return withRouter(
+    ({ router, ...props }: any): any => {
+      if (router && router.asPath) {
+        const query = queryString.parse(router.asPath.split(/\?/)[1])
+        router = { ...router, query }
+        return <ReplCode router={router} {...props} />
+      }
     }
-  })
+  )
 }
 
 const CodeScreen = withCustomRouter(Code)
