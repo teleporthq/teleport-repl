@@ -71,7 +71,7 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           margin-bottom: 5px;
         }
         .error-item::before {
-          content: '\\2663';
+          content: '♣️';
           height: 1em;
           font-size: 0.65em;
           line-height: 1;
