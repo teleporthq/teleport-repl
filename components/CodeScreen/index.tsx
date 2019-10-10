@@ -306,9 +306,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
-            <div className="editor-header-section">
-              <h3>UIDL</h3>
-            </div>
             <button className="share-button" onClick={() => this.generateSharableLink()}>
               Share UIDL
             </button>
@@ -408,23 +405,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               flex-direction: row;
               border-bottom: solid 1px #cccccc20;
               padding: 10px 10px;
-            }
-            .editor-header-section {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 100%;
-              position: absolute;
-              height: 30px;
-              z-index: -1;
-            }
-
-            .editor h3 {
-              margin: 0;
-              padding: 0;
-              color:  var(--editor-white-50);
-              font-weight: 300;
-              font-size: 14px;
             }
 
             .code-wrapper {
@@ -526,13 +506,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               border: 1px solid var(--success-green);
               color: #fff;
               display: inline-block;
-            }
-
-            @media screen and (max-width: 992px) {
-              .editor h3 {
-                display: none;
-              }
-
             }
           `}</style>
       </div>
