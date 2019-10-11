@@ -298,11 +298,13 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
                 padding: 20px 15px;
                 display: grid;
                 grid-template-rows: 1fr 1fr;
-                grid-gap: 50px;
+                grid-gap: 4%;
+                justify-content: normal;
+                overflow-y: scroll;
               }
               .editor{
                 width: 99%;
-                height: 100%;
+                height: calc(100% - 30px);
               }
             }
             .editor-header {
