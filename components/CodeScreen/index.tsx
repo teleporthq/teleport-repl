@@ -357,7 +357,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChange={this.handleJSONUpdate}
             />
           </div>
-          <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <div className="editor">
           <div className="editor-header previewer-header">
@@ -377,6 +376,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               </div>
             </div>
           </div>
+          <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <style jsx>{`
             .main-content {
