@@ -54,7 +54,7 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           background-color: #5f5959;
           border-radius: 50%;
           width: 20px;
-          height: 20px;
+          height: 15px;
           margin-left: 10px;
           display: inline-block;
           text-align: center;

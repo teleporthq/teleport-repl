@@ -49,7 +49,6 @@ const DropDown: React.SFC<DropDownProps> = (props) => {
           content: '▼';
           height: 1em;
           font-size: 0.625em;
-          line-height: 1;
           right: 1.2em;
           top: 50%;
           margin-top: -0.5em;
