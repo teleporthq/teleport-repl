@@ -29,7 +29,6 @@ import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 import { DropDown } from '../DropDown'
 import { ErrorPanel } from '../ErrorPanel'
 import Loader from '../Loader'
-import { Tabs } from '../Tabs'
 import { createAllPreactStyleFlavors, createAllReactStyleFlavors } from './utils'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
@@ -228,10 +227,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     )
   }
 
-  public handleTargetChange = (target: string) => {
+  public handleTargetChange = (ev: { target: { value: string } }) => {
     this.setState(
       {
-        targetLibrary: target as ComponentType,
+        targetLibrary: ev.target.value as ComponentType,
         libraryFlavor: ReactStyleVariation.CSSModules,
       },
       this.handleInputChange
@@ -360,10 +359,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         </div>
         <div className="editor">
           <div className="editor-header previewer-header">
-            <Tabs
-              options={Object.values(ComponentType)}
-              selected={this.state.targetLibrary}
+            <DropDown
+              list={Object.values(ComponentType)}
               onChoose={this.handleTargetChange}
+              value={this.state.targetLibrary}
             />
             {this.renderDropDownFlavour()}
           </div>
