@@ -8,6 +8,8 @@ import 'brace/mode/javascript'
 
 import 'brace/theme/monokai'
 
+import 'brace/ext/searchbox';
+
 interface EditorProps {
   mode: 'jsx' | 'json' | 'javascript' | 'html'
   editorDomId: string
