@@ -366,7 +366,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             />
             {this.renderDropDownFlavour()}
           </div>
-          <div className="code-wrapper">
+          <div className="code-wrapper ace_scrollbar ace_scrollbar-h ace_scrollbar-v ace-monokai">
             <div className="preview-scroller-y">
               <div className="preview-scroller-x">
                 <pre className="previewer">
@@ -378,6 +378,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <style jsx>{`
+            ::-webkit-scrollbar-corner{
+                background: #272822;
+            }
+
             .main-content {
               display: flex;
               padding-top 20px;
@@ -410,7 +414,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               height: calc(100% - 30px);
               position: relative;
               overflow: auto;
-              background: var(--editor-bg-black);
             }
 
             .preview-scroller-y {
