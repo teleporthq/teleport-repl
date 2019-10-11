@@ -16,6 +16,8 @@ const AppPage: React.SFC = (props) => {
           --editor-bg-black: #2d2d2d;
           --editor-bt-text-color: #1e6cb3;
           --editor-scrollbar-color: #494646b3;
+          --link-grey: #ddd;
+          --success-green: #2cbe4e;
         }
 
         html,

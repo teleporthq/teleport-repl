@@ -54,7 +54,7 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           background-color: #5f5959;
           border-radius: 50%;
           width: 20px;
-          height: 20px;
+          height: 15px;
           margin-left: 10px;
           display: inline-block;
           text-align: center;
@@ -71,7 +71,7 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           margin-bottom: 5px;
         }
         .error-item::before {
-          content: '\\2663';
+          content: '♣️';
           height: 1em;
           font-size: 0.65em;
           line-height: 1;

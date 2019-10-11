@@ -1,60 +1,86 @@
-import React from 'react'
+import { createAngularComponentGenerator } from '@teleporthq/teleport-component-generator-angular'
+import { PreactStyleVariation } from '@teleporthq/teleport-component-generator-preact'
+import { ReactStyleVariation } from '@teleporthq/teleport-component-generator-react'
+import { createStencilComponentGenerator } from '@teleporthq/teleport-component-generator-stencil'
+import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
+import {
+  CompiledComponent,
+  ComponentGenerator,
+  ComponentUIDL,
+  GeneratedFile,
+} from '@teleporthq/teleport-types'
+import { copyToClipboard } from 'copy-lite'
 import dynamic from 'next/dynamic'
 import { withRouter } from 'next/router'
 import Prism from 'prismjs'
-
-import {
-  createReactComponentGenerator,
-  createVueComponentGenerator,
-  UIDLTypes,
-  GeneratorTypes,
-} from '@teleporthq/teleport-code-generators'
-import { ReactComponentStylingFlavors } from '@teleporthq/teleport-code-generators/dist/component-generators/react/react-component'
-
-import newComponentUIDL from '../../inputs/new-component.json'
-import oneComponentUIDL from '../../inputs/one-component.json'
-import modalWindowUIDL from '../../inputs/modal-window.json'
-import modalUIDL from '../../inputs/modal.json'
+import queryString from 'query-string'
+import React from 'react'
+import Modal from 'react-modal'
+import complexComponentUIDL from '../../inputs/complex-component.json'
+import contactForm from '../../inputs/contact-form.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
+import navbar from '../../inputs/navbar.json'
+import personList from '../../inputs/person-list.json'
+import personSpotlight from '../../inputs/person-spotlight.json'
+import customMapping from '../../inputs/repl-mapping.json'
+import simpleComponentUIDL from '../../inputs/simple-component.json'
+import tabSelector from '../../inputs/tab-selector.json'
+import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
+import { DropDown } from '../DropDown'
+import { ErrorPanel } from '../ErrorPanel'
+import Loader from '../Loader'
+import { createAllPreactStyleFlavors, createAllReactStyleFlavors } from './utils'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
 })
 
-import { DropDown } from '../DropDown'
-import { Tabs } from '../Tabs'
-import { ErrorPanel } from '../ErrorPanel'
+enum ComponentType {
+  REACT = 'React',
+  VUE = 'Vue',
+  PREACT = 'Preact',
+  STENCIL = 'Stencil',
+  ANGULAR = 'Angular',
+}
 
-const vueGenerator = createVueComponentGenerator()
-const reactInlineStylesGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.InlineStyles,
-})
-const reactJSSGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.JSS,
-})
-const reactStyledJSXGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.StyledJSX,
-})
-const reactCSSModulesGenerator = createReactComponentGenerator({
-  variation: ReactComponentStylingFlavors.CSSModules,
-})
+type GeneratorsCache = Record<
+  ComponentType,
+  ComponentGenerator | Record<string, ComponentGenerator>
+>
 
-const uidlSamples: Record<string, UIDLTypes.ComponentUIDL> = {
-  'new-component': newComponentUIDL,
-  'one-component': oneComponentUIDL,
-  'modal-window': modalWindowUIDL,
-  modal: modalUIDL,
-  'expandable-area': expandableArealUIDL,
+type StyleVariation = ReactStyleVariation | PreactStyleVariation
+
+const generatorsCache: GeneratorsCache = {
+  [ComponentType.ANGULAR]: createAngularComponentGenerator(),
+  [ComponentType.VUE]: createVueComponentGenerator(),
+  [ComponentType.STENCIL]: createStencilComponentGenerator(),
+  [ComponentType.REACT]: createAllReactStyleFlavors(),
+  [ComponentType.PREACT]: createAllPreactStyleFlavors(),
+}
+
+const uidlSamples: Record<string, ComponentUIDL> = {
+  'simple-component': simpleComponentUIDL as ComponentUIDL,
+  navbar: (navbar as unknown) as ComponentUIDL,
+  'contact-form': (contactForm as unknown) as ComponentUIDL,
+  'person-spotlight': (personSpotlight as unknown) as ComponentUIDL,
+  'person-list': (personList as unknown) as ComponentUIDL,
+  'complex-component': (complexComponentUIDL as unknown) as ComponentUIDL,
+  'expandable-area': (expandableArealUIDL as unknown) as ComponentUIDL,
+  'tab-selector': (tabSelector as unknown) as ComponentUIDL,
 }
 
 interface CodeScreenState {
   generatedCode: string
-  targetLibrary: string
+  targetLibrary: ComponentType
   inputJson: string
   sourceJSON: string
-  libraryFlavor: string
+  libraryFlavor: StyleVariation
   externalLink: boolean
   showErrorPanel: boolean
+  showShareableLinkModal: boolean
+  isLoading: boolean
+  shareableLink?: string
+  copied: boolean
   error: any
 }
 
@@ -63,16 +89,36 @@ interface CodeProps {
 }
 
 class Code extends React.Component<CodeProps, CodeScreenState> {
+  public static customStyle: ReactModal.Styles = {
+    overlay: {
+      zIndex: 10,
+    },
+    content: {
+      textAlign: 'center',
+      color: '#000',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      borderRadius: '4px',
+      transform: 'translate(-50%, -50%)',
+    },
+  }
+
   constructor(props: CodeProps) {
     super(props)
     this.state = {
       generatedCode: '',
-      sourceJSON: 'new-component',
-      inputJson: jsonPrettify(uidlSamples['new-component']),
-      targetLibrary: 'react',
-      libraryFlavor: 'StyledJSX',
+      sourceJSON: 'simple-component',
+      inputJson: jsonPrettify(uidlSamples['simple-component']),
+      targetLibrary: ComponentType.REACT,
+      libraryFlavor: ReactStyleVariation.CSSModules,
       externalLink: false,
       showErrorPanel: false,
+      showShareableLinkModal: false,
+      isLoading: false,
+      copied: false,
       error: null,
     }
   }
@@ -100,32 +146,25 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       return false
     }
 
-    return this.fetchJSONDataAndLoad(uidlLink)
-  }
-
-  public fetchJSONDataAndLoad = async (uidlLink: string) => {
-    const result = await fetch(uidlLink)
-    try {
-      if (result.status !== 200) throw new Error(result.statusText)
-
-      const jsonData = await result.json()
-      this.setState(
-        {
-          inputJson: jsonPrettify(jsonData),
-          externalLink: true,
-          sourceJSON: 'externalLink',
-          showErrorPanel: false,
-          error: null,
-        },
-        this.handleInputChange
-      )
-
-      return true
-    } catch (error) {
-      // tslint:disable-next-line:no-console
-      console.error('Cannot fetch UIDL', error)
-      return false
-    }
+    fetchJSONDataAndLoad(uidlLink)
+      .then((response) => {
+        if (response) {
+          this.setState(
+            {
+              inputJson: jsonPrettify(response),
+              externalLink: true,
+              sourceJSON: 'externalLink',
+              showErrorPanel: false,
+              error: null,
+            },
+            this.handleInputChange
+          )
+          return true
+        }
+      })
+      .catch(() => {
+        return false
+      })
   }
 
   public handleJSONUpdate = (inputJson: string) => {
@@ -149,22 +188,21 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       return
     }
 
-    const generatorSelectorString =
-      libraryFlavor.length > 0 ? `${targetLibrary}.${libraryFlavor}` : targetLibrary
-    const generator = chooseGenerator(generatorSelectorString)
+    const generator = chooseGenerator(targetLibrary, libraryFlavor)
 
     try {
-      const result: GeneratorTypes.CompiledComponent = await generator.generateComponent(
-        jsonValue
-      )
+      const result: CompiledComponent = await generator.generateComponent(jsonValue, {
+        mapping: customMapping, // Temporary fix for svg's while the `line` element is converted to `hr` in the generators
+      })
 
-      const component = result.files[0]
-      if (!component) {
+      const code = concatenateAllFiles(result.files)
+      if (!code) {
         // tslint:disable-next-line:no-console
         console.log('no content')
         return
       }
-      this.setState({ generatedCode: component.content }, Prism.highlightAll)
+
+      this.setState({ generatedCode: code }, Prism.highlightAll)
     } catch (err) {
       this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
@@ -189,9 +227,14 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     )
   }
 
-  public handleTargetChange = (target: string) => {
-    const libraryFlavor = target === 'react' ? 'StyledJSX' : ''
-    this.setState({ targetLibrary: target, libraryFlavor }, this.handleInputChange)
+  public handleTargetChange = (ev: { target: { value: string } }) => {
+    this.setState(
+      {
+        targetLibrary: ev.target.value as ComponentType,
+        libraryFlavor: ReactStyleVariation.CSSModules,
+      },
+      this.handleInputChange
+    )
   }
 
   public handleFlavourChange = (flavor: { target: { value: string } }) => {
@@ -199,18 +242,21 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       target: { value },
     } = flavor
 
-    this.setState({ libraryFlavor: value }, this.handleInputChange)
+    this.setState({ libraryFlavor: value as StyleVariation }, this.handleInputChange)
   }
 
   public renderDropDownFlavour = () => {
     const { targetLibrary } = this.state
-    if (targetLibrary !== 'react') {
+    if (targetLibrary !== ComponentType.REACT && targetLibrary !== ComponentType.PREACT) {
       return null
     }
 
+    const flavors =
+      targetLibrary === ComponentType.REACT ? ReactStyleVariation : PreactStyleVariation
+
     return (
       <DropDown
-        list={Object.values(ReactComponentStylingFlavors)}
+        list={Object.values(flavors)}
         onChoose={this.handleFlavourChange}
         value={this.state.libraryFlavor}
       />
@@ -227,7 +273,29 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     return samples
   }
 
+  public generateSharableLink = () => {
+    this.setState({ showShareableLinkModal: true, isLoading: true }, async () => {
+      try {
+        const response = await uploadUIDLJSON(this.state.inputJson)
+        const { fileName } = response
+        if (fileName) {
+          this.setState({
+            isLoading: false,
+            shareableLink: `https://repl.teleporthq.io/?uidlLink=${fileName}`,
+            showShareableLinkModal: true,
+          })
+        }
+      } catch (err) {
+        this.setState({
+          isLoading: false,
+          showShareableLinkModal: false,
+        })
+      }
+    })
+  }
+
   public render() {
+    const { showShareableLinkModal, isLoading, shareableLink } = this.state
     return (
       <div className="main-content">
         <div className="editor">
@@ -237,9 +305,48 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
-            <div className="editor-header-section">
-              <h3>UIDL</h3>
-            </div>
+            <button className="share-button" onClick={() => this.generateSharableLink()}>
+              Share UIDL
+            </button>
+            <Modal
+              isOpen={showShareableLinkModal}
+              style={Code.customStyle}
+              ariaHideApp={false}
+            >
+              <div>
+                {isLoading && <Loader />}
+                {!isLoading && (
+                  <>
+                    <div className="shareable-link">{shareableLink}</div>
+                    <div>
+                      {shareableLink && (
+                        <button
+                          className="close-button"
+                          onClick={() => {
+                            copyToClipboard(shareableLink)
+                            this.setState({ copied: true })
+                          }}
+                        >
+                          Copy
+                        </button>
+                      )}
+                      <button
+                        className="close-button"
+                        onClick={() =>
+                          this.setState({
+                            showShareableLinkModal: false,
+                            isLoading: false,
+                          })
+                        }
+                      >
+                        Close
+                      </button>
+                    </div>
+                    {this.state.copied && <div className="copied-text">Copied !!</div>}
+                  </>
+                )}
+              </div>
+            </Modal>
           </div>
           <div className="code-wrapper">
             <CodeEditor
@@ -249,18 +356,14 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChange={this.handleJSONUpdate}
             />
           </div>
-          <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <div className="editor">
           <div className="editor-header previewer-header">
-            <Tabs
-              options={generators}
-              selected={this.state.targetLibrary}
+            <DropDown
+              list={Object.values(ComponentType)}
               onChoose={this.handleTargetChange}
+              value={this.state.targetLibrary}
             />
-            <div className="editor-header-section">
-              <h3>GENERATED CODE</h3>
-            </div>
             {this.renderDropDownFlavour()}
           </div>
           <div className="code-wrapper">
@@ -272,6 +375,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               </div>
             </div>
           </div>
+          <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <style jsx>{`
             .main-content {
@@ -313,23 +417,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               flex-direction: row;
               border-bottom: solid 1px #cccccc20;
               padding: 10px 10px;
-            }
-            .editor-header-section {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: 100%;
-              position: absolute;
-              height: 30px;
-              z-index: -1;
-            }
-
-            .editor h3 {
-              margin: 0;
-              padding: 0;
-              color:  var(--editor-white-50);
-              font-weight: 300;
-              font-size: 14px;
             }
 
             .code-wrapper {
@@ -391,11 +478,46 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               padding-left: 50px;
             }
 
-            @media screen and (max-width: 992px) {
-              .editor h3 {
-                display: none;
-              }
+            .shareable-link {
+              background-color: var(--link-grey);
+              padding: 10px;
+              border-radius: 4px;
+              border: 1px solid var(--editor-scrollbar-color);
+            }
 
+            .close-button {
+              margin-top: 15px;
+              padding: 5px;
+              background-color: var(--color-purple);
+              color: #fff;
+              font-size: 15px;
+              letter-spacing: 0.6px;
+              display: inline-block;
+              border-radius: 4px;
+              cursor: pointer;
+            }
+
+            .share-button {
+              color: var(--color-purple);
+              padding: 6px;
+              margin-left: 15px;
+              background-color: #fff;
+              font-size: 14px;
+              border-radius: 4px;
+              cursor: pointer;
+            }
+
+            .copied-text {
+              padding: 5px;
+              margin-top: 10px;
+              line-height: 10px;
+              font-size; 12px;
+              margin-bottom: 10px;
+              border-radius: 6px;
+              background-color: var(--success-green);
+              border: 1px solid var(--success-green);
+              color: #fff;
+              display: inline-block;
             }
           `}</style>
       </div>
@@ -403,27 +525,45 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 }
 
-const CodeScreen = withRouter(Code)
+const withCustomRouter = (ReplCode: any) => {
+  return withRouter(
+    ({ router, ...props }: any): any => {
+      if (router && router.asPath) {
+        const query = queryString.parse(router.asPath.split(/\?/)[1])
+        router = { ...router, query }
+        return <ReplCode router={router} {...props} />
+      }
+    }
+  )
+}
+
+const CodeScreen = withCustomRouter(Code)
 export { CodeScreen }
 
-const jsonPrettify = (json: UIDLTypes.ComponentUIDL): string => {
+const jsonPrettify = (json: ComponentUIDL): string => {
   return JSON.stringify(json, null, 2)
 }
 
-const generators = ['react', 'vue']
-const chooseGenerator = (flavor: string) => {
-  switch (flavor) {
-    case 'react.InlineStyles':
-      return reactInlineStylesGenerator
-    case 'react.StyledJSX':
-      return reactStyledJSXGenerator
-    case 'react.JSS':
-      return reactJSSGenerator
-    case 'react.CSSModules':
-      return reactCSSModulesGenerator
-    case 'vue':
-      return vueGenerator
-    default:
-      return reactInlineStylesGenerator
+const chooseGenerator = (library: ComponentType, stylePlugin: string) => {
+  const generator = generatorsCache[library]
+
+  if (typeof generator.generateComponent === 'function') {
+    return generator as ComponentGenerator
   }
+
+  return (generator as Record<string, ComponentGenerator>)[stylePlugin]
+}
+
+const concatenateAllFiles = (files: GeneratedFile[]) => {
+  if (files.length === 1) {
+    return files[0].content
+  }
+
+  return files.reduce((accCode, file) => {
+    accCode += `// ${file.name}.${file.fileType}\n`
+    accCode += file.content
+    accCode += '\n'
+
+    return accCode
+  }, '')
 }

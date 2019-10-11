@@ -3,11 +3,11 @@
   "propDefinitions": {
     "title": {
       "type": "string",
-      "defaultValue": "Hello"
+      "defaultValue": "This whole area is clickable!"
     },
-    "text": {
+    "expandableHeight": {
       "type": "string",
-      "defaultValue": "Is it me you're looking for?"
+      "defaultValue": "100px"
     }
   },
   "stateDefinitions": {
@@ -21,66 +21,18 @@
     "content": {
       "elementType": "container",
       "style": {
-        "border": {
-          "type": "static",
-          "content": "1px solid green"
-        },
-        "margin": {
-          "type": "static",
-          "content": "10px"
-        }
+        "border-bottom": "1px solid #ccc"
       },
       "children": [
         {
           "type": "element",
           "content": {
-            "elementType": "text",
-            "children": [{
-              "type": "dynamic",
-              "content": {
-                "referenceType": "prop",
-                "id": "title"
-              }
-            }]
-          }
-        },
-        {
-          "type": "element",
-          "content": {
-            "elementType": "button",
-            "children": [{
-              "type": "conditional",
-              "content": {
-                "node": {
-                  "type": "static",
-                  "content": "Hide me"
-                },
-                "value": true,
-                "reference": {
-                  "type": "dynamic",
-                  "content": {
-                    "referenceType": "state",
-                    "id": "isExpanded"
-                  }
-                }
-              }
-            },{
-              "type": "conditional",
-              "content": {
-                "node": {
-                  "type": "static",
-                  "content": "Show me"
-                },
-                "value": false,
-                "reference": {
-                  "type": "dynamic",
-                  "content": {
-                    "referenceType": "state",
-                    "id": "isExpanded"
-                  }
-                }
-              }
-            }],
+            "elementType": "container",
+            "name": "clickable-area",
+            "style": {
+              "cursor": "pointer",
+              "padding": "10px 0"
+            },
             "events": {
               "click": [
                 {
@@ -89,33 +41,123 @@
                   "newState": "$toggle"
                 }
               ]
-            }
+            },
+            "children": [
+              {
+                "type": "element",
+                "content": {
+                  "elementType": "text",
+                  "style": {
+                    "font-size": "20px",
+                    "font-weight": "600",
+                    "line-height": "1.5"
+                  },
+                  "children": [
+                    {
+                      "type": "dynamic",
+                      "content": {
+                        "referenceType": "prop",
+                        "id": "title"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "element",
+                "content": {
+                  "elementType": "text",
+                  "style": {
+                    "float": "right",
+                    "margin-top": "4px",
+                    "line-height": "1.5"
+                  },
+                  "name": "button",
+                  "children": [
+                    {
+                      "type": "element",
+                      "content": {
+                        "elementType": "svg",
+                        "attrs": {
+                          "width": "15",
+                          "height": "15",
+                          "viewBox": "0 0 15 15",
+                          "fill": "none"
+                        },
+                        "children": [
+                          {
+                            "type": "element",
+                            "content": {
+                              "elementType": "line",
+                              "attrs": {
+                                "x1": "15",
+                                "y1": "7.5",
+                                "x2": "0",
+                                "y2": "7.5",
+                                "stroke": "#000"
+                              }
+                            }
+                          },
+                          {
+                            "type": "conditional",
+                            "content": {
+                              "node": {
+                                "type": "element",
+                                "content": {
+                                  "elementType": "line",
+                                  "attrs": {
+                                    "x1": "7.5",
+                                    "y1": "0",
+                                    "x2": "7.5",
+                                    "y2": "15",
+                                    "stroke": "#000"
+                                  }
+                                }
+                              },
+                              "reference": {
+                                "type": "dynamic",
+                                "content": {
+                                  "referenceType": "state",
+                                  "id": "isExpanded"
+                                }
+                              },
+                              "value": false
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
-          "type": "conditional",
+          "type": "element",
           "content": {
-            "node": {
-              "type": "element",
-              "content": {
-                "elementType": "text",
-                "children": [{
-                  "type": "dynamic",
-                  "content": {
-                    "referenceType": "prop",
-                    "id": "text"
-                  }
-                }]
+            "elementType": "container",
+            "name": "collapsible-area",
+            "attrs": {
+              "data-is-expanded": "$state.isExpanded"
+            },
+            "style": {
+              "height": "0",
+              "overflow": "hidden",
+              "transition": "height .2s ease-out",
+              "&[data-is-expanded='true']": {
+                "type": "nested-style",
+                "content": {
+                  "height": "$props.expandableHeight"
+                }
               }
             },
-            "value": true,
-            "reference": {
-              "type": "dynamic",
-              "content": {
-                "referenceType": "state",
-                "id": "isExpanded"
+            "children": [
+              {
+                "type": "slot",
+                "content": {}
               }
-            }
+            ]
           }
         }
       ]
