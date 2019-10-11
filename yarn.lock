@@ -868,270 +868,300 @@
   dependencies:
     "@babel/runtime" "^7.4.4"
 
-"@teleporthq/teleport-component-generator-angular@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-angular/-/teleport-component-generator-angular-0.10.0-alpha.2.tgz#7e373259452911c3fd2c701e5714c37ff732de99"
+"@teleporthq/teleport-component-generator-angular@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-angular/-/teleport-component-generator-angular-0.10.0-alpha.3.tgz#f01c849b00b25c1d8cd18b049d5cf96eb1d6575f"
+  integrity sha512-sDgFmSLVapjDkVlA73vU5vXKjcL5exH6qXSjk/0EGPCDH9d+MU6dhjI3KdWRX9oNST0d7X/Wa8kKAmNTEcH0lg==
   dependencies:
-    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-angular-base-component" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-prettier-html" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-prettier-ts" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-angular-base-component" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-prettier-html" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-prettier-ts" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-component-generator-preact@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-preact/-/teleport-component-generator-preact-0.10.0-alpha.2.tgz#9d4aaf4a10c9a521ab01db5d1b03df7c87edbfc3"
+"@teleporthq/teleport-component-generator-preact@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-preact/-/teleport-component-generator-preact-0.10.0-alpha.3.tgz#68f75b22e8d190261e043eb62c6784130b96a8d1"
+  integrity sha512-FHC5jGzBmQjF+OsyN061FYbolB/UJELSNafYnxHMhOCPM0X65zlRihdZWUvnvzuTvMN7/cjL70hacJmaCGdbpQ==
   dependencies:
-    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-css-modules" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-jsx-inline-styles" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-jsx-proptypes" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-preact-base-component" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-prettier-js" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-css-modules" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-jsx-inline-styles" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-jsx-proptypes" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-preact-base-component" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-prettier-js" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-component-generator-react@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-react/-/teleport-component-generator-react-0.10.0-alpha.2.tgz#7666d3dc154817f9741f221de1859f6fbf0bcf3b"
+"@teleporthq/teleport-component-generator-react@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-react/-/teleport-component-generator-react-0.10.0-alpha.3.tgz#56489eacd80b77b2b1b19a319810c0a7aa0ff9b5"
+  integrity sha512-cYYFeNJUvGn51PYTVTSqKww3GgZo9/ofNmcAKGMLnxUe+u0T/27y5h7CprgYsS3R8YSpojV0dE3A0SrQXol6ZQ==
   dependencies:
-    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-css-modules" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-jsx-inline-styles" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-jsx-proptypes" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-react-base-component" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-react-jss" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-react-styled-components" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-react-styled-jsx" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-prettier-jsx" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-css-modules" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-jsx-inline-styles" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-jsx-proptypes" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-react-base-component" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-react-jss" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-react-styled-components" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-react-styled-jsx" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-prettier-jsx" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-component-generator-stencil@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-stencil/-/teleport-component-generator-stencil-0.10.0-alpha.2.tgz#3dd48495988d9f255b4a501c76472072dddf878b"
+"@teleporthq/teleport-component-generator-stencil@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-stencil/-/teleport-component-generator-stencil-0.10.0-alpha.3.tgz#faab9431c3c65565580fcc95da8c9915a4d87fd9"
+  integrity sha512-Ac0q3p6B7ZYermUuiI/rVw21HGTPC8pc4MC90BDadfT2gUO1JScAgCzMGm7IkqQEiqAl9H9bhIRUe1pNaoEAaw==
   dependencies:
-    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-stencil-base-component" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-prettier-js" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-stencil-base-component" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-prettier-js" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-component-generator-vue@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-vue/-/teleport-component-generator-vue-0.10.0-alpha.2.tgz#7ae6c8b60164592157243d2889d270bd349308fb"
+"@teleporthq/teleport-component-generator-vue@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator-vue/-/teleport-component-generator-vue-0.10.0-alpha.3.tgz#ee84fc8d34d6c2933c3bc99110d23b7f11a3f52d"
+  integrity sha512-foeyH2THmFBQw4dpeEkV/ieMROHmIOa8bVh5NbY0TiGlNP7HjpYYAJDQ2S4pNlZ4nMQvZUu1zjlNti5+7JNMiA==
   dependencies:
-    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-vue-app-routing" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-plugin-vue-base-component" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-prettier-html" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-prettier-js" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-postprocessor-vue-file" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-component-generator" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-css" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-import-statements" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-vue-app-routing" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-plugin-vue-base-component" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-prettier-html" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-prettier-js" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-postprocessor-vue-file" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-component-generator@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator/-/teleport-component-generator-0.10.0-alpha.2.tgz#787a1dcc22ad78c49f98901710f90ae60161ee07"
+"@teleporthq/teleport-component-generator@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-component-generator/-/teleport-component-generator-0.10.0-alpha.3.tgz#6704504dc25482aac4d010799f3507a046bbc189"
+  integrity sha512-qJJn/i/ZfFixLV53d+DXpiA84d3h4QAvVPWzbZHlzzyuiTKDlb94oje4R5B+cnJbHVdrdo1z9zP3CdcDNNQbyQ==
   dependencies:
     "@babel/generator" "^7.5.5"
     "@babel/types" "^7.5.5"
     "@starptech/prettyhtml-hast-to-html" "^0.10.0"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-uidl-resolver" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-uidl-validator" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-uidl-resolver" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-uidl-validator" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-angular-base-component@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-angular-base-component/-/teleport-plugin-angular-base-component-0.10.0-alpha.2.tgz#818dfec5a34d1777c153bd94b0c25ea09fe9e2b2"
+"@teleporthq/teleport-plugin-angular-base-component@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-angular-base-component/-/teleport-plugin-angular-base-component-0.10.0-alpha.3.tgz#8d79601e2798bde0292ac18495396e4afc6563b6"
+  integrity sha512-QMOf+5w+XLYKUjuMvBrg6g5YPvU9lSpWrlfYrzzQirCIWAFG/BX7I6AvxyIMx8EFIsSjWHtA9lA3h0NjSa7+8A==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-css-modules@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-css-modules/-/teleport-plugin-css-modules-0.10.0-alpha.2.tgz#2d8c82f67328deb87101a9d1fe33c9e3e313c9ad"
+"@teleporthq/teleport-plugin-css-modules@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-css-modules/-/teleport-plugin-css-modules-0.10.0-alpha.3.tgz#159662bf5103a7e7ffab8a9610c0d5923da1f4a7"
+  integrity sha512-CZwl/G7UzPc510hbnhAspNfVyqB4pFk6SXpDPe/u6a8NgqKJWtX2XOPgeF28XkmhD9FVJ/hNr8h06hy5Ap5R/A==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-css@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-css/-/teleport-plugin-css-0.10.0-alpha.2.tgz#f4cfadf205f407c32448b909bb23686e92bceaaf"
+"@teleporthq/teleport-plugin-css@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-css/-/teleport-plugin-css-0.10.0-alpha.3.tgz#d9ff8a2877588b407d869a69d4904853b9c3d1c7"
+  integrity sha512-/57aYJ1UZuVbTqvsyFanqtw0Bg+iznLPMEmx+Sxos33cpmed1CPl6V1r5MHJ/gpPQkqGvqucceoGkHp1o9p70A==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-import-statements@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-import-statements/-/teleport-plugin-import-statements-0.10.0-alpha.2.tgz#1f51ca2a9722457b5f1969ee7751d88c84b49fab"
+"@teleporthq/teleport-plugin-import-statements@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-import-statements/-/teleport-plugin-import-statements-0.10.0-alpha.3.tgz#8f412c47a019d9ddd5d33135ddf218b706637ea9"
+  integrity sha512-nd7s/HDmMMMpakJvs3fSym6rnCImKojy4r6ZWvYOxwmV2G5aS35nBmBwHlQ409DJJwuYzj1Uf01TjIGYpuIi8w==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-jsx-inline-styles@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-jsx-inline-styles/-/teleport-plugin-jsx-inline-styles-0.10.0-alpha.2.tgz#93efadf76270463b4a4480729edb683d665e4d2d"
+"@teleporthq/teleport-plugin-jsx-inline-styles@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-jsx-inline-styles/-/teleport-plugin-jsx-inline-styles-0.10.0-alpha.3.tgz#1bb468ffb00ae56a6e9af0518dd1171272d81a23"
+  integrity sha512-WLVWSbPUMX3f3CrJrLSU5sYVm02OLInkY8G2ag8wtw7sF8VKfFA9g713imvErfBiavZueFtqU2qCcloYOx3u4g==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-jsx-proptypes@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-jsx-proptypes/-/teleport-plugin-jsx-proptypes-0.10.0-alpha.2.tgz#46043d5c9c5fde48470ea330c500722658b178ed"
-  dependencies:
-    "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
-
-"@teleporthq/teleport-plugin-preact-base-component@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-preact-base-component/-/teleport-plugin-preact-base-component-0.10.0-alpha.2.tgz#49ca0fd7122b1d68f7e1f557189d5bcfd8f4c683"
+"@teleporthq/teleport-plugin-jsx-proptypes@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-jsx-proptypes/-/teleport-plugin-jsx-proptypes-0.10.0-alpha.3.tgz#871e58c109731034abc5e96d3ab8c38000a1b8f6"
+  integrity sha512-3dspcqnYLfh4fZrTr/RBaiuEHip45s3cCiLRLvHRN83pFpQiCJ9Na7klu83GeLUR8EO9MMjwWxCX+BdXETME6Q==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-react-base-component@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-base-component/-/teleport-plugin-react-base-component-0.10.0-alpha.2.tgz#5e8d81dab6a871af41d7b813e0b8ed9cec0779d3"
+"@teleporthq/teleport-plugin-preact-base-component@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-preact-base-component/-/teleport-plugin-preact-base-component-0.10.0-alpha.3.tgz#86a02ab7c018fa7337e134f4d6abfe057ed52092"
+  integrity sha512-bzWZ/2t7c4EHxBbXXdic9XuefLdaOCHPwrVaFwo/WbInrYRWX/fcn7H1ZL4ywnP6QwtVfOPc1g5YW4OFinax0g==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-react-jss@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-jss/-/teleport-plugin-react-jss-0.10.0-alpha.2.tgz#683120f985200dc1f453dafaeddce94a416e31de"
-  dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
-
-"@teleporthq/teleport-plugin-react-styled-components@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-components/-/teleport-plugin-react-styled-components-0.10.0-alpha.2.tgz#2bb8661f417a642b2554a0a20c9d6277d3f0b211"
+"@teleporthq/teleport-plugin-react-base-component@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-base-component/-/teleport-plugin-react-base-component-0.10.0-alpha.3.tgz#efe0f00036bf7b10d28f5ddc7f509ca69643da7e"
+  integrity sha512-xczrXgZ3nuEHEPuuEe9iGJVvJDJuVpuOBnaNaKPkkdZb5ttP5gJkRnOKmwRjyTMXcuEnGO/USBYnyP6MCCwUTw==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-react-styled-jsx@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-jsx/-/teleport-plugin-react-styled-jsx-0.10.0-alpha.2.tgz#bfe994ae1bdf9052cedabb3ff627ab8a99c36f9e"
+"@teleporthq/teleport-plugin-react-jss@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-jss/-/teleport-plugin-react-jss-0.10.0-alpha.3.tgz#c64699ffb3f9e231806fa753a7986dc037979242"
+  integrity sha512-U38XYXaLt0gpdjY2l0+uKKzK/lMZM/kihhcMM7b43t/V5E9PKDJx0N/+MwHb4BTSAKZRoFysWmPjc6FwMA30kw==
+  dependencies:
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
+
+"@teleporthq/teleport-plugin-react-styled-components@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-components/-/teleport-plugin-react-styled-components-0.10.0-alpha.3.tgz#c9dbb72ef71eac9e818ed2708fb1f29a8b9fd536"
+  integrity sha512-eNddnK0TU9qZ4j2L4Rw4F8cMb/FeJwf2tonkEKAtluRIM/pOjD4Muci64Cu7EEo1b3iIfXLtf1MdFuFJ6jaQtg==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-stencil-base-component@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-stencil-base-component/-/teleport-plugin-stencil-base-component-0.10.0-alpha.2.tgz#4344f480f3b696823eedfe1f666c1381a4580073"
+"@teleporthq/teleport-plugin-react-styled-jsx@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-react-styled-jsx/-/teleport-plugin-react-styled-jsx-0.10.0-alpha.3.tgz#a558b07937d8828bef5edf0f16ca776058fc6a7c"
+  integrity sha512-6sjiyg51CwlWltg+2LOEtXTueP/7tDuhE1FCwj3nqYIioPeon4E99CoOBl6b3lDSoSjWpN7xGQP+p1U/a5hTBQ==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-vue-app-routing@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-app-routing/-/teleport-plugin-vue-app-routing-0.10.0-alpha.2.tgz#dde9d7fd088a21b6116c1245dd3265bf4d3a1594"
+"@teleporthq/teleport-plugin-stencil-base-component@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-stencil-base-component/-/teleport-plugin-stencil-base-component-0.10.0-alpha.3.tgz#deddeaff95601a73e51da380b0b30d7fe6390453"
+  integrity sha512-AUVPvqXEo6CwEUi6pfWm6MWFX7Knhtrhq15/ofO2bXZySsJxwpVA5wya03k8IUJj3hlyXIiDFg0OMkP3zjCJEw==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-plugin-vue-base-component@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-base-component/-/teleport-plugin-vue-base-component-0.10.0-alpha.2.tgz#9551b4ff34499dcfc05f749288d144883bd89d1d"
+"@teleporthq/teleport-plugin-vue-app-routing@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-app-routing/-/teleport-plugin-vue-app-routing-0.10.0-alpha.3.tgz#c85e815973c1c005465d92f0d24a31e3a2b0ddba"
+  integrity sha512-wWrYTdeYaFy49BPCuHGBhMJWU6wDmMPbFdyebgwWwxjpm4FyNem8/DYABfQwjwrjcJqBeAhPBISvlHVUt07hqA==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-postprocessor-prettier-html@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-html/-/teleport-postprocessor-prettier-html-0.10.0-alpha.2.tgz#6cbf85f5514a34f4cd727c1459506588d4e4d1cb"
+"@teleporthq/teleport-plugin-vue-base-component@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-plugin-vue-base-component/-/teleport-plugin-vue-base-component-0.10.0-alpha.3.tgz#9f526a0bf05000c16d0c00394587a15abda67564"
+  integrity sha512-+m9MmG4ZzvvFyERMx1QDukKinH1o6abEHnMNrt3GwyyYBE+hgEbda2Kh5wvcHoZWMdk5tYYo/fyRpvcvMaCLQw==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@babel/types" "^7.5.5"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
+
+"@teleporthq/teleport-postprocessor-prettier-html@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-html/-/teleport-postprocessor-prettier-html-0.10.0-alpha.3.tgz#05a02bfacef7bef97487c906a08ed3ef790cc1c8"
+  integrity sha512-g2pZW/2oGS0Ug0VjOK9x8O3lSq7qUS7jVldvhc/euRXNhAEALu/FbsJBfmzEVS55V1Wug2JqxDqIZw3D9JfB4A==
+  dependencies:
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
     prettier "^1.18.2"
 
-"@teleporthq/teleport-postprocessor-prettier-js@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-js/-/teleport-postprocessor-prettier-js-0.10.0-alpha.2.tgz#812872457b5759af5f47bc0402f2d2f2f51c1a0d"
+"@teleporthq/teleport-postprocessor-prettier-js@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-js/-/teleport-postprocessor-prettier-js-0.10.0-alpha.3.tgz#a6bfa387bc27ac49ae5f381ae98074b049f76562"
+  integrity sha512-F3IZrRn6sIVz9jvOnPWHybmdZJVzx4peifZ5WSZAvcok4z8leYnY6DrM6yfpGm0h6wFid1ZMtOkOqCcZ2RHx4g==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
     prettier "^1.18.2"
 
-"@teleporthq/teleport-postprocessor-prettier-jsx@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-jsx/-/teleport-postprocessor-prettier-jsx-0.10.0-alpha.2.tgz#28e7c88a7e7d031be9a37e384101d6c171539639"
+"@teleporthq/teleport-postprocessor-prettier-jsx@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-jsx/-/teleport-postprocessor-prettier-jsx-0.10.0-alpha.3.tgz#e71ba7bc959104ed892fd0ad78a89dfe90055b4d"
+  integrity sha512-wFE9T8y0MXaxQTZzAlejCRk99mdVOX/fkQE94OvOJCGEZpmGjGM83GbQu8jaPu6pTyDcV9sM9hq8pUumYIltZQ==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
     prettier "^1.18.2"
 
-"@teleporthq/teleport-postprocessor-prettier-ts@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-ts/-/teleport-postprocessor-prettier-ts-0.10.0-alpha.2.tgz#0b111809ce37936cbd71171e99a80e1593e13f9a"
+"@teleporthq/teleport-postprocessor-prettier-ts@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-prettier-ts/-/teleport-postprocessor-prettier-ts-0.10.0-alpha.3.tgz#7e6e8bad589f0df2e252b8a940a59fe966b85716"
+  integrity sha512-B7Hn6O8u1dxX1i6TktOTVC3p9Yi6fyKwXQBdvyDKETTPijpymjKWI8QqgtGxuc4u09CITmqKiOx+64TAj+8jtg==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
     prettier "^1.18.2"
 
-"@teleporthq/teleport-postprocessor-vue-file@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-vue-file/-/teleport-postprocessor-vue-file-0.10.0-alpha.2.tgz#435ecb6f70651590da95aa2a89618aa3ab4c669d"
+"@teleporthq/teleport-postprocessor-vue-file@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-postprocessor-vue-file/-/teleport-postprocessor-vue-file-0.10.0-alpha.3.tgz#8dad1df644610efefd70df209c4e48eb96c9c109"
+  integrity sha512-XreJWJvGeJc8YKhYiFdK6FFGzE5/jNcaZ58DlzX01JfOT01l62hEBKvjEKXWtY35uJ2jx1i/XBsDG60wwNW3yw==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-shared@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-shared/-/teleport-shared-0.10.0-alpha.2.tgz#f27dcc8c19a3854810b592b456b4d820c770a4cc"
+"@teleporthq/teleport-shared@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-shared/-/teleport-shared-0.10.0-alpha.3.tgz#9d9b42af08e13910426344f75cb06a61248eab66"
+  integrity sha512-kCML/JySVF5emYEu6j7SbsyuIUFIt/RAV7q/Yv2gVPH2SZR3quyedZ2Z+Mcg9OvYbufBgVh4yTLmfsefgnCyGQ==
   dependencies:
     "@babel/types" "^7.5.5"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
     jss "^9.8.7"
     jss-preset-default "^4.5.0"
 
-"@teleporthq/teleport-types@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-types/-/teleport-types-0.10.0-alpha.2.tgz#b00b90e030e7d279b75e7566584164302a3a8772"
+"@teleporthq/teleport-types@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-types/-/teleport-types-0.10.0-alpha.3.tgz#5cd05ad822640abf7738950d942cc0980f8d15c9"
+  integrity sha512-Z4fp5kWRfDR6bhyn+hC0YEfX0mnd8C1rEUdaoLRO1Jrn8C8oRm+eVneEjcONqp0mIV5XJY3920eR61XtLKLMPQ==
 
-"@teleporthq/teleport-uidl-builders@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-builders/-/teleport-uidl-builders-0.10.0-alpha.2.tgz#d1f13383759501c1a97f6784c7a314472381d87b"
+"@teleporthq/teleport-uidl-builders@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-builders/-/teleport-uidl-builders-0.10.0-alpha.3.tgz#9fed86639d767d9f7b0100220112357c70b1cfde"
+  integrity sha512-CbmyKN3lkBB7qfigDg9LOZF4y+x6E/Q2n/r5HgbdUk3opEsXrxqzJVO7YMxV6m61PJicdM1+LtEw0xM3VLW4fA==
   dependencies:
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
 
-"@teleporthq/teleport-uidl-resolver@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-resolver/-/teleport-uidl-resolver-0.10.0-alpha.2.tgz#6b9f0475b0e43821b82bac0f791766008ced5cbe"
+"@teleporthq/teleport-uidl-resolver@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-resolver/-/teleport-uidl-resolver-0.10.0-alpha.3.tgz#44a6b1a12455868166bead64af8b17cbfe4d709f"
+  integrity sha512-njkfYVxPw9F320pHLMFwwUaxwW6hPKGtSRkJfvE14m2/GQrSmdrVlpD66b0a47AMMZDCaEfKOM3kRJvHNVXbrA==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-uidl-builders" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-uidl-builders" "^0.10.0-alpha.3"
     deepmerge "^4.0.0"
 
-"@teleporthq/teleport-uidl-validator@^0.10.0-alpha.2":
-  version "0.10.0-alpha.2"
-  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-validator/-/teleport-uidl-validator-0.10.0-alpha.2.tgz#8d4033e7e7100c6926837e159ec08b39a94fc261"
+"@teleporthq/teleport-uidl-validator@^0.10.0-alpha.3":
+  version "0.10.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@teleporthq/teleport-uidl-validator/-/teleport-uidl-validator-0.10.0-alpha.3.tgz#7da2e0a6567c556fca3511849dc1178e9e5dd543"
+  integrity sha512-zma2RqaPRQJAg8bfwXOOy9U9tlpnZKA3PnBrnPngXWICs1cPbSNnNzNFC8WELUlf+J7l1mJnNBGB50+zPQ1XnA==
   dependencies:
-    "@teleporthq/teleport-shared" "^0.10.0-alpha.2"
-    "@teleporthq/teleport-types" "^0.10.0-alpha.2"
+    "@teleporthq/teleport-shared" "^0.10.0-alpha.3"
+    "@teleporthq/teleport-types" "^0.10.0-alpha.3"
     ajv "^6.10.2"
 
 "@types/anymatch@*":
