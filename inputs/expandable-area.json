@@ -1,7 +1,7 @@
 {
   "name": "ExpandableArea",
   "propDefinitions": {
-    "title": {
+    "heading": {
       "type": "string",
       "defaultValue": "This whole area is clickable!"
     },
@@ -57,7 +57,7 @@
                       "type": "dynamic",
                       "content": {
                         "referenceType": "prop",
-                        "id": "title"
+                        "id": "heading"
                       }
                     }
                   ]
