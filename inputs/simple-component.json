@@ -1,7 +1,7 @@
 {
   "name": "Simple Component",
   "propDefinitions": {
-    "title": {
+    "heading": {
       "type": "string",
       "defaultValue": "Hello"
     }
@@ -20,7 +20,7 @@
                 "type": "dynamic",
                 "content": {
                   "referenceType": "prop",
-                  "id": "title"
+                  "id": "heading"
                 }
               },
               {

@@ -179,6 +179,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public handleInputChange = async () => {
+    this.setState({ showErrorPanel: false })
     const { targetLibrary, inputJson, libraryFlavor } = this.state
     let jsonValue: any = null
 
