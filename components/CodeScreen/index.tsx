@@ -367,7 +367,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             />
             {this.renderDropDownFlavour()}
           </div>
-          <div className="code-wrapper ace_scrollbar ace_scrollbar-h ace_scrollbar-v ace-monokai">
+          <div className="code-wrapper ace_scrollbar ace_scrollbar-h ace_scrollbar-v">
             <div className="preview-scroller-y">
               <div className="preview-scroller-x">
                 <pre className="previewer">
