@@ -313,6 +313,12 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               isOpen={showShareableLinkModal}
               style={Code.customStyle}
               ariaHideApp={false}
+              onRequestClose={() => {
+                this.setState({
+                  showShareableLinkModal: false,
+                  isLoading: false,
+                })
+              }}
             >
               <div>
                 {isLoading && <Loader />}
