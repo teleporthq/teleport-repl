@@ -8,7 +8,7 @@ import 'brace/mode/javascript'
 
 import 'brace/theme/monokai'
 
-import 'brace/ext/searchbox';
+import 'brace/ext/searchbox'
 
 interface EditorProps {
   mode: 'jsx' | 'json' | 'javascript' | 'html'
@@ -52,6 +52,7 @@ class CodeEditor extends React.Component<EditorProps, {}> {
         focus={focus || false}
         fontSize={fontSize || 14}
         tabSize={2}
+        showPrintMargin={false}
       />
     )
   }
