@@ -47,7 +47,6 @@ const TopBar: React.SFC = () => {
           text-decoration: none;
           transition: color 0.2s;
           color: #2c3e50;
-          font-weight: 500;
           font-size: 15px;
         }
 
