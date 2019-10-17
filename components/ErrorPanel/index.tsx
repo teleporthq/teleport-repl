@@ -67,7 +67,7 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           padding: 10px;
         }
         .first-error-item {
-          font-weight: bold;
+          font-weight: 700;
           margin-bottom: 5px;
         }
         .error-item::before {

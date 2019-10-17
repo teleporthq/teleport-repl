@@ -1,13 +1,8 @@
 import React from 'react'
 
 import AceEditor from 'react-ace'
-import 'brace/mode/html'
-import 'brace/mode/jsx'
 import 'brace/mode/json'
-import 'brace/mode/javascript'
-
 import 'brace/theme/monokai'
-
 import 'brace/ext/searchbox'
 
 interface EditorProps {
