@@ -324,21 +324,14 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
                 {isLoading && <Loader />}
                 {!isLoading && (
                   <>
+                    {this.state.copied && (
+                      <div className="copied-text fade-in">Copied</div>
+                    )}
+                    <h4>Share working UIDL</h4>
                     <div className="shareable-link">{shareableLink}</div>
-                    <div>
-                      {shareableLink && (
-                        <button
-                          className="close-button"
-                          onClick={() => {
-                            copyToClipboard(shareableLink)
-                            this.setState({ copied: true })
-                          }}
-                        >
-                          Copy
-                        </button>
-                      )}
+                    <div className="modal-buttons">
                       <button
-                        className="close-button"
+                        className="modal-button close-button"
                         onClick={() =>
                           this.setState({
                             showShareableLinkModal: false,
@@ -348,8 +341,18 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
                       >
                         Close
                       </button>
+                      {shareableLink && (
+                        <button
+                          className="modal-button"
+                          onClick={() => {
+                            copyToClipboard(shareableLink)
+                            this.setState({ copied: true })
+                          }}
+                        >
+                          Copy
+                        </button>
+                      )}
                     </div>
-                    {this.state.copied && <div className="copied-text">Copied !!</div>}
                   </>
                 )}
               </div>
@@ -486,22 +489,28 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             }
 
             .shareable-link {
-              background-color: var(--link-grey);
               padding: 10px;
+              background: rgba(200, 200, 200, 0.5);
+              user-select: all;
+            }
+
+            .modal-buttons {
+              display: flex;
+              justify-content: space-between;
+              margin: 20px 0 0;
+            }
+
+            .modal-button {
+              background: var(--color-purple);
+              color: #fff;
+              padding: 8px 16px;
+              font-size: 14px;
               border-radius: 4px;
-              border: 1px solid var(--editor-scrollbar-color);
+              border: 0 none;
             }
 
             .close-button {
-              margin-top: 15px;
-              padding: 5px;
-              background-color: var(--color-purple);
-              color: #fff;
-              font-size: 15px;
-              letter-spacing: 0.6px;
-              display: inline-block;
-              border-radius: 4px;
-              cursor: pointer;
+              background: rgb(55, 55, 62);
             }
 
             .share-button {
@@ -511,20 +520,31 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               background-color: #fff;
               font-size: 14px;
               border-radius: 4px;
-              cursor: pointer;
+              border: 0 none;
             }
 
             .copied-text {
-              padding: 5px;
-              margin-top: 10px;
-              line-height: 10px;
-              font-size; 12px;
-              margin-bottom: 10px;
-              border-radius: 6px;
+              position: absolute;
+              top: 0;
+              width: 100%;
+              left: 0;
+              padding: 5px 0;
               background-color: var(--success-green);
-              border: 1px solid var(--success-green);
               color: #fff;
-              display: inline-block;
+              opacity: 0;
+            }
+
+            .fade-in {
+              animation: fadeInOpacity 1 ease-in 0.35s forwards;
+            }
+
+            @keyframes fadeInOpacity {
+              0% {
+                opacity: 0;
+              }
+              100% {
+                opacity: 1;
+              }
             }
           `}</style>
       </div>
