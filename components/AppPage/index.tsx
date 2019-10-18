@@ -22,8 +22,7 @@ const AppPage: React.SFC = (props) => {
 
         html,
         body,
-        #__next,
-        body {
+        #__next {
           font-family: var(--main-font-family);
           font-size: var(--main-text-font-size);
           background-color: var(--main-bg-white);
@@ -32,8 +31,8 @@ const AppPage: React.SFC = (props) => {
           width: 100%;
           overflow: hidden;
           margin: 0;
-          padding: 0 0 20px 0;
         }
+
         input,
         textarea {
           font-family: var(--main-font-family);
