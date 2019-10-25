@@ -8,6 +8,7 @@ import {
   ComponentGenerator,
   ComponentUIDL,
   GeneratedFile,
+  ReactNativeStyleVariation,
 } from '@teleporthq/teleport-types'
 import { copyToClipboard } from 'copy-lite'
 import dynamic from 'next/dynamic'
@@ -29,26 +30,27 @@ import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 import { DropDown } from '../DropDown'
 import { ErrorPanel } from '../ErrorPanel'
 import Loader from '../Loader'
-import { createAllPreactStyleFlavors, createAllReactStyleFlavors } from './utils'
+import {
+  ComponentType,
+  createAllPreactStyleFlavors,
+  createAllReactStyleFlavors,
+  createAllReactNativeStyleFlavors,
+  DefaultStyleFlavors,
+} from './utils'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
 })
-
-enum ComponentType {
-  REACT = 'React',
-  VUE = 'Vue',
-  PREACT = 'Preact',
-  STENCIL = 'Stencil',
-  ANGULAR = 'Angular',
-}
 
 type GeneratorsCache = Record<
   ComponentType,
   ComponentGenerator | Record<string, ComponentGenerator>
 >
 
-type StyleVariation = ReactStyleVariation | PreactStyleVariation
+type StyleVariation =
+  | ReactStyleVariation
+  | PreactStyleVariation
+  | ReactNativeStyleVariation
 
 const generatorsCache: GeneratorsCache = {
   [ComponentType.ANGULAR]: createAngularComponentGenerator(),
@@ -56,6 +58,7 @@ const generatorsCache: GeneratorsCache = {
   [ComponentType.STENCIL]: createStencilComponentGenerator(),
   [ComponentType.REACT]: createAllReactStyleFlavors(),
   [ComponentType.PREACT]: createAllPreactStyleFlavors(),
+  [ComponentType.REACTNATIVE]: createAllReactNativeStyleFlavors(),
 }
 
 const uidlSamples: Record<string, ComponentUIDL> = {
@@ -229,10 +232,13 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public handleTargetChange = (ev: { target: { value: string } }) => {
+    const target = ev.target.value as ComponentType
     this.setState(
       {
-        targetLibrary: ev.target.value as ComponentType,
-        libraryFlavor: ReactStyleVariation.CSSModules,
+        targetLibrary: target,
+        libraryFlavor:
+          (DefaultStyleFlavors[target] as StyleVariation) ||
+          ReactStyleVariation.CSSModules,
       },
       this.handleInputChange
     )
@@ -248,12 +254,11 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
   public renderDropDownFlavour = () => {
     const { targetLibrary } = this.state
-    if (targetLibrary !== ComponentType.REACT && targetLibrary !== ComponentType.PREACT) {
+    if (!DefaultStyleFlavors[targetLibrary]) {
       return null
     }
 
-    const flavors =
-      targetLibrary === ComponentType.REACT ? ReactStyleVariation : PreactStyleVariation
+    const flavors = getFlavorsForTarget(targetLibrary)
 
     return (
       <DropDown
@@ -593,4 +598,15 @@ const concatenateAllFiles = (files: GeneratedFile[]) => {
 
     return accCode
   }, '')
+}
+
+const getFlavorsForTarget = (target: ComponentType) => {
+  switch (target) {
+    case ComponentType.PREACT:
+      return PreactStyleVariation
+    case ComponentType.REACTNATIVE:
+      return ReactNativeStyleVariation
+    default:
+      return ReactStyleVariation
+  }
 }

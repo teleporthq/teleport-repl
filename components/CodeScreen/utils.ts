@@ -7,6 +7,19 @@ import {
   createPreactComponentGenerator,
   PreactStyleVariation,
 } from '@teleporthq/teleport-component-generator-preact'
+import {
+  createReactNativeComponentGenerator,
+  ReactNativeStyleVariation,
+} from '@teleporthq/teleport-component-generator-reactnative'
+
+export enum ComponentType {
+  REACT = 'React',
+  VUE = 'Vue',
+  PREACT = 'Preact',
+  STENCIL = 'Stencil',
+  ANGULAR = 'Angular',
+  REACTNATIVE = 'ReactNative',
+}
 
 export const createAllReactStyleFlavors = () => {
   return Object.values(ReactStyleVariation).reduce(
@@ -26,4 +39,25 @@ export const createAllPreactStyleFlavors = () => {
     },
     {}
   )
+}
+
+export const createAllReactNativeStyleFlavors = () => {
+  return Object.values(ReactNativeStyleVariation).reduce(
+    (acc: Record<string, ComponentGenerator>, styleKey) => {
+      acc[styleKey] = createReactNativeComponentGenerator(
+        styleKey as ReactNativeStyleVariation
+      )
+      return acc
+    },
+    {}
+  )
+}
+
+export const DefaultStyleFlavors = {
+  [ComponentType.REACT]: ReactStyleVariation.CSSModules,
+  [ComponentType.PREACT]: PreactStyleVariation.CSSModules,
+  [ComponentType.REACTNATIVE]: ReactNativeStyleVariation.StyledComponents,
+  [ComponentType.VUE]: null,
+  [ComponentType.STENCIL]: null,
+  [ComponentType.ANGULAR]: null,
 }
