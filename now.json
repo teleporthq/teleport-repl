@@ -1,7 +1,7 @@
 {
   "name": "repl",
   "version": 2,
-  "scope": "teleport-dev",
+  "scope": "teleport-team",
   "alias":["repl.teleporthq.io"],
   "public": false
 }
