@@ -26,7 +26,11 @@ import personSpotlight from '../../inputs/person-spotlight.json'
 import customMapping from '../../inputs/repl-mapping.json'
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import tabSelector from '../../inputs/tab-selector.json'
-import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
+import {
+  fetchJSONDataAndLoad,
+  uploadUIDLJSON,
+  generatePackage,
+} from '../../utils/services'
 import { DropDown } from '../DropDown'
 import { ErrorPanel } from '../ErrorPanel'
 import Loader from '../Loader'
@@ -300,6 +304,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     })
   }
 
+  public generateCDN = async () => {
+    await generatePackage(this.state.inputJson)
+  }
+
   public render() {
     const { showShareableLinkModal, isLoading, shareableLink } = this.state
     return (
@@ -313,6 +321,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
             />
             <button className="share-button" onClick={() => this.generateSharableLink()}>
               Share UIDL
+            </button>
+            <button onClick={() => this.generateCDN()} className="share-button">
+              Generate CDN
             </button>
             <Modal
               isOpen={showShareableLinkModal}
