@@ -27,7 +27,18 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
             rel="stylesheet"
           />
-
+          <script
+            src="https://unpkg.com/react@16.8.0/umd/react.production.min.js"
+            type="text/javascript"
+          />
+          <script
+            src="https://unpkg.com/react-dom@16.8.0/umd/react-dom.production.min.js"
+            type="text/javascript"
+          />
+          <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.7.2/prop-types.min.js"
+            type="text/javascript"
+          />
           <script
             dangerouslySetInnerHTML={{
               __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
