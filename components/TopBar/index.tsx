@@ -3,19 +3,33 @@ import React from 'react'
 const TopBar: React.SFC = () => {
   return (
     <div className="top-bar">
-      <a href="https://teleporthq.io/" target="_blank">
+      <a href="https://teleporthq.io/" target="_blank" id="repl-to-main">
         <img className="logo" alt="logo" src="/static/svg/logo.svg" />
       </a>
       <div className="menu-items">
-        <a className="menu-item" target="_blank" href="https://docs.teleporthq.io">
+        <a
+          className="menu-item"
+          target="_blank"
+          href="https://play.teleporthq.io"
+          id="repl-to-playground"
+        >
+          Try our Playground
+        </a>
+        <a
+          className="menu-item"
+          target="_blank"
+          href="https://docs.teleporthq.io"
+          id="repl-to-docs"
+        >
           Official Docs
         </a>
         <a
           href="https://github.com/teleporthq/teleport-code-generators"
           target="_blank"
           className="menu-item gitHub-logo"
+          id="repl-to-github"
         >
-          Contribute on GitHub!
+          Contribute
           <svg
             className="github-icon"
             role="img"
@@ -74,6 +88,18 @@ const TopBar: React.SFC = () => {
         .logo {
           height: 2.2rem;
           vertical-align: middle;
+        }
+
+        @media screen and (max-width: 600px) {
+          #repl-to-docs {
+            display: none;
+          }
+        }
+
+        @media screen and (max-width: 418px) {
+          #repl-to-playground {
+            display: none;
+          }
         }
       `}</style>
     </div>
