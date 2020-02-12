@@ -1,5 +1,4 @@
 {
-  "name": "repl",
   "version": 2,
   "scope": "teleport-team",
   "public": true
