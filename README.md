@@ -14,4 +14,4 @@ $ npm run dev
 
 ## Production deploy
 
-Pushing to master will automatically deploy to production env at: [https://repl.teleporthq.io](https://repl.teleporthq.io)
+Pushing to `development` will automatically deploy to production env at: [https://repl.teleporthq.io](https://repl.teleporthq.io)
