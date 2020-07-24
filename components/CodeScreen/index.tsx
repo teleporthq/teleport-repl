@@ -218,14 +218,17 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public async preview() {
-    const generator = createReactComponentGenerator(ReactStyleVariation.InlineStyles)
+    const generator = createReactComponentGenerator(ReactStyleVariation.StyledComponents)
     try {
       const component = await generator.generateComponent(
         JSON.parse(this.state.inputJson)
       )
-      const jsFile = component.files.filter((file) => file.fileType === 'js')[0]
-      await bundle(jsFile.content)
+      const jsFile = component.files.find((file) => file.fileType === 'js')
+      if (jsFile) {
+        await bundle(jsFile)
+      }
     } catch (e) {
+      // @ts-ignore
       console.error(e)
     }
   }

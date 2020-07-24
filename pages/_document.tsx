@@ -40,6 +40,14 @@ export default class MyDocument extends Document {
             type="text/javascript"
           />
           <script
+            src="https://unpkg.com/react-is/umd/react-is.production.min.js"
+            type="text/javascript"
+          ></script>
+          <script
+            src="https://unpkg.com/styled-components/dist/styled-components.min.js"
+            type="text/javascript"
+          />
+          <script
             dangerouslySetInnerHTML={{
               __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
