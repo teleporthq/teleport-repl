@@ -451,6 +451,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               position: relative;
               margin-right: 5px;
               margin-left: 5px;
+              overflow: scroll;
             }
 
             @media screen and (max-width: 762px){
