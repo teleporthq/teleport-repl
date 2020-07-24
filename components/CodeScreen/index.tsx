@@ -1,6 +1,9 @@
 import { createAngularComponentGenerator } from '@teleporthq/teleport-component-generator-angular'
 import { PreactStyleVariation } from '@teleporthq/teleport-component-generator-preact'
-import { ReactStyleVariation } from '@teleporthq/teleport-component-generator-react'
+import {
+  ReactStyleVariation,
+  createReactComponentGenerator,
+} from '@teleporthq/teleport-component-generator-react'
 import { createStencilComponentGenerator } from '@teleporthq/teleport-component-generator-stencil'
 import { createVueComponentGenerator } from '@teleporthq/teleport-component-generator-vue'
 import {
@@ -37,6 +40,7 @@ import {
   createAllReactNativeStyleFlavors,
   DefaultStyleFlavors,
 } from './utils'
+import bundle from '../../utils/bundler'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -126,7 +130,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     }
   }
 
-  public componentDidMount() {
+  public async componentDidMount() {
     this.initREPL()
   }
 
@@ -198,7 +202,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       const result: CompiledComponent = await generator.generateComponent(jsonValue, {
         mapping: customMapping, // Temporary fix for svg's while the `line` element is converted to `hr` in the generators
       })
-
       const code = concatenateAllFiles(result.files)
       if (!code) {
         // tslint:disable-next-line:no-console
@@ -207,10 +210,26 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       }
 
       this.setState({ generatedCode: code }, Prism.highlightAll)
+      this.preview()
     } catch (err) {
       this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
-      console.error('generateReactComponent', err)
+    }
+  }
+
+  public async preview() {
+    const generator = createReactComponentGenerator(ReactStyleVariation.StyledComponents)
+    try {
+      const component = await generator.generateComponent(
+        JSON.parse(this.state.inputJson)
+      )
+      const jsFile = component.files.find((file) => file.fileType === 'js')
+      if (jsFile) {
+        await bundle(jsFile)
+      }
+    } catch (e) {
+      // @ts-ignore
+      console.error(e)
     }
   }
 
@@ -392,6 +411,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           </div>
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
+        <div className="preview-screen" id="output"></div>
         <style jsx>{`
             .main-content {
               display: flex;
@@ -403,6 +423,11 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               box-sizing: border-box;
             }
 
+            .iframe-size {
+              width: 100%;
+              height: 100%;
+            }
+
             .editor {
               border-radius: 10px;
               width: 49%;
@@ -410,8 +435,24 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               overflow: hidden;
               z-index: 3;
               padding: 0 0 30px 0;
-              position: relative
+              position: relative;
+              margin-right: 5px;
+              margin-left: 5px;
             }
+
+            .preview-screen {
+              color: #000;
+              border-radius: 10px;
+              width: 49%;
+              border: 1px solid var(--editor-bg-black); 
+              overflow: hidden;
+              z-index: 3;
+              padding: 5px;
+              position: relative;
+              margin-right: 5px;
+              margin-left: 5px;
+            }
+
             @media screen and (max-width: 762px){
               .main-content{
                 padding: 20px 15px;
@@ -558,15 +599,13 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 }
 
 const withCustomRouter = (ReplCode: any) => {
-  return withRouter(
-    ({ router, ...props }: any): any => {
-      if (router && router.asPath) {
-        const query = queryString.parse(router.asPath.split(/\?/)[1])
-        router = { ...router, query }
-        return <ReplCode router={router} {...props} />
-      }
+  return withRouter(({ router, ...props }: any): any => {
+    if (router && router.asPath) {
+      const query = queryString.parse(router.asPath.split(/\?/)[1])
+      router = { ...router, query }
+      return <ReplCode router={router} {...props} />
     }
-  )
+  })
 }
 
 const CodeScreen = withCustomRouter(Code)
