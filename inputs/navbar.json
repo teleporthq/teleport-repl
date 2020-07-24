@@ -29,18 +29,27 @@
                 "content": {
                   "elementType": "li",
                   "name": "home-link",
+                  "referencedStyles": {
+                    "5ee9a8c4855aa926ce281bce": {
+                      "id": "5ee9a8c4855aa926ce281bce",
+                      "type": "style-map",
+                      "content": {
+                        "mapType": "inlined",
+                        "styles": {
+                          "color": { "type": "static", "content": "red"},
+                        "border-bottom": "3px solid red",
+                        "padding-bottom": "7px"
+                        },
+                        "conditions": [
+                          { "conditionType": "element-state", "content": "hover"}
+                        ]
+                      }
+                    }
+                  },
                   "style": {
                     "padding": "10px 20px",
                     "transition": "all .15s ease-in-out",
-                    "cursor": "pointer",
-                    "&:hover": {
-                      "type": "nested-style",
-                      "content": {
-                        "color": { "type": "static", "content": "red"},
-                        "border-bottom": "3px solid red",
-                        "padding-bottom": "7px"
-                      }
-                    }
+                    "cursor": "pointer"
                   },
                   "children": [{
                     "type": "element",
@@ -59,18 +68,27 @@
                 "content": {
                   "name": "team-link",
                   "elementType": "li",
+                  "referencedStyles": {
+                    "5ee9a805ad9046338c1115f1": {
+                      "id": "5ee9a805ad9046338c1115f1",
+                      "type": "style-map",
+                      "content": {
+                        "mapType": "inlined",
+                        "styles": {
+                          "color": { "type": "static", "content": "red"},
+                        "border-bottom": "3px solid red",
+                        "padding-bottom": "7px"
+                        },
+                        "conditions": [
+                          { "conditionType": "element-state", "content": "hover"}
+                        ]
+                      }
+                    }
+                  },
                   "style": {
                     "padding": "10px 20px",
                     "transition": "all .15s ease-in-out",
-                    "cursor": "pointer",
-                    "&:hover": {
-                      "type": "nested-style",
-                      "content": {
-                        "color": { "type": "static", "content": "red"},
-                        "border-bottom": "3px solid red",
-                        "padding-bottom": "7px"
-                      }
-                    }
+                    "cursor": "pointer"
                   },
                   "children": [{
                     "type": "element",
@@ -89,18 +107,27 @@
                 "content": {
                   "elementType": "li",
                   "name": "contact-link",
+                  "referencedStyles": {
+                    "5ee9a89058cb16c5ae3c69c4": {
+                      "id": "5ee9a89058cb16c5ae3c69c4",
+                      "type": "style-map",
+                      "content": {
+                        "mapType": "inlined",
+                        "styles": {
+                          "color": { "type": "static", "content": "red"},
+                        "border-bottom": "3px solid red",
+                        "padding-bottom": "7px"
+                        },
+                        "conditions": [
+                          { "conditionType": "element-state", "content": "hover"}
+                        ]
+                      }
+                    }
+                  },
                   "style": {
                     "padding": "10px 20px",
                     "transition": "all .15s ease-in-out",
-                    "cursor": "pointer",
-                    "&:hover": {
-                      "type": "nested-style",
-                      "content": {
-                        "color": { "type": "static", "content": "red"},
-                        "border-bottom": "3px solid red",
-                        "padding-bottom": "7px"
-                      }
-                    }
+                    "cursor": "pointer"
                   },
                   "children": [{
                     "type": "element",

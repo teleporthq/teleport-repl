@@ -144,13 +144,7 @@
             "style": {
               "height": "0",
               "overflow": "hidden",
-              "transition": "height .2s ease-out",
-              "&[data-is-expanded='true']": {
-                "type": "nested-style",
-                "content": {
-                  "height": "$props.expandableHeight"
-                }
-              }
+              "transition": "height .2s ease-out"
             },
             "children": [
               {
