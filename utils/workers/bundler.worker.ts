@@ -10,6 +10,7 @@ import babelPresetReact from '@babel/preset-react'
 // @ts-ignore
 import replace from '@rollup/plugin-replace'
 import { GeneratedFile } from '@teleporthq/teleport-types'
+import { expose } from 'comlink'
 
 const INDEX_ENTRY = `import React from "react";
 import ReactDOM from "react-dom";
@@ -27,7 +28,7 @@ const elm = document.getElementById("output");
 ReactDOM.render(<PreviewWindow />, document.getElementById("output"));
 `
 
-export const minify = async (esmComponent: string) => {
+const minify = async (esmComponent: string) => {
   const minifiedCode = transform(esmComponent, {
     presets: [[babelPresetENV, { modules: false }], babelPresetReact],
   })
@@ -65,46 +66,18 @@ const bundle = async (jsFile: GeneratedFile) => {
       sourcemap: true,
     })
 
-    const bundledCode = output.output[0].code
-    const existingIframe = document.getElementById('output-iframe')
-    existingIframe?.remove()
-
-    const iframe = document.createElement('iframe')
-    Object.assign(iframe.style, {
-      margin: '0',
-      padding: '0',
-      borderStyle: 'none',
-      height: '100%',
-      width: '100%',
-      marginBottom: '-5px',
-      overflow: 'scroll',
-    })
-    const blob = URL.createObjectURL(
-      new Blob(
-        [
-          `
-<script type="module">
-${bundledCode}
-</script>
-<body>
-<div id="output">
-</div>
-</body>
-`,
-        ],
-        { type: 'text/html' }
-      )
-    )
-    iframe.src = blob
-    iframe.setAttribute('id', 'output-iframe')
-    iframe.onerror = (e) => {
-      console.error(e)
-    }
-    document.getElementById('render-output')?.append(iframe)
+    return output.output[0]?.code
   } catch (e) {
     // @ts-ignore
     console.error(e)
   }
 }
 
-export default bundle
+const exports = {
+  bundle,
+  minify,
+}
+
+export type BundlerTypes = typeof exports
+
+expose(exports)

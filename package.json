@@ -30,6 +30,7 @@
     "@teleporthq/teleport-component-generator-vue": "^0.12.3",
     "@teleporthq/teleport-types": "^0.12.2",
     "brace": "^0.11.1",
+    "comlink": "^4.3.0",
     "copy-lite": "^0.1.2",
     "next": "^9.4.4",
     "prismjs": "^1.16.0",
@@ -39,7 +40,8 @@
     "react-dom": "^16.10.2",
     "react-modal": "^3.8.2",
     "react-svg": "^8.0.2",
-    "rollup": "^1.31.0"
+    "rollup": "^1.31.0",
+    "worker-loader": "^2.0.0"
   },
   "devDependencies": {
     "@types/node": "^13.7.0",

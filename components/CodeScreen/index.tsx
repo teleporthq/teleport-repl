@@ -40,7 +40,7 @@ import {
   createAllReactNativeStyleFlavors,
   DefaultStyleFlavors,
 } from './utils'
-import bundle from '../../utils/bundler'
+import { bundler } from '../../utils/services'
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -225,7 +225,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       )
       const jsFile = component.files.find((file) => file.fileType === 'js')
       if (jsFile) {
-        await bundle(jsFile)
+        bundler(jsFile)
       }
     } catch (e) {
       // @ts-ignore
