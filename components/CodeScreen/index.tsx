@@ -41,6 +41,9 @@ import {
   DefaultStyleFlavors,
 } from './utils'
 import { bundler } from '../../utils/services'
+import throttle from 'lodash.throttle'
+
+const throttledBundler = throttle(bundler, 500)
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -225,7 +228,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       )
       const jsFile = component.files.find((file) => file.fileType === 'js')
       if (jsFile) {
-        bundler(jsFile)
+        throttledBundler(jsFile)
       }
     } catch (e) {
       // @ts-ignore

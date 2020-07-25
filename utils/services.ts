@@ -67,7 +67,11 @@ export const bundler = async (jsFile: GeneratedFile) => {
     )
     iframe.src = blob
     iframe.setAttribute('id', 'output-iframe')
-    document.getElementById('render-output')?.append(iframe)
+    const elm = document.getElementById('render-output')
+    if (elm) {
+      elm.innerHTML = ''
+      elm.append(iframe)
+    }
   } catch (e) {
     const elm = document.getElementById('render-output')
     if (elm) {
