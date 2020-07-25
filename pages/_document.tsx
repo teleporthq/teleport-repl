@@ -28,26 +28,6 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
           <script
-            src="https://unpkg.com/react@16.8.0/umd/react.production.min.js"
-            type="text/javascript"
-          />
-          <script
-            src="https://unpkg.com/react-dom@16.8.0/umd/react-dom.production.min.js"
-            type="text/javascript"
-          />
-          <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.7.2/prop-types.min.js"
-            type="text/javascript"
-          />
-          <script
-            src="https://unpkg.com/react-is/umd/react-is.production.min.js"
-            type="text/javascript"
-          ></script>
-          <script
-            src="https://unpkg.com/styled-components/dist/styled-components.min.js"
-            type="text/javascript"
-          />
-          <script
             dangerouslySetInnerHTML={{
               __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

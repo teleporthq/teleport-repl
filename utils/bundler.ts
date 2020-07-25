@@ -8,6 +8,7 @@ import babelPresetENV from '@babel/preset-env'
 // @ts-ignore
 import babelPresetReact from '@babel/preset-react'
 // @ts-ignore
+import replace from '@rollup/plugin-replace'
 import { GeneratedFile } from '@teleporthq/teleport-types'
 
 const INDEX_ENTRY = `import React from "react";
@@ -49,24 +50,57 @@ const bundle = async (jsFile: GeneratedFile) => {
           'src/entry.js': MINIFIED_INDEX,
           'src/preview.js': MINIFIED_PREVIEW,
         }),
+        replace({
+          react: 'https://cdn.skypack.dev/react',
+          'react-dom': 'https://cdn.skypack.dev/react-dom',
+          'prop-types': 'https://cdn.skypack.dev/prop-types',
+          'styled-components': 'https://cdn.skypack.dev/styled-components',
+        }),
       ],
     })
 
     const output = await compiler.generate({
-      format: 'iife',
-      globals: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
-        'prop-types': 'PropTypes',
-        'styled-components': 'styled',
-      },
+      format: 'esm',
       name: 'bundled',
       sourcemap: true,
     })
 
     const bundledCode = output.output[0].code
-    // @ts-ignore
-    eval(bundledCode)
+    const existingIframe = document.getElementById('output-iframe')
+    existingIframe?.remove()
+
+    const iframe = document.createElement('iframe')
+    Object.assign(iframe.style, {
+      margin: '0',
+      padding: '0',
+      borderStyle: 'none',
+      height: '100%',
+      width: '100%',
+      marginBottom: '-5px',
+      overflow: 'scroll',
+    })
+    const blob = URL.createObjectURL(
+      new Blob(
+        [
+          `
+<script type="module">
+${bundledCode}
+</script>
+<body>
+<div id="output">
+</div>
+</body>
+`,
+        ],
+        { type: 'text/html' }
+      )
+    )
+    iframe.src = blob
+    iframe.setAttribute('id', 'output-iframe')
+    iframe.onerror = (e) => {
+      console.error(e)
+    }
+    document.getElementById('render-output')?.append(iframe)
   } catch (e) {
     // @ts-ignore
     console.error(e)

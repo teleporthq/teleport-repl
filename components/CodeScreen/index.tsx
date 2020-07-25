@@ -411,7 +411,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           </div>
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
-        <div className="preview-screen" id="output"></div>
+        <div className="preview-screen" id="render-output"></div>
         <style jsx>{`
             .main-content {
               display: flex;
