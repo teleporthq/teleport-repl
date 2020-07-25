@@ -8,9 +8,10 @@ import babelPresetENV from '@babel/preset-env'
 // @ts-ignore
 import babelPresetReact from '@babel/preset-react'
 // @ts-ignore
-import replace from '@rollup/plugin-replace'
+import replaceImport from 'rollup-plugin-esm-import-to-url'
 import { GeneratedFile } from '@teleporthq/teleport-types'
 import { expose } from 'comlink'
+import { init, parse, ImportSpecifier } from 'es-module-lexer'
 
 const INDEX_ENTRY = `import React from "react";
 import ReactDOM from "react-dom";
@@ -24,8 +25,7 @@ function PreviewWindow(){
   );
 };
 
-const elm = document.getElementById("output");
-ReactDOM.render(<PreviewWindow />, document.getElementById("output"));
+ReactDOM.render(<PreviewWindow />, document.body);
 `
 
 const minify = async (esmComponent: string) => {
@@ -35,47 +35,67 @@ const minify = async (esmComponent: string) => {
   return minifiedCode
 }
 
+const parseImports = async (component: string) => {
+  await init
+  const [imports] = parse(component)
+  const usedImports: string[] = ['react-dom']
+  if (Array.isArray(imports) && imports.length > 0) {
+    imports.forEach((key: ImportSpecifier) => {
+      const usedPackage = component.substring(key.s, key.e)
+      if (usedPackage.startsWith('.') || usedPackage.startsWith('/')) {
+        throw new Error(
+          `We don't support using external components other than npm packages`
+        )
+      }
+      usedImports.push(usedPackage)
+    })
+  }
+  return usedImports
+}
+
 const bundle = async (jsFile: GeneratedFile) => {
-  if (!jsFile) {
+  if (!jsFile || !jsFile?.content) {
     throw new Error('Failed in generating component')
   }
-  try {
-    const { content: component } = jsFile
-    const MINIFIED_INDEX = minify(INDEX_ENTRY)
-    const MINIFIED_PREVIEW = minify(component)
-    const compiler = await rollup({
-      input: 'src/entry.js',
-      external: ['react', 'react-dom', 'prop-types', 'styled-components'],
-      plugins: [
-        virtual({
-          'src/entry.js': MINIFIED_INDEX,
-          'src/preview.js': MINIFIED_PREVIEW,
-        }),
-        replace({
-          react: 'https://cdn.skypack.dev/react',
-          'react-dom': 'https://cdn.skypack.dev/react-dom',
-          'prop-types': 'https://cdn.skypack.dev/prop-types',
-          'styled-components': 'https://cdn.skypack.dev/styled-components',
-        }),
-      ],
-    })
+  const { content: component } = jsFile
+  const MINIFIED_INDEX = await minify(INDEX_ENTRY)
+  const MINIFIED_PREVIEW = await minify(component)
+  const usedImports = await parseImports(MINIFIED_PREVIEW.code)
 
-    const output = await compiler.generate({
-      format: 'esm',
-      name: 'bundled',
-      sourcemap: true,
-    })
+  const importMap = usedImports.reduce((acc, imp) => {
+    acc = {
+      ...acc,
+      [imp]: `https://cdn.skypack.dev/${imp}`,
+    }
+    return acc
+  }, {})
 
-    return output.output[0]?.code
-  } catch (e) {
-    // @ts-ignore
-    console.error(e)
-  }
+  const compiler = await rollup({
+    input: 'src/entry.js',
+    plugins: [
+      virtual({
+        'src/entry.js': MINIFIED_INDEX,
+        'src/preview.js': MINIFIED_PREVIEW,
+      }),
+      replaceImport({
+        imports: importMap,
+      }),
+    ],
+  })
+
+  const output = await compiler.generate({
+    format: 'esm',
+    name: 'bundled',
+    sourcemap: true,
+  })
+
+  return output.output[0]?.code
 }
 
 const exports = {
   bundle,
   minify,
+  parseImports,
 }
 
 export type BundlerTypes = typeof exports
