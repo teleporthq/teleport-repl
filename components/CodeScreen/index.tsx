@@ -28,8 +28,9 @@ import personList from '../../inputs/person-list.json'
 import personSpotlight from '../../inputs/person-spotlight.json'
 import customMapping from '../../inputs/repl-mapping.json'
 import simpleComponentUIDL from '../../inputs/simple-component.json'
+import externalComponentUIDL from '../../inputs/external-components.json'
 import tabSelector from '../../inputs/tab-selector.json'
-import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
+import { fetchJSONDataAndLoad, uploadUIDLJSON, bundler } from '../../utils/services'
 import { DropDown } from '../DropDown'
 import { ErrorPanel } from '../ErrorPanel'
 import Loader from '../Loader'
@@ -40,7 +41,6 @@ import {
   createAllReactNativeStyleFlavors,
   DefaultStyleFlavors,
 } from './utils'
-import { bundler } from '../../utils/services'
 import throttle from 'lodash.throttle'
 
 const throttledBundler = throttle(bundler, 500)
@@ -70,6 +70,7 @@ const generatorsCache: GeneratorsCache = {
 
 const uidlSamples: Record<string, ComponentUIDL> = {
   'simple-component': simpleComponentUIDL as ComponentUIDL,
+  'external-component': (externalComponentUIDL as unknown) as ComponentUIDL,
   navbar: (navbar as unknown) as ComponentUIDL,
   'contact-form': (contactForm as unknown) as ComponentUIDL,
   'person-spotlight': (personSpotlight as unknown) as ComponentUIDL,
@@ -167,7 +168,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               showErrorPanel: false,
               error: null,
             },
-            this.handleInputChange
+            () => {
+              this.handleInputChange()
+              this.preview()
+            }
           )
           return true
         }
@@ -213,7 +217,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       }
 
       this.setState({ generatedCode: code }, Prism.highlightAll)
-      this.preview()
     } catch (err) {
       this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
@@ -249,7 +252,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     const sourceJSON = jsonPrettify(uidlSamples[value])
     this.setState(
       { inputJson: sourceJSON, sourceJSON: value, showErrorPanel: false, error: null },
-      this.handleInputChange
+      () => {
+        this.handleInputChange()
+        this.preview()
+      }
     )
   }
 
@@ -402,6 +408,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               value={this.state.targetLibrary}
             />
             {this.renderDropDownFlavour()}
+            <button className="share-button" onClick={() => this.preview()}>
+              Render
+            </button>
           </div>
           <div className="code-wrapper">
             <div className="preview-scroller-y">

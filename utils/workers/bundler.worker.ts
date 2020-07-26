@@ -25,7 +25,7 @@ function PreviewWindow(){
   );
 };
 
-ReactDOM.render(<PreviewWindow />, document.body);
+ReactDOM.render(<PreviewWindow />, document.getElementById('output'));
 `
 
 const minify = async (esmComponent: string) => {
@@ -44,7 +44,7 @@ const parseImports = async (component: string) => {
       const usedPackage = component.substring(key.s, key.e)
       if (usedPackage.startsWith('.') || usedPackage.startsWith('/')) {
         throw new Error(
-          `We don't support using external components other than npm packages`
+          `Relative imports are not supported, use only external library imports`
         )
       }
       usedImports.push(usedPackage)
@@ -65,7 +65,7 @@ const bundle = async (jsFile: GeneratedFile) => {
   const importMap = usedImports.reduce((acc, imp) => {
     acc = {
       ...acc,
-      [imp]: `https://cdn.skypack.dev/${imp}`,
+      [imp]: `https://jspm.dev/${imp}`,
     }
     return acc
   }, {})

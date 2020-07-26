@@ -17,6 +17,7 @@
               "type": "element",
               "content": {
                 "elementType": "PersonSpotlight",
+                "semanticType": "PersonSpotlight",
                 "dependency": {
                   "type": "local",
                   "path": "./person-spotlight"
