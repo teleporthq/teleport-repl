@@ -65,7 +65,7 @@ const bundle = async (jsFile: GeneratedFile) => {
   const importMap = usedImports.reduce((acc, imp) => {
     acc = {
       ...acc,
-      [imp]: `https://jspm.dev/${imp}`,
+      [imp]: `https://cdn.skypack.dev/${imp}`,
     }
     return acc
   }, {})
