@@ -29,6 +29,8 @@ import personSpotlight from '../../inputs/person-spotlight.json'
 import customMapping from '../../inputs/repl-mapping.json'
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import externalComponentUIDL from '../../inputs/external-components.json'
+import antButtonComponentUIDL from '../../inputs/antd-button.json'
+import reactBootStrapComponentUIDL from '../../inputs/react-bootstrap.json'
 import tabSelector from '../../inputs/tab-selector.json'
 import { fetchJSONDataAndLoad, uploadUIDLJSON, bundler } from '../../utils/services'
 import { DropDown } from '../DropDown'
@@ -71,6 +73,8 @@ const generatorsCache: GeneratorsCache = {
 const uidlSamples: Record<string, ComponentUIDL> = {
   'simple-component': simpleComponentUIDL as ComponentUIDL,
   'external-component': (externalComponentUIDL as unknown) as ComponentUIDL,
+  'antd-button': (antButtonComponentUIDL as unknown) as ComponentUIDL,
+  'react-bootstrap': (reactBootStrapComponentUIDL as unknown) as ComponentUIDL,
   navbar: (navbar as unknown) as ComponentUIDL,
   'contact-form': (contactForm as unknown) as ComponentUIDL,
   'person-spotlight': (personSpotlight as unknown) as ComponentUIDL,

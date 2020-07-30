@@ -1,0 +1,92 @@
+{
+    "name": "Simple Component",
+    "stateDefinitions": {
+      "checked": {
+        "type": "boolean",
+        "defaultValue": true
+      }
+    },
+    "node": {
+      "type": "element",
+      "content": {
+        "elementType": "container",
+        "semanticType": "div",
+        "children": [
+          {
+            "type": "element",
+            "content": {
+              "elementType": "link",
+              "semanticType": "link",
+              "attrs": {
+                "href": "https://unpkg.com/bootstrap@4.5.0/dist/css/bootstrap.min.css",
+                "rel": "stylesheet"
+              }
+            }
+          },
+          {
+            "type": "element",
+            "content": {
+              "elementType": "Button",
+              "semanticType": "Button",
+              "attrs": {
+                "variant": "primary",
+                "size": "lg"
+              },
+              "dependency": {
+                "type": "package",
+                "path": "antd",
+                "meta": {
+                  "namedImport": true
+                }
+              },
+              "children": [
+                "Button"
+              ]
+            }
+          },
+          {
+            "type": "element",
+            "content": {
+              "elementType": "Button",
+              "semanticType": "Button",
+              "attrs": {
+                "variant": "secondary",
+                "size": "lg"
+              },
+              "dependency": {
+                "type": "package",
+                "path": "antd",
+                "meta": {
+                  "namedImport": true
+                }
+              },
+              "children": [
+                "Button"
+              ]
+            }
+          },
+          {
+            "type": "element",
+            "content": {
+              "elementType": "Button",
+              "semanticType": "Button",
+              "attrs": {
+                "variant": "danger",
+                "size": "lg"
+              },
+              "dependency": {
+                "type": "package",
+                "path": "react-bootstrap",
+                "meta": {
+                  "namedImport": true
+                }
+              },
+              "children": [
+                "Button"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }

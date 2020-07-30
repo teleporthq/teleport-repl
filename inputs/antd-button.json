@@ -1,0 +1,129 @@
+{
+    "name": "Simple Component",
+    "stateDefinitions": {
+      "checked": {
+        "type": "boolean",
+        "defaultValue": true
+      }
+    },
+    "node": {
+      "type": "element",
+      "content": {
+        "elementType": "container",
+        "semanticType": "div",
+        "children": [
+          {
+            "type": "element",
+            "content": {
+              "elementType": "link",
+              "semanticType": "link",
+              "attrs": {
+                "href": "https://unpkg.com/antd@4.5.0/dist/antd.css",
+                "rel": "stylesheet"
+              }
+            }
+          },
+          {
+            "type": "element",
+            "content": {
+              "elementType": "Button",
+              "semanticType": "Button",
+              "attrs": {
+                "type": "primary"
+              },
+              "dependency": {
+                "type": "package",
+                "path": "antd",
+                "meta": {
+                  "namedImport": true
+                }
+              },
+              "children": [
+                "Button"
+              ]
+            }
+          },
+          {
+            "type": "element",
+            "content": {
+              "elementType": "Button",
+              "semanticType": "Button",
+              "attrs": {
+                "type": "secondary"
+              },
+              "dependency": {
+                "type": "package",
+                "path": "antd",
+                "meta": {
+                  "namedImport": true
+                }
+              },
+              "children": [
+                "Button"
+              ]
+            }
+          },
+          {
+            "type": "element",
+            "content": {
+              "elementType": "Button",
+              "semanticType": "Button",
+              "attrs": {
+                "danger": "true"
+              },
+              "dependency": {
+                "type": "package",
+                "path": "antd",
+                "meta": {
+                  "namedImport": true
+                }
+              },
+              "children": [
+                "Button"
+              ]
+            }
+          },
+          {
+              "type": "element",
+              "content": {
+                  "elementType": "container",
+                  "children": ["Antd Checkbox"]
+              }
+          },
+          {
+            "type": "element",
+            "content": {
+                "elementType": "container",
+                "semanticType": "Checkbox",
+                "events": {
+                  "click": [
+                    {
+                      "type": "stateChange",
+                      "modifies": "checked",
+                      "newState": false
+                    }
+                  ]
+                },
+                "attrs": {
+                    "checked": {
+                        "type": "dynamic",
+                        "content": {
+                            "referenceType": "state",
+                            "id": "checked"
+                        }
+                    }
+                },
+                "dependency": {
+                    "type": "package",
+                    "path": "antd",
+                    "meta": {
+                      "namedImport": true
+                    }
+                  }
+                
+            }
+        }
+        ]
+      }
+    }
+  }

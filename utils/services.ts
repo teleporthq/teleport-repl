@@ -33,49 +33,51 @@ export const bundler = async (jsFile: GeneratedFile) => {
   const { bundle } = workerApi
   try {
     const result = await bundle(jsFile)
-    if (!result) {
-      console.error('Failed in bundling')
-    }
-    const existingIframe = document.getElementById('output-iframe')
-    existingIframe?.remove()
+    console.log(result, 'bundle')
+    //   if (!result) {
+    //     console.error('Failed in bundling')
+    //   }
+    //   const existingIframe = document.getElementById('output-iframe')
+    //   existingIframe?.remove()
 
-    const iframe = document.createElement('iframe')
-    Object.assign(iframe.style, {
-      margin: '0',
-      padding: '0',
-      borderStyle: 'none',
-      height: '100%',
-      width: '100%',
-      marginBottom: '-5px',
-      overflow: 'scroll',
-    })
-    const blob = URL.createObjectURL(
-      new Blob(
-        [
-          `
-  <script type="module">
-  ${result}
-  </script>
-  <body>
-  <div id="output">
-  </div>
-  </body>
-  `,
-        ],
-        { type: 'text/html' }
-      )
-    )
-    iframe.src = blob
-    iframe.setAttribute('id', 'output-iframe')
-    const elm = document.getElementById('render-output')
-    if (elm) {
-      elm.innerHTML = ''
-      elm.append(iframe)
-    }
+    //   const iframe = document.createElement('iframe')
+    //   Object.assign(iframe.style, {
+    //     margin: '0',
+    //     padding: '0',
+    //     borderStyle: 'none',
+    //     height: '100%',
+    //     width: '100%',
+    //     marginBottom: '-5px',
+    //     overflow: 'scroll',
+    //   })
+    //   const blob = URL.createObjectURL(
+    //     new Blob(
+    //       [
+    //         `
+    // <script type="module">
+    // ${result}
+    // </script>
+    // <body>
+    // <div id="output">
+    // </div>
+    // </body>
+    // `,
+    //       ],
+    //       { type: 'text/html' }
+    //     )
+    //   )
+    //   iframe.src = blob
+    //   iframe.setAttribute('id', 'output-iframe')
+    //   const elm = document.getElementById('render-output')
+    //   if (elm) {
+    //     elm.innerHTML = ''
+    //     elm.append(iframe)
+    //   }
   } catch (e) {
-    const elm = document.getElementById('render-output')
-    if (elm) {
-      elm.innerHTML = e
-    }
+    console.log(e)
+    // const elm = document.getElementById('render-output')
+    // if (elm) {
+    //   elm.innerHTML = e
+    // }
   }
 }

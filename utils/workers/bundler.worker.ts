@@ -13,6 +13,27 @@ import { GeneratedFile } from '@teleporthq/teleport-types'
 import { expose } from 'comlink'
 import { init, parse, ImportSpecifier } from 'es-module-lexer'
 
+class CacheService {
+  cache: Record<string, unknown> = {}
+
+  setCache(key: string, value: unknown) {
+    this.cache = {
+      ...this.cache,
+      [key]: value,
+    }
+  }
+
+  isCachedModule(key: string) {
+    return Boolean(this.cache[key]) ?? false
+  }
+
+  getCache() {
+    return this.cache
+  }
+}
+
+const cache = new CacheService()
+
 const INDEX_ENTRY = `import React from "react";
 import ReactDOM from "react-dom";
 import Component from "./preview.js";
@@ -53,6 +74,15 @@ const parseImports = async (component: string) => {
   return usedImports
 }
 
+const checkModulesForCache = async (usedImports: string[]) => {
+  for (const imp of usedImports) {
+    if (!cache.isCachedModule(imp)) {
+      const module = await import(`https://jspm.dev/${imp}`)
+      cache.setCache(imp, module.dfault)
+    }
+  }
+}
+
 const bundle = async (jsFile: GeneratedFile) => {
   if (!jsFile || !jsFile?.content) {
     throw new Error('Failed in generating component')
@@ -61,14 +91,7 @@ const bundle = async (jsFile: GeneratedFile) => {
   const MINIFIED_INDEX = await minify(INDEX_ENTRY)
   const MINIFIED_PREVIEW = await minify(component)
   const usedImports = await parseImports(MINIFIED_PREVIEW.code)
-
-  const importMap = usedImports.reduce((acc, imp) => {
-    acc = {
-      ...acc,
-      [imp]: `https://cdn.skypack.dev/${imp}`,
-    }
-    return acc
-  }, {})
+  checkModulesForCache(usedImports)
 
   const compiler = await rollup({
     input: 'src/entry.js',
@@ -78,7 +101,13 @@ const bundle = async (jsFile: GeneratedFile) => {
         'src/preview.js': MINIFIED_PREVIEW,
       }),
       replaceImport({
-        imports: importMap,
+        imports: usedImports.reduce((acc, imp) => {
+          acc = {
+            ...acc,
+            [imp]: `./${imp}`,
+          }
+          return acc
+        }, {}),
       }),
     ],
   })
