@@ -145,6 +145,22 @@
           "type": "element",
           "content": {
             "elementType": "button",
+            "referencedStyles": {
+              "5ee9a8c4855aa926ce281bce": {
+                "id": "5ee9a8c4855aa926ce281bce",
+                "type": "style-map",
+                "content": {
+                  "mapType": "inlined",
+                  "styles": {
+                    "background-color": "green",
+                  "color": "white"
+                  },
+                  "conditions": [
+                    { "conditionType": "element-state", "content": "hover"}
+                  ]
+                }
+              }
+            },
             "style": {
               "font-size": "18px",
               "padding": "5px 10px",
@@ -154,14 +170,7 @@
               "border": "1px solid grey",
               "transition": "all .35s ease-out",
               "border-radius": "3px",
-              "cursor": "pointer",
-              "&:hover": {
-                "type": "nested-style",
-                "content": {
-                  "background-color": "green",
-                  "color": "white"
-                }
-              }
+              "cursor": "pointer"
             },
             "children": ["Send"]
           }

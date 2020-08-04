@@ -1,0 +1,23 @@
+{
+    "name": "Simple Component",
+    "node": {
+      "type": "element",
+      "content": {
+        "elementType": "Button",
+        "semanticType": "Button",
+        "attrs": {
+          "variant": "contained"
+        },
+        "dependency": {
+            "type": "package",
+            "path": "@material-ui/core",
+            "meta": {
+                "namedImport": true
+            }
+        },
+        "children": [
+          "Button"
+        ]
+      }
+    }
+  }

@@ -54,7 +54,7 @@
         {
           "type": "element",
           "content": {
-            "elementType": "textblock",
+            "elementType": "container",
             "style": {
               "font-size": "22px",
               "font-weight": "900",
@@ -95,7 +95,7 @@
         {
           "type": "element",
           "content": {
-            "elementType": "textblock",
+            "elementType": "container",
             "style": {
               "fontSize": "16px",
               "margin": "0",
@@ -130,7 +130,7 @@
         {
           "type": "element",
           "content": {
-            "elementType": "textblock",
+            "elementType": "container",
             "children": [
               {
                 "type": "dynamic",
