@@ -11,6 +11,7 @@
         "dependency": {
             "type": "package",
             "path": "@material-ui/core",
+            "version": "^4.11.2",
             "meta": {
                 "namedImport": true
             }
