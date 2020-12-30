@@ -40,6 +40,8 @@ import {
   createAllReactStyleFlavors,
   createAllReactNativeStyleFlavors,
   DefaultStyleFlavors,
+  capitalize,
+  dashToSpace,
 } from './utils'
 import throttle from 'lodash.throttle'
 
@@ -152,7 +154,19 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       router: { query },
     } = this.props
 
-    const { uidlLink } = query
+    const { uidlLink, flavor, style } = query
+
+    if (flavor) {
+      this.setState({ ...this.state, targetLibrary: capitalize(flavor) as ComponentType })
+    }
+
+    if (style && ['react', 'preact', 'react-native'].includes(flavor?.toLowerCase())) {
+      this.setState({
+        ...this.state,
+        libraryFlavor: dashToSpace(style) as StyleVariation,
+      })
+    }
+
     if (!uidlLink) {
       return false
     }
@@ -208,6 +222,13 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     try {
       const result: CompiledComponent = await generator.generateComponent(jsonValue, {
         mapping: customMapping, // Temporary fix for svg's while the `line` element is converted to `hr` in the generators
+        /* Project Style sheets are used only for project-generators. We need to show-case tokens in repl
+        and so we are adding a empty project style sheet by default. */
+        projectStyleSet: {
+          styleSetDefinitions: {},
+          fileName: 'style',
+          path: '.',
+        },
       })
       const code = concatenateAllFiles(result.files)
       if (!code) {
@@ -614,7 +635,15 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 const withCustomRouter = (ReplCode: any) => {
   return withRouter(({ router, ...props }: any): any => {
     if (router && router.asPath) {
-      const query = queryString.parse(router.asPath.split(/\?/)[1])
+      const query = router.asPath
+        .split('/?')
+        .reduce((acc: Record<string, string>, param: string) => {
+          if (param) {
+            const parsed = queryString.parse(param) as Record<string, string>
+            acc = { ...acc, ...parsed }
+          }
+          return acc
+        }, {})
       router = { ...router, query }
       return <ReplCode router={router} {...props} />
     }

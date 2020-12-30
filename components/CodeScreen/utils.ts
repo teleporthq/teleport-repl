@@ -61,3 +61,12 @@ export const DefaultStyleFlavors = {
   [ComponentType.STENCIL]: null,
   [ComponentType.ANGULAR]: null,
 }
+
+export const capitalize = (str: string) => {
+  const flavor = str.toLowerCase()
+  return flavor.charAt(0).toUpperCase() + flavor.slice(1)
+}
+
+export const dashToSpace = (str: string) => {
+  return str.replace(/-/g, ' ')
+}
