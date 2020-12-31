@@ -156,13 +156,25 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
     const { uidlLink, flavor, style } = query
 
-    if (flavor) {
+    if (flavor && !style) {
       this.setState({ ...this.state, targetLibrary: capitalize(flavor) as ComponentType })
     }
 
-    if (style && ['react', 'preact', 'react-native'].includes(flavor?.toLowerCase())) {
+    if (style && !flavor) {
       this.setState({
         ...this.state,
+        libraryFlavor: dashToSpace(style) as StyleVariation,
+      })
+    }
+
+    if (
+      style &&
+      flavor &&
+      ['react', 'preact', 'react-native'].includes(flavor?.toLowerCase())
+    ) {
+      this.setState({
+        ...this.state,
+        targetLibrary: capitalize(flavor) as ComponentType,
         libraryFlavor: dashToSpace(style) as StyleVariation,
       })
     }
