@@ -40,12 +40,13 @@ import {
   createAllReactStyleFlavors,
   createAllReactNativeStyleFlavors,
   DefaultStyleFlavors,
-  capitalize,
   dashToSpace,
+  spaceToDash,
 } from './utils'
 import throttle from 'lodash.throttle'
 
 const throttledBundler = throttle(bundler, 500)
+const FLAVORS_WITH_STYLES = ['react', 'preact', 'react-native', 'reactnative']
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
@@ -136,8 +137,30 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     }
   }
 
+  public updateParams(flavor: string, style: string) {
+    this.props.router.push({
+      pathname: '/',
+      query: {
+        flavor,
+        ...(FLAVORS_WITH_STYLES.includes(flavor.toLowerCase()) && {
+          style: spaceToDash(style),
+        }),
+      },
+    })
+  }
+
   public async componentDidMount() {
     this.initREPL()
+    this.updateParams(ComponentType.REACT, ReactStyleVariation.CSSModules)
+  }
+
+  public componentDidUpdate(_: CodeProps, prevState: CodeScreenState) {
+    if (
+      this.state.targetLibrary !== prevState.targetLibrary ||
+      this.state.libraryFlavor !== prevState.libraryFlavor
+    ) {
+      this.updateParams(this.state.targetLibrary, this.state.libraryFlavor)
+    }
   }
 
   public initREPL = async () => {
@@ -157,7 +180,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     const { uidlLink, flavor, style } = query
 
     if (flavor && !style) {
-      this.setState({ ...this.state, targetLibrary: capitalize(flavor) as ComponentType })
+      this.setState({ ...this.state, targetLibrary: flavor as ComponentType })
     }
 
     if (style && !flavor) {
@@ -167,14 +190,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       })
     }
 
-    if (
-      style &&
-      flavor &&
-      ['react', 'preact', 'react-native'].includes(flavor?.toLowerCase())
-    ) {
+    if (style && flavor && FLAVORS_WITH_STYLES.includes(flavor?.toLowerCase())) {
       this.setState({
         ...this.state,
-        targetLibrary: capitalize(flavor) as ComponentType,
+        targetLibrary: flavor as ComponentType,
         libraryFlavor: dashToSpace(style) as StyleVariation,
       })
     }
