@@ -61,3 +61,11 @@ export const DefaultStyleFlavors = {
   [ComponentType.STENCIL]: null,
   [ComponentType.ANGULAR]: null,
 }
+
+export const dashToSpace = (str: string) => {
+  return str.replace(/-/g, ' ')
+}
+
+export const spaceToDash = (str: string) => {
+  return str.replace(/ /g, '-')
+}
