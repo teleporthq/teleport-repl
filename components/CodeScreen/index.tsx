@@ -276,7 +276,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public async preview() {
-    const generator = createReactComponentGenerator(ReactStyleVariation.StyledComponents)
+    const generator = createReactComponentGenerator({
+      variation: ReactStyleVariation.StyledComponents,
+    })
     try {
       const component = await generator.generateComponent(
         JSON.parse(this.state.inputJson)

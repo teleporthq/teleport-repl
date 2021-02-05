@@ -24,7 +24,9 @@ export enum ComponentType {
 export const createAllReactStyleFlavors = () => {
   return Object.values(ReactStyleVariation).reduce(
     (acc: Record<string, ComponentGenerator>, styleKey) => {
-      acc[styleKey] = createReactComponentGenerator(styleKey as ReactStyleVariation)
+      acc[styleKey] = createReactComponentGenerator({
+        variation: styleKey as ReactStyleVariation,
+      })
       return acc
     },
     {}
@@ -34,7 +36,9 @@ export const createAllReactStyleFlavors = () => {
 export const createAllPreactStyleFlavors = () => {
   return Object.values(PreactStyleVariation).reduce(
     (acc: Record<string, ComponentGenerator>, styleKey) => {
-      acc[styleKey] = createPreactComponentGenerator(styleKey as PreactStyleVariation)
+      acc[styleKey] = createPreactComponentGenerator({
+        variation: styleKey as PreactStyleVariation,
+      })
       return acc
     },
     {}
@@ -44,9 +48,9 @@ export const createAllPreactStyleFlavors = () => {
 export const createAllReactNativeStyleFlavors = () => {
   return Object.values(ReactNativeStyleVariation).reduce(
     (acc: Record<string, ComponentGenerator>, styleKey) => {
-      acc[styleKey] = createReactNativeComponentGenerator(
-        styleKey as ReactNativeStyleVariation
-      )
+      acc[styleKey] = createReactNativeComponentGenerator({
+        variation: styleKey as ReactNativeStyleVariation,
+      })
       return acc
     },
     {}
