@@ -1,7 +1,6 @@
 import React from 'react'
 import App from 'next/app'
 import Head from 'next/head'
-import 'react-smooshpack/dist/index.css'
 
 const DEFAULT_TITLE = 'teleportHQ REPL'
 
@@ -12,6 +11,7 @@ class MyApp extends App {
       <>
         <Head>
           <title>{DEFAULT_TITLE}</title>
+          <style>{`.sp-stack { height: auto !important}`}</style>
         </Head>
         <Component {...pageProps} />
       </>

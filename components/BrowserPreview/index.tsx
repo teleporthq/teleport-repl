@@ -1,20 +1,21 @@
-import { useEffect } from 'react'
-import { SandpackPreview, useSandpack } from 'react-smooshpack'
+import { SandpackRunner } from 'react-smooshpack'
 
-const BrowserPreview: React.FC<{ activeComponentCode: string }> = ({
-  activeComponentCode,
-}) => {
-  const { sandpack } = useSandpack()
+const DEPENDENCIES = {
+  'prop-types': 'latest',
+  'styled-components': 'latest',
+}
 
-  useEffect(() => {
-    sandpack.updateCurrentFile(activeComponentCode)
-  }, [activeComponentCode])
-
+const BrowserPreview: React.FC<{
+  code: string
+  dependencies: Record<string, string>
+}> = ({ code, dependencies }) => {
   return (
-    <SandpackPreview
-      showNavigator={true}
-      showOpenInCodeSandbox={false}
+    <SandpackRunner
+      options={{ showNavigator: true }}
+      code={code}
+      template="react"
       customStyle={{ height: '85vh' }}
+      customSetup={{ dependencies: { ...DEPENDENCIES, ...dependencies } }}
     />
   )
 }

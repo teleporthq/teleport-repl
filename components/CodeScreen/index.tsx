@@ -85,7 +85,7 @@ const uidlSamples: Record<string, ComponentUIDL> = {
 }
 
 interface CodeScreenState {
-  activeComponentCode: string
+  preview: { code: string; dependencies: Record<string, string> }
   generatedCode: string
   targetLibrary: ComponentType
   inputJson: string
@@ -125,7 +125,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   constructor(props: CodeProps) {
     super(props)
     this.state = {
-      activeComponentCode: '',
+      preview: { code: '', dependencies: {} },
       generatedCode: '',
       sourceJSON: 'simple-component',
       inputJson: jsonPrettify(uidlSamples['simple-component']),
@@ -272,25 +272,26 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       }
 
       this.setState({ generatedCode: code }, Prism.highlightAll)
+      this.preview()
     } catch (err) {
       this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
     }
   }
 
-  public async preview() {
+  preview = async () => {
     const generator = createReactComponentGenerator({
       variation: ReactStyleVariation.StyledComponents,
     })
     try {
-      const component = await generator.generateComponent(
+      const { files, dependencies } = await generator.generateComponent(
         JSON.parse(this.state.inputJson)
       )
-      const jsFile = component.files.find((file) => file.fileType === 'js')
+      const jsFile = files.find((file) => file.fileType === 'js')
       if (!jsFile) {
         return
       }
-      this.setState({ activeComponentCode: jsFile.content })
+      this.setState({ preview: { code: jsFile.content, dependencies } })
     } catch (e) {
       // @ts-ignore
       console.error(e)
@@ -466,7 +467,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               value={this.state.targetLibrary}
             />
             {this.renderDropDownFlavour()}
-            <button className="share-button" onClick={() => this.preview()}>
+            <button className="share-button" onClick={this.preview}>
               Render
             </button>
           </div>
@@ -482,8 +483,11 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <div className="preview-screen">
-          <SandpackProvider template="react">
-            <BrowserPreview activeComponentCode={this.state.activeComponentCode} />
+          <SandpackProvider>
+            <BrowserPreview
+              code={this.state.preview.code}
+              dependencies={this.state.preview.dependencies}
+            />
           </SandpackProvider>
         </div>
         <style jsx>{styles}</style>
