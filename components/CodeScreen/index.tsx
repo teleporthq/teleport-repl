@@ -20,6 +20,7 @@ import Prism from 'prismjs'
 import queryString from 'query-string'
 import React from 'react'
 import Modal from 'react-modal'
+import { SandpackProvider } from 'react-smooshpack'
 import complexComponentUIDL from '../../inputs/complex-component.json'
 import contactForm from '../../inputs/contact-form.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
@@ -30,7 +31,7 @@ import customMapping from '../../inputs/repl-mapping.json'
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import externalComponentUIDL from '../../inputs/external-components.json'
 import tabSelector from '../../inputs/tab-selector.json'
-import { fetchJSONDataAndLoad, uploadUIDLJSON, bundler } from '../../utils/services'
+import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 import { DropDown } from '../DropDown'
 import { ErrorPanel } from '../ErrorPanel'
 import Loader from '../Loader'
@@ -42,10 +43,10 @@ import {
   DefaultStyleFlavors,
   dashToSpace,
   spaceToDash,
+  styles,
 } from './utils'
-import throttle from 'lodash.throttle'
+import BrowserPreview from '../BrowserPreview'
 
-const throttledBundler = throttle(bundler, 500)
 const FLAVORS_WITH_STYLES = ['react', 'preact', 'react-native', 'reactnative']
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
@@ -84,6 +85,7 @@ const uidlSamples: Record<string, ComponentUIDL> = {
 }
 
 interface CodeScreenState {
+  activeComponentCode: string
   generatedCode: string
   targetLibrary: ComponentType
   inputJson: string
@@ -123,6 +125,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   constructor(props: CodeProps) {
     super(props)
     this.state = {
+      activeComponentCode: '',
       generatedCode: '',
       sourceJSON: 'simple-component',
       inputJson: jsonPrettify(uidlSamples['simple-component']),
@@ -284,9 +287,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         JSON.parse(this.state.inputJson)
       )
       const jsFile = component.files.find((file) => file.fileType === 'js')
-      if (jsFile) {
-        throttledBundler(jsFile)
+      if (!jsFile) {
+        return
       }
+      this.setState({ activeComponentCode: jsFile.content })
     } catch (e) {
       // @ts-ignore
       console.error(e)
@@ -477,189 +481,12 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           </div>
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
-        <div className="preview-screen" id="render-output"></div>
-        <style jsx>{`
-            .main-content {
-              display: flex;
-              padding-top 20px;
-              padding-bottom 20px;
-              width: 100%;
-              height: calc(100% - 71px);
-              justify-content: space-around;
-              box-sizing: border-box;
-            }
-
-            .iframe-size {
-              width: 100%;
-              height: 100%;
-            }
-
-            .editor {
-              border-radius: 10px;
-              width: 49%;
-              background: var(--editor-bg-black);
-              overflow: hidden;
-              z-index: 3;
-              padding: 0 0 30px 0;
-              position: relative;
-              margin-right: 5px;
-              margin-left: 5px;
-            }
-
-            .preview-screen {
-              color: #000;
-              border-radius: 10px;
-              width: 49%;
-              border: 1px solid var(--editor-bg-black); 
-              overflow: hidden;
-              z-index: 3;
-              padding: 5px;
-              position: relative;
-              margin-right: 5px;
-              margin-left: 5px;
-              overflow: scroll;
-            }
-
-            @media screen and (max-width: 762px){
-              .main-content{
-                padding: 20px 15px;
-                display: grid;
-                grid-template-rows: 1fr 1fr;
-                grid-gap: 4%;
-                justify-content: normal;
-                overflow-y: scroll;
-              }
-              .editor{
-                width: 99%;
-                height: calc(100% - 30px);
-              }
-            }
-            .editor-header {
-              height: 30px;
-              display: flex;
-              flex-direction: row;
-              border-bottom: solid 1px #cccccc20;
-              padding: 10px 10px;
-            }
-
-            .code-wrapper {
-              height: calc(100% - 30px);
-              position: relative;
-              overflow: auto;
-              background: var(--editor-bg-black);
-            }
-
-            .preview-scroller-y {
-              height: 100%;
-              width: 100%;
-              position: absolute;
-              top: 0;
-              left: 0;
-              background: var(--editor-bg-black);
-            }
-
-            .preview-scroller-x {
-              position: absolute;
-              top: 0;
-              left: 0;
-              background: var(--editor-bg-black);
-            }
-
-            .preview-scroller-x::-webkit-scrollbar-corner,
-            .preview-scroller-y::-webkit-scrollbar-corner {
-              background: var(--editor-bg-black);
-              height: 10px;
-              width: 10px;
-            }
-
-            .preview-scroller-x::-webkit-scrollbar,
-            .preview-scroller-y::-webkit-scrollbar {
-              width: 10px;
-              height: 10px;
-            }
-
-            .preview-scroller-x::-webkit-scrollbar-thumb, .preview-scroller-y::-webkit-scrollbar-thumb {
-              background: var(--editor-scrollbar-color);
-              border-radius: 5px;
-            }
-
-            .code-wrapper .previewer {
-              margin: 0;
-              padding: 5px 0 0 10px;
-            }
-
-            .previewer-header {
-              justify-content: space-between;
-              align-items: center;
-            }
-
-            .previewer-header .code-wrapper {
-              background-color: #2d2d2d;
-            }
-
-            .with-offset {
-              padding-left: 50px;
-            }
-
-            .shareable-link {
-              padding: 10px;
-              background: rgba(200, 200, 200, 0.5);
-              user-select: all;
-            }
-
-            .modal-buttons {
-              display: flex;
-              justify-content: space-between;
-              margin: 20px 0 0;
-            }
-
-            .modal-button {
-              background: var(--color-purple);
-              color: #fff;
-              padding: 8px 16px;
-              font-size: 14px;
-              border-radius: 4px;
-              border: 0 none;
-            }
-
-            .close-button {
-              background: rgb(55, 55, 62);
-            }
-
-            .share-button {
-              color: var(--color-purple);
-              padding: 6px;
-              margin-left: 15px;
-              background-color: #fff;
-              font-size: 14px;
-              border-radius: 4px;
-              border: 0 none;
-            }
-
-            .copied-text {
-              position: absolute;
-              top: 0;
-              width: 100%;
-              left: 0;
-              padding: 5px 0;
-              background-color: var(--success-green);
-              color: #fff;
-              opacity: 0;
-            }
-
-            .fade-in {
-              animation: fadeInOpacity 1 ease-in 0.35s forwards;
-            }
-
-            @keyframes fadeInOpacity {
-              0% {
-                opacity: 0;
-              }
-              100% {
-                opacity: 1;
-              }
-            }
-          `}</style>
+        <div className="preview-screen">
+          <SandpackProvider template="react">
+            <BrowserPreview activeComponentCode={this.state.activeComponentCode} />
+          </SandpackProvider>
+        </div>
+        <style jsx>{styles}</style>
       </div>
     )
   }
