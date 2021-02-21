@@ -20,7 +20,6 @@ import Prism from 'prismjs'
 import queryString from 'query-string'
 import React from 'react'
 import Modal from 'react-modal'
-import { SandpackProvider } from 'react-smooshpack'
 import complexComponentUIDL from '../../inputs/complex-component.json'
 import contactForm from '../../inputs/contact-form.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
@@ -293,7 +292,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       }
       this.setState({ preview: { code: jsFile.content, dependencies } })
     } catch (e) {
-      // @ts-ignore
+      // tslint:disable-next-line:no-console
       console.error(e)
     }
   }
@@ -483,12 +482,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
         <div className="preview-screen">
-          <SandpackProvider>
-            <BrowserPreview
-              code={this.state.preview.code}
-              dependencies={this.state.preview.dependencies}
-            />
-          </SandpackProvider>
+          <BrowserPreview
+            code={this.state.preview.code}
+            dependencies={this.state.preview.dependencies}
+          />
         </div>
         <style jsx>{styles}</style>
       </div>

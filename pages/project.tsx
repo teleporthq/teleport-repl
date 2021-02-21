@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GeneratedFolder } from '@teleporthq/teleport-types'
-import { Sandpack, SandpackFiles, SandpackProvider } from 'react-smooshpack'
+import { Sandpack, SandpackFiles } from 'react-smooshpack'
 import { AppPage } from '../components/AppPage'
 import dynamic from 'next/dynamic'
 import projectJSON from '../inputs/project.json'
@@ -24,7 +24,6 @@ const fixPackageJSONForReact = (json: string) => {
 }
 
 const SandpackWrapper: React.FC<{ files: SandpackFiles }> = ({ files }) => {
-  console.log(files)
   return (
     <>
       <Sandpack
@@ -61,8 +60,8 @@ const ProjectPreview = () => {
 
   const mapFiles = (folders: GeneratedFolder[], currentPath: string) => {
     return folders.reduce((acc: SandpackFiles, folder) => {
-      const { files, subFolders } = folder
-      files.map(
+      const { files: subFiles, subFolders } = folder
+      subFiles.map(
         (file) =>
           (acc[`${currentPath}/${folder.name}/${file.name}.${file.fileType}`] = {
             code: file.content,
@@ -77,8 +76,8 @@ const ProjectPreview = () => {
 
   const generate = async () => {
     try {
-      const { files, subFolders } = await generator.generateProject(uidl)
-      const packageJSON = files.find(
+      const { files: filesFromFolder, subFolders } = await generator.generateProject(uidl)
+      const packageJSON = filesFromFolder.find(
         (file) => file.name === 'package' && file.fileType === 'json'
       )
       if (!packageJSON) {
