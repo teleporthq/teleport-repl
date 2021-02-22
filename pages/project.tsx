@@ -35,6 +35,8 @@ const SandpackWrapper: React.FC<{ files: SandpackFiles }> = ({ files }) => {
           showLineNumbers: true,
           showTabs: true,
           wrapContent: true,
+          recompileMode: 'delayed',
+          recompileDelay: 500,
         }}
       />
     </>
@@ -83,12 +85,13 @@ const ProjectPreview = () => {
       if (!packageJSON) {
         return
       }
-      setFiles({
+      const mappedFiles = {
         ['/package.json']: {
           code: JSON.stringify(fixPackageJSONForReact(packageJSON.content), null, 2),
         },
         ...mapFiles(subFolders, ''),
-      })
+      }
+      setFiles(mappedFiles)
     } catch (e) {
       throw new Error(e)
     }

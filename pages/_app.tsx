@@ -11,7 +11,11 @@ class MyApp extends App {
       <>
         <Head>
           <title>{DEFAULT_TITLE}</title>
-          <style>{`.sp-stack { height: auto !important} .sp-dark > .sp-layout { height: 100vh !important } `}</style>
+          <style>{`
+          .sp-stack { height: auto !important} 
+          .sp-dark > .sp-layout { height: 93vh !important } 
+          .ace_content { background-color: #040404} 
+          .ace_gutter { background-color: #040404 !important }`}</style>
         </Head>
         <Component {...pageProps} />
       </>
