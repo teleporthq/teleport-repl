@@ -1,7 +1,4 @@
-import { SandpackRunner, SandpackProvider } from 'react-smooshpack'
-
-/* Till this get's fixed.
-Reference --> https://github.com/teleporthq/teleport-code-generators/issues/540 */
+import { SandpackRunner } from 'react-smooshpack'
 
 const DEPENDENCIES = {
   'prop-types': 'latest',
@@ -13,15 +10,13 @@ const BrowserPreview: React.FC<{
   dependencies: Record<string, string>
 }> = ({ code, dependencies }) => {
   return (
-    <SandpackProvider>
-      <SandpackRunner
-        options={{ showNavigator: true }}
-        code={code}
-        template="react"
-        customStyle={{ height: '85vh' }}
-        customSetup={{ dependencies: { ...DEPENDENCIES, ...dependencies } }}
-      />
-    </SandpackProvider>
+    <SandpackRunner
+      options={{ showNavigator: true }}
+      code={code}
+      template="react"
+      customStyle={{ height: '85vh' }}
+      customSetup={{ dependencies: { ...DEPENDENCIES, ...dependencies } }}
+    />
   )
 }
 

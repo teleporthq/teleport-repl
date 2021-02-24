@@ -23,26 +23,6 @@ const fixPackageJSONForReact = (json: string) => {
   return packageJSON
 }
 
-const SandpackWrapper: React.FC<{ files: SandpackFiles }> = ({ files }) => {
-  return (
-    <>
-      <Sandpack
-        theme="sp-dark"
-        template="react"
-        files={files}
-        options={{
-          showNavigator: true,
-          showLineNumbers: true,
-          showTabs: true,
-          wrapContent: true,
-          recompileMode: 'delayed',
-          recompileDelay: 500,
-        }}
-      />
-    </>
-  )
-}
-
 const CodeEditor = dynamic(import('../components/CodeEditor'), {
   ssr: false,
 })
@@ -110,7 +90,18 @@ const ProjectPreview = () => {
           />
         </div>
         <div className="right">
-          <SandpackWrapper files={files} />
+          <Sandpack
+            theme="sp-dark"
+            template="react"
+            files={files}
+            options={{
+              autorun: false,
+              showNavigator: true,
+              showLineNumbers: true,
+              showTabs: true,
+              wrapContent: true,
+            }}
+          />
         </div>
       </div>
       <style jsx>
