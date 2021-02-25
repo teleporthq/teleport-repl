@@ -80,7 +80,7 @@ export const styles = css`.main-content {
   padding-top 20px;
   padding-bottom 20px;
   width: 100%;
-  height: calc(100% - 71px);
+  height: calc(100% - 65px);
   justify-content: space-around;
   box-sizing: border-box;
 }

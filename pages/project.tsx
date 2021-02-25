@@ -108,6 +108,8 @@ const ProjectPreview = () => {
         {`
           .project-preview-wrapper {
             display: flex;
+            padding: 5px;
+            height: calc(100% - 80px);
           }
           .left {
             background-color: #040404;

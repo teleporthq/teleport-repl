@@ -1255,9 +1255,9 @@
     "@codemirror/view" "^0.17.0"
 
 "@codemirror/view@^0.17.0", "@codemirror/view@^0.17.9":
-  version "0.17.9"
-  resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-0.17.9.tgz#4a934cd0347e3a6dbabb991f6fd9edef7b69e5c6"
-  integrity sha512-/7Y0qY+SsbzXJoRepbaHQS9SsI7Oyr/96x55BhU9L7ZxPEUwfN1dcCtJGbORn/TnBryWJkMMULnbyy9UHxPA9A==
+  version "0.17.10"
+  resolved "https://registry.yarnpkg.com/@codemirror/view/-/view-0.17.10.tgz#d3bf4b2435b68c7ede784583f2c240f58ac3d5c4"
+  integrity sha512-Ke3mgfw1qnLekFDFYJsz8ewKa0dBnnUrlYSZd+1X1XkMaqmKZj6enbcvpW0/GnxOvGJpa+HrWCMSrRvCrlaqjA==
   dependencies:
     "@codemirror/rangeset" "^0.17.0"
     "@codemirror/state" "^0.17.0"
@@ -5455,9 +5455,9 @@ pretty-quick@1.6.0:
     mri "^1.1.0"
 
 prism-react-renderer@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-1.1.1.tgz#1c1be61b1eb9446a146ca7a50b7bcf36f2a70a44"
-  integrity sha512-MgMhSdHuHymNRqD6KM3eGS0PNqgK9q4QF5P0yoQQvpB6jNjeSAi3jcSAz0Sua/t9fa4xDOMar9HJbLa08gl9ug==
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-1.2.0.tgz#5ad4f90c3e447069426c8a53a0eafde60909cdf4"
+  integrity sha512-GHqzxLYImx1iKN1jJURcuRoA/0ygCcNhfGw1IT8nPIMzarmKQ3Nc+JcG0gi8JXQzuh0C5ShE4npMIoqNin40hg==
 
 prismjs@^1.21.0:
   version "1.22.0"
@@ -5641,9 +5641,9 @@ react-refresh@0.8.3:
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
 react-smooshpack@^1.0.0-alpha-30:
-  version "1.0.0-alpha-30"
-  resolved "https://registry.yarnpkg.com/react-smooshpack/-/react-smooshpack-1.0.0-alpha-30.tgz#180846fa26b2e521876272f76cb79521534bc6c1"
-  integrity sha512-9vpATAvXuRbnt9a4Rqx31JKxyuCeygnEIj6QTn0a1CbT77wwNEYNfYfhD1EBwK0cxqohyOLNFLgX2ojso4p4BQ==
+  version "1.0.0-alpha-31"
+  resolved "https://registry.yarnpkg.com/react-smooshpack/-/react-smooshpack-1.0.0-alpha-31.tgz#b306ec31122b91526b0c77182e24fbde7e88fa18"
+  integrity sha512-koIbpFXCT61wgUokNyEZMdJymJm68390NkVeOON82sL/ZVDaonv+ra8Jm5kYFfEKSaW6PHFP8qMyQWAfZOzhzQ==
   dependencies:
     "@codemirror/closebrackets" "^0.17.2"
     "@codemirror/commands" "^0.17.4"
@@ -5660,7 +5660,7 @@ react-smooshpack@^1.0.0-alpha-30:
     "@codemirror/view" "^0.17.9"
     codesandbox-import-utils "^1.2.3"
     prism-react-renderer "^1.1.1"
-    smooshpack "^1.0.0-alpha-30"
+    smooshpack "^1.0.0-alpha-31"
 
 react-svg@^8.0.2:
   version "8.0.8"
@@ -6037,10 +6037,10 @@ slash@^2.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-2.0.0.tgz#de552851a1759df3a8f206535442f5ec4ddeab44"
   integrity sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==
 
-smooshpack@^1.0.0-alpha-30:
-  version "1.0.0-alpha-30"
-  resolved "https://registry.yarnpkg.com/smooshpack/-/smooshpack-1.0.0-alpha-30.tgz#144f5d502d008ab3894053bf2a2e0c555e408ac4"
-  integrity sha512-32CN0DlV9nV1+ULJlu+IjGc4OYyhbv1kEAxCFxaFXt87mJtPwEwS235KzTYOFLK/sq6FHiAN79GScr8bD596Zg==
+smooshpack@^1.0.0-alpha-31:
+  version "1.0.0-alpha-31"
+  resolved "https://registry.yarnpkg.com/smooshpack/-/smooshpack-1.0.0-alpha-31.tgz#5fd0ef83a7743dd8636c180851fc0998ec133343"
+  integrity sha512-OVIS2XRkPG86O8FWzS4lDRDWF+db6zmAMyUgAdYCXzrO8+53IfajG20xKDhs+mTb/S5N/z0lKQvG5B8W9dnXUw==
   dependencies:
     codesandbox-api "^0.0.31"
     codesandbox-import-utils "^1.2.3"

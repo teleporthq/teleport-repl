@@ -51,6 +51,7 @@ const TopBar: React.SFC = () => {
           padding: 0.7rem 1.5rem;
           box-sizing: border-box;
           border-bottom: 1px solid #00000010;
+          height: 65px;
         }
         .menu-items {
           display: flex;

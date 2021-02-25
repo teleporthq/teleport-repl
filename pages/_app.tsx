@@ -13,7 +13,7 @@ class MyApp extends App {
           <title>{DEFAULT_TITLE}</title>
           <style>{`
           .sp-stack { height: auto !important} 
-          .sp-dark > .sp-layout { height: 93vh !important } 
+          .sp-dark > .sp-layout { height: 90vh !important } 
           .ace_content { background-color: #040404} 
           .ace_gutter { background-color: #040404 !important }`}</style>
         </Head>
