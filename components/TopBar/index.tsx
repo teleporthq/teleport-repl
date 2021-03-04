@@ -1,12 +1,25 @@
 import React from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const TopBar: React.SFC = () => {
+  const router = useRouter()
+
   return (
     <div className="top-bar">
       <a href="https://teleporthq.io/" target="_blank" id="repl-to-main">
         <img className="logo" alt="logo" src="/static/svg/logo.svg" />
       </a>
       <div className="menu-items">
+        {router.pathname?.includes('/project') ? (
+          <Link href="/">
+            <span className="menu-item">Component UIDL</span>
+          </Link>
+        ) : (
+          <Link href="/project">
+            <span className="menu-item">Project UIDL</span>
+          </Link>
+        )}
         <a
           className="menu-item"
           target="_blank"

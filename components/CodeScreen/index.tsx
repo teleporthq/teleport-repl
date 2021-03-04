@@ -44,13 +44,13 @@ import {
   spaceToDash,
   styles,
 } from './utils'
-import BrowserPreview from '../BrowserPreview'
 
 const FLAVORS_WITH_STYLES = ['react', 'preact', 'react-native', 'reactnative']
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
 })
+const BrowserPreview = dynamic(import('../BrowserPreview'))
 
 type GeneratorsCache = Record<
   ComponentType,
@@ -483,8 +483,14 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         </div>
         <div className="preview-screen">
           <BrowserPreview
-            code={this.state.preview.code}
-            dependencies={this.state.preview.dependencies}
+            files={{ '/App.js': { code: this.state.preview.code } }}
+            dependencies={{
+              ...this.state.preview.dependencies,
+              ...{
+                'prop-types': 'latest',
+                'styled-components': 'latest',
+              },
+            }}
           />
         </div>
         <style jsx>{styles}</style>

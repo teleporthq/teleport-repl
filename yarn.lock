@@ -1075,6 +1075,11 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
+"@code-hike/classer@^0.0.0-aa6efee":
+  version "0.0.0-aa6efee"
+  resolved "https://registry.yarnpkg.com/@code-hike/classer/-/classer-0.0.0-aa6efee.tgz#ce2423505baa66679dc4477498d5226a1e282c00"
+  integrity sha512-+NcPLh4d/AGFFK3wUQ2EzTI0zeeSIQUMczKEwwd8MlMYZl8rP/M6C6iWLwaAkGiOuadLDC/gO01MtIV18kSyQw==
+
 "@codemirror/autocomplete@^0.17.0":
   version "0.17.4"
   resolved "https://registry.yarnpkg.com/@codemirror/autocomplete/-/autocomplete-0.17.4.tgz#06e1ff689b07c7fb3a4a9de121e94282b49c86ee"
@@ -1764,11 +1769,6 @@
     "@teleporthq/teleport-shared" "^0.16.0"
     "@teleporthq/teleport-types" "^0.16.0"
 
-"@types/es-module-lexer@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@types/es-module-lexer/-/es-module-lexer-0.3.0.tgz#9fee3f19f64e6b3f999eeb3a70bd177a4d57a6cb"
-  integrity sha512-XI3MGSejUQIJ3wzY0i5IHy5J3eb36M/ytgG8jIOssP08ovtRPcjpjXQqrx51AHBNBOisTS/NQNWJitI17+EwzQ==
-
 "@types/json-schema@^7.0.5":
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.6.tgz#f4c7ec43e81b319a9815115031709f26987891f0"
@@ -1782,9 +1782,9 @@
     "@types/lodash" "*"
 
 "@types/lodash@*":
-  version "4.14.165"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.165.tgz#74d55d947452e2de0742bad65270433b63a8c30f"
-  integrity sha512-tjSSOTHhI5mCHTy/OOXYIhi2Wt1qcbHmuXD1Ha7q70CgI/I71afO4XtLb/cVexki1oVYchpul/TOuu3Arcdxrg==
+  version "4.14.168"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
+  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
 
 "@types/node@^13.7.0":
   version "13.13.36"
@@ -4569,10 +4569,20 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
+lodash.throttle@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
+  integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
+
 lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.19:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
@@ -5640,11 +5650,12 @@ react-refresh@0.8.3:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
-react-smooshpack@^1.0.0-alpha-30:
-  version "1.0.0-alpha-31"
-  resolved "https://registry.yarnpkg.com/react-smooshpack/-/react-smooshpack-1.0.0-alpha-31.tgz#b306ec31122b91526b0c77182e24fbde7e88fa18"
-  integrity sha512-koIbpFXCT61wgUokNyEZMdJymJm68390NkVeOON82sL/ZVDaonv+ra8Jm5kYFfEKSaW6PHFP8qMyQWAfZOzhzQ==
+react-smooshpack@^1.0.0-alpha-35:
+  version "1.0.0-alpha-35"
+  resolved "https://registry.yarnpkg.com/react-smooshpack/-/react-smooshpack-1.0.0-alpha-35.tgz#cf95acb4f6c2466ea59d731c7150aa658e7e2315"
+  integrity sha512-3OQGzbJJsLgXoUJet/vnysbKNs+SYA3XiMeYb2UNqt8cJT1HLEarWVt1u6hs7hCjIye2BdpbSHeb8OiG0kOV/Q==
   dependencies:
+    "@code-hike/classer" "^0.0.0-aa6efee"
     "@codemirror/closebrackets" "^0.17.2"
     "@codemirror/commands" "^0.17.4"
     "@codemirror/comment" "^0.17.2"
@@ -5660,7 +5671,7 @@ react-smooshpack@^1.0.0-alpha-30:
     "@codemirror/view" "^0.17.9"
     codesandbox-import-utils "^1.2.3"
     prism-react-renderer "^1.1.1"
-    smooshpack "^1.0.0-alpha-31"
+    smooshpack "^1.0.0-alpha-35"
 
 react-svg@^8.0.2:
   version "8.0.8"
@@ -6037,10 +6048,10 @@ slash@^2.0.0:
   resolved "https://registry.yarnpkg.com/slash/-/slash-2.0.0.tgz#de552851a1759df3a8f206535442f5ec4ddeab44"
   integrity sha512-ZYKh3Wh2z1PpEXWr0MpSBZ0V6mZHAQfYevttO11c51CaWjGTaadiKZ+wVt1PbMlDV5qhMFslpZCemhwOK7C89A==
 
-smooshpack@^1.0.0-alpha-31:
-  version "1.0.0-alpha-31"
-  resolved "https://registry.yarnpkg.com/smooshpack/-/smooshpack-1.0.0-alpha-31.tgz#5fd0ef83a7743dd8636c180851fc0998ec133343"
-  integrity sha512-OVIS2XRkPG86O8FWzS4lDRDWF+db6zmAMyUgAdYCXzrO8+53IfajG20xKDhs+mTb/S5N/z0lKQvG5B8W9dnXUw==
+smooshpack@^1.0.0-alpha-35:
+  version "1.0.0-alpha-35"
+  resolved "https://registry.yarnpkg.com/smooshpack/-/smooshpack-1.0.0-alpha-35.tgz#2a5c61487daa74520763ab1f0608ef8d7d374d0c"
+  integrity sha512-grsvOpahiRXqsmPxQLcwI2Fjnk6Cr/MxnZMxcc9iKqiOi+afzSq37TpH1xKmlukwLthMV/rYAG6TvZICW3HfcQ==
   dependencies:
     codesandbox-api "^0.0.31"
     codesandbox-import-utils "^1.2.3"
