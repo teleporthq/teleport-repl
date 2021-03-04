@@ -143,10 +143,59 @@
             },
             "style": {
               "height": "0",
-              "overflow": "hidden",
               "transition": "height .2s ease-out"
             },
             "children": [
+              {
+                "type": "conditional",
+                "content": {
+                  "node": {
+                    "type": "element",
+                    "content": {
+                      "elementType": "container",
+                      "style": {
+                        "padding-top": "20px"
+                      },
+                      "children": ["Image powered by Unsplash"]
+                    }
+                  },
+                  "reference": {
+                    "type": "dynamic",
+                    "content": {
+                      "referenceType": "state",
+                      "id": "isExpanded"
+                    }
+                  },
+                  "value": true
+                }
+              },
+              {
+                "type": "conditional",
+                "content": {
+                  "node": {
+                    "type": "element",
+                    "content": {
+                      "elementType": "image",
+                      "style": {
+                        "margin-top": "20px",
+                        "width": "100%",
+                        "height": "auto"
+                      },
+                      "attrs": {
+                        "src": "https://images.unsplash.com/photo-1530347927633-5f393ff7abd0"
+                      }
+                    }
+                  },
+                  "reference": {
+                    "type": "dynamic",
+                    "content": {
+                      "referenceType": "state",
+                      "id": "isExpanded"
+                    }
+                  },
+                  "value": true
+                }
+              },
               {
                 "type": "slot",
                 "content": {}

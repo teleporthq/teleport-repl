@@ -30,7 +30,7 @@ import customMapping from '../../inputs/repl-mapping.json'
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import externalComponentUIDL from '../../inputs/external-components.json'
 import tabSelector from '../../inputs/tab-selector.json'
-import { fetchJSONDataAndLoad, uploadUIDLJSON, bundler } from '../../utils/services'
+import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 import { DropDown } from '../DropDown'
 import { ErrorPanel } from '../ErrorPanel'
 import Loader from '../Loader'
@@ -42,15 +42,15 @@ import {
   DefaultStyleFlavors,
   dashToSpace,
   spaceToDash,
+  styles,
 } from './utils'
-import throttle from 'lodash.throttle'
 
-const throttledBundler = throttle(bundler, 500)
 const FLAVORS_WITH_STYLES = ['react', 'preact', 'react-native', 'reactnative']
 
 const CodeEditor = dynamic(import('../CodeEditor'), {
   ssr: false,
 })
+const BrowserPreview = dynamic(import('../BrowserPreview'))
 
 type GeneratorsCache = Record<
   ComponentType,
@@ -84,6 +84,7 @@ const uidlSamples: Record<string, ComponentUIDL> = {
 }
 
 interface CodeScreenState {
+  preview: { code: string; dependencies: Record<string, string> }
   generatedCode: string
   targetLibrary: ComponentType
   inputJson: string
@@ -123,6 +124,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   constructor(props: CodeProps) {
     super(props)
     this.state = {
+      preview: { code: '', dependencies: {} },
       generatedCode: '',
       sourceJSON: 'simple-component',
       inputJson: jsonPrettify(uidlSamples['simple-component']),
@@ -269,26 +271,28 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       }
 
       this.setState({ generatedCode: code }, Prism.highlightAll)
+      this.preview()
     } catch (err) {
       this.setState({ generatedCode: '', showErrorPanel: true, error: err })
       // tslint:disable-next-line:no-console
     }
   }
 
-  public async preview() {
+  preview = async () => {
     const generator = createReactComponentGenerator({
       variation: ReactStyleVariation.StyledComponents,
     })
     try {
-      const component = await generator.generateComponent(
+      const { files, dependencies } = await generator.generateComponent(
         JSON.parse(this.state.inputJson)
       )
-      const jsFile = component.files.find((file) => file.fileType === 'js')
-      if (jsFile) {
-        throttledBundler(jsFile)
+      const jsFile = files.find((file) => file.fileType === 'js')
+      if (!jsFile) {
+        return
       }
+      this.setState({ preview: { code: jsFile.content, dependencies } })
     } catch (e) {
-      // @ts-ignore
+      // tslint:disable-next-line:no-console
       console.error(e)
     }
   }
@@ -462,7 +466,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               value={this.state.targetLibrary}
             />
             {this.renderDropDownFlavour()}
-            <button className="share-button" onClick={() => this.preview()}>
+            <button className="share-button" onClick={this.preview}>
               Render
             </button>
           </div>
@@ -477,189 +481,19 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           </div>
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
-        <div className="preview-screen" id="render-output"></div>
-        <style jsx>{`
-            .main-content {
-              display: flex;
-              padding-top 20px;
-              padding-bottom 20px;
-              width: 100%;
-              height: calc(100% - 71px);
-              justify-content: space-around;
-              box-sizing: border-box;
-            }
-
-            .iframe-size {
-              width: 100%;
-              height: 100%;
-            }
-
-            .editor {
-              border-radius: 10px;
-              width: 49%;
-              background: var(--editor-bg-black);
-              overflow: hidden;
-              z-index: 3;
-              padding: 0 0 30px 0;
-              position: relative;
-              margin-right: 5px;
-              margin-left: 5px;
-            }
-
-            .preview-screen {
-              color: #000;
-              border-radius: 10px;
-              width: 49%;
-              border: 1px solid var(--editor-bg-black); 
-              overflow: hidden;
-              z-index: 3;
-              padding: 5px;
-              position: relative;
-              margin-right: 5px;
-              margin-left: 5px;
-              overflow: scroll;
-            }
-
-            @media screen and (max-width: 762px){
-              .main-content{
-                padding: 20px 15px;
-                display: grid;
-                grid-template-rows: 1fr 1fr;
-                grid-gap: 4%;
-                justify-content: normal;
-                overflow-y: scroll;
-              }
-              .editor{
-                width: 99%;
-                height: calc(100% - 30px);
-              }
-            }
-            .editor-header {
-              height: 30px;
-              display: flex;
-              flex-direction: row;
-              border-bottom: solid 1px #cccccc20;
-              padding: 10px 10px;
-            }
-
-            .code-wrapper {
-              height: calc(100% - 30px);
-              position: relative;
-              overflow: auto;
-              background: var(--editor-bg-black);
-            }
-
-            .preview-scroller-y {
-              height: 100%;
-              width: 100%;
-              position: absolute;
-              top: 0;
-              left: 0;
-              background: var(--editor-bg-black);
-            }
-
-            .preview-scroller-x {
-              position: absolute;
-              top: 0;
-              left: 0;
-              background: var(--editor-bg-black);
-            }
-
-            .preview-scroller-x::-webkit-scrollbar-corner,
-            .preview-scroller-y::-webkit-scrollbar-corner {
-              background: var(--editor-bg-black);
-              height: 10px;
-              width: 10px;
-            }
-
-            .preview-scroller-x::-webkit-scrollbar,
-            .preview-scroller-y::-webkit-scrollbar {
-              width: 10px;
-              height: 10px;
-            }
-
-            .preview-scroller-x::-webkit-scrollbar-thumb, .preview-scroller-y::-webkit-scrollbar-thumb {
-              background: var(--editor-scrollbar-color);
-              border-radius: 5px;
-            }
-
-            .code-wrapper .previewer {
-              margin: 0;
-              padding: 5px 0 0 10px;
-            }
-
-            .previewer-header {
-              justify-content: space-between;
-              align-items: center;
-            }
-
-            .previewer-header .code-wrapper {
-              background-color: #2d2d2d;
-            }
-
-            .with-offset {
-              padding-left: 50px;
-            }
-
-            .shareable-link {
-              padding: 10px;
-              background: rgba(200, 200, 200, 0.5);
-              user-select: all;
-            }
-
-            .modal-buttons {
-              display: flex;
-              justify-content: space-between;
-              margin: 20px 0 0;
-            }
-
-            .modal-button {
-              background: var(--color-purple);
-              color: #fff;
-              padding: 8px 16px;
-              font-size: 14px;
-              border-radius: 4px;
-              border: 0 none;
-            }
-
-            .close-button {
-              background: rgb(55, 55, 62);
-            }
-
-            .share-button {
-              color: var(--color-purple);
-              padding: 6px;
-              margin-left: 15px;
-              background-color: #fff;
-              font-size: 14px;
-              border-radius: 4px;
-              border: 0 none;
-            }
-
-            .copied-text {
-              position: absolute;
-              top: 0;
-              width: 100%;
-              left: 0;
-              padding: 5px 0;
-              background-color: var(--success-green);
-              color: #fff;
-              opacity: 0;
-            }
-
-            .fade-in {
-              animation: fadeInOpacity 1 ease-in 0.35s forwards;
-            }
-
-            @keyframes fadeInOpacity {
-              0% {
-                opacity: 0;
-              }
-              100% {
-                opacity: 1;
-              }
-            }
-          `}</style>
+        <div className="preview-screen">
+          <BrowserPreview
+            files={{ '/App.js': { code: this.state.preview.code } }}
+            dependencies={{
+              ...this.state.preview.dependencies,
+              ...{
+                'prop-types': 'latest',
+                'styled-components': 'latest',
+              },
+            }}
+          />
+        </div>
+        <style jsx>{styles}</style>
       </div>
     )
   }

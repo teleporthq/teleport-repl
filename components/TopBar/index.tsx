@@ -1,12 +1,25 @@
 import React from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const TopBar: React.SFC = () => {
+  const router = useRouter()
+
   return (
     <div className="top-bar">
       <a href="https://teleporthq.io/" target="_blank" id="repl-to-main">
         <img className="logo" alt="logo" src="/static/svg/logo.svg" />
       </a>
       <div className="menu-items">
+        {router.pathname?.includes('/project') ? (
+          <Link href="/">
+            <span className="menu-item">Component UIDL</span>
+          </Link>
+        ) : (
+          <Link href="/project">
+            <span className="menu-item">Project UIDL</span>
+          </Link>
+        )}
         <a
           className="menu-item"
           target="_blank"
@@ -51,6 +64,7 @@ const TopBar: React.SFC = () => {
           padding: 0.7rem 1.5rem;
           box-sizing: border-box;
           border-bottom: 1px solid #00000010;
+          height: 65px;
         }
         .menu-items {
           display: flex;
