@@ -91,24 +91,11 @@ export const styles = css`.main-content {
   background: var(--editor-bg-black);
   overflow: hidden;
   z-index: 3;
-  padding: 0 0 30px 0;
-  position: relative;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-
-.preview-screen {
-  color: #000;
-  border-radius: 10px;
-  width: 49%;
-  border: 1px solid var(--editor-bg-black); 
-  overflow: hidden;
-  z-index: 3;
   padding: 5px;
   position: relative;
   margin-right: 5px;
   margin-left: 5px;
-  overflow: scroll;
+  min-height: 300px;
 }
 
 @media screen and (max-width: 762px){
@@ -121,7 +108,7 @@ export const styles = css`.main-content {
     overflow-y: scroll;
   }
   .editor{
-    width: 99%;
+    width: 95%;
     height: calc(100% - 30px);
   }
 }

@@ -481,7 +481,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
           </div>
           <ErrorPanel error={this.state.error} visible={this.state.showErrorPanel} />
         </div>
-        <div className="preview-screen">
+        <div className="editor">
           <BrowserPreview
             files={{ '/App.js': { code: this.state.preview.code } }}
             dependencies={{

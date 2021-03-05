@@ -76,6 +76,7 @@ const TopBar: React.SFC = () => {
           transition: color 0.2s;
           color: #2c3e50;
           font-size: 15px;
+          cursor: pointer;
         }
 
         .menu-item.gitHub-logo {
@@ -92,7 +93,8 @@ const TopBar: React.SFC = () => {
           color: #24272e;
           display: flex;
         }
-        a:hover {
+
+        .menu-item:hover {
           color: var(--color-purple);
           fill: var(--color-purple);
         }

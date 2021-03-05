@@ -7,19 +7,23 @@
     "assets": [
       {
         "type": "style",
-        "content": "html {  line-height: 1.15;}body {  margin: 0px;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6 {  margin: 0;  padding: 0;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type=\"button\"],[type=\"reset\"],[type=\"submit\"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type=\"button\"]::-moz-focus-inner,[type=\"reset\"]::-moz-focus-inner,[type=\"submit\"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type=\"button\"]:-moz-focus,[type=\"reset\"]:-moz-focus,[type=\"submit\"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}"
+        "content": "html {  line-height: 1.15;}body {  margin: 0;}* {  box-sizing: border-box;  border-width: 0;  border-style: solid;}p,li,ul,pre,div,h1,h2,h3,h4,h5,h6 {  margin: 0;  padding: 0;}button,input,optgroup,select,textarea {  font-family: inherit;  font-size: 100%;  line-height: 1.15;  margin: 0;}button,select {  text-transform: none;}button,[type=\"button\"],[type=\"reset\"],[type=\"submit\"] {  -webkit-appearance: button;}button::-moz-focus-inner,[type=\"button\"]::-moz-focus-inner,[type=\"reset\"]::-moz-focus-inner,[type=\"submit\"]::-moz-focus-inner {  border-style: none;  padding: 0;}button:-moz-focus,[type=\"button\"]:-moz-focus,[type=\"reset\"]:-moz-focus,[type=\"submit\"]:-moz-focus {  outline: 1px dotted ButtonText;}a {  color: inherit;  text-decoration: inherit;}input {  padding: 2px 4px;}img {  display: block;}"
       },
       {
         "type": "style",
-        "content": "    body {      font-family: Trebuchet MS;      font-size: 16px;      line-height: 1.55;      color: #333;      background-color: #fff; margin: 0px;    }  "
+        "content": "    body {      font-family: Trebuchet MS;      font-size: 16px;      line-height: 1.55;      color: #333;      background-color: #fff    }  "
       },
       {
         "type": "icon",
-        "path": "/playground_assets/cube.png",
+        "path": "https://demo-project-bejq.teleporthq.app/playground_assets/cube.png",
         "options": {
           "iconType": "icon/png",
           "iconSizes": "32x32"
         }
+      },
+      {
+        "type": "font",
+        "path": ""
       }
     ],
     "meta": [
@@ -36,15 +40,15 @@
       }
     ],
     "customCode": {
-      "head": "<style>body{margin:0px}*,:before,:after{box-sizing: border-box}</style>"
+      "head": "<style>body{margin:0}*,:before,:after{box-sizing: border-box}</style>"
     }
   },
   "name": "Demo Project",
   "root": {
     "name": "App",
     "styleSetDefinitions": {
-      "4b9b2739-dcbf-456a-8d94-95c5bb047df9": {
-        "id": "4b9b2739-dcbf-456a-8d94-95c5bb047df9",
+      "16678ebe-2e77-4c14-bf2f-65d30edaa1c9": {
+        "id": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9",
         "name": "thqLink",
         "type": "reusable-project-style-map",
         "content": {
@@ -62,8 +66,8 @@
           }
         }
       },
-      "f5996237-aac1-48b5-a9fa-491bafd7742f": {
-        "id": "f5996237-aac1-48b5-a9fa-491bafd7742f",
+      "0e1d4340-2d42-4cbb-8d7a-99341ecbcd0d": {
+        "id": "0e1d4340-2d42-4cbb-8d7a-99341ecbcd0d",
         "name": "thqButton",
         "type": "reusable-project-style-map",
         "content": {
@@ -89,8 +93,8 @@
           }
         }
       },
-      "531273ab-fc4e-49c0-a948-fb227f1f9474": {
-        "id": "531273ab-fc4e-49c0-a948-fb227f1f9474",
+      "171ed1aa-2918-4878-8b05-eba426bcc4e9": {
+        "id": "171ed1aa-2918-4878-8b05-eba426bcc4e9",
         "name": "thqTextInput",
         "type": "reusable-project-style-map",
         "content": {
@@ -112,8 +116,8 @@
           }
         }
       },
-      "efa616e6-318b-41ab-b113-8627d3b87d39": {
-        "id": "efa616e6-318b-41ab-b113-8627d3b87d39",
+      "348b27d7-01cd-4578-a71a-ce8b24da2a86": {
+        "id": "348b27d7-01cd-4578-a71a-ce8b24da2a86",
         "name": "thqNumberInput",
         "type": "reusable-project-style-map",
         "content": {
@@ -135,8 +139,8 @@
           }
         }
       },
-      "be8c92e4-9018-4a6c-9bb0-155d76024ee8": {
-        "id": "be8c92e4-9018-4a6c-9bb0-155d76024ee8",
+      "2b8129d8-6d74-46e0-8c44-6b4d7ee86bfa": {
+        "id": "2b8129d8-6d74-46e0-8c44-6b4d7ee86bfa",
         "name": "thqTextArea",
         "type": "reusable-project-style-map",
         "content": {
@@ -154,8 +158,8 @@
           }
         }
       },
-      "e6bcc3d0-2352-41ed-880d-574a8babb3c4": {
-        "id": "e6bcc3d0-2352-41ed-880d-574a8babb3c4",
+      "5cde1b6b-3e51-4c92-9a52-6072967acbe5": {
+        "id": "5cde1b6b-3e51-4c92-9a52-6072967acbe5",
         "name": "thqImage",
         "type": "reusable-project-style-map",
         "content": {
@@ -169,19 +173,19 @@
           }
         }
       },
-      "b24d305b-131a-45bc-8d17-2fccd5a32a5a": {
-        "id": "b24d305b-131a-45bc-8d17-2fccd5a32a5a",
+      "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc": {
+        "id": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc",
         "name": "thqIcon",
         "type": "reusable-project-style-map",
         "content": {
           "fill": {
             "type": "static",
-            "content": "#822cec"
+            "content": "#fff"
           }
         }
       },
-      "95b3d3d3-390a-4ceb-8a8e-69fff460a87c": {
-        "id": "95b3d3d3-390a-4ceb-8a8e-69fff460a87c",
+      "c0257c32-9c21-4541-ac16-d634aad5f0f7": {
+        "id": "c0257c32-9c21-4541-ac16-d634aad5f0f7",
         "name": "thqHeading1",
         "type": "reusable-project-style-map",
         "content": {
@@ -191,8 +195,8 @@
           }
         }
       },
-      "e46166a4-f372-4b2b-9457-c998f7a0d6cc": {
-        "id": "e46166a4-f372-4b2b-9457-c998f7a0d6cc",
+      "06ba3286-a754-42ce-9f2f-029282d02842": {
+        "id": "06ba3286-a754-42ce-9f2f-029282d02842",
         "name": "thqHeading2",
         "type": "reusable-project-style-map",
         "content": {
@@ -202,8 +206,8 @@
           }
         }
       },
-      "775310ff-d935-42e8-8679-e055fe772da5": {
-        "id": "775310ff-d935-42e8-8679-e055fe772da5",
+      "4289aad7-0eb5-4cc7-9dec-011c47a85062": {
+        "id": "4289aad7-0eb5-4cc7-9dec-011c47a85062",
         "name": "thqHeading3",
         "type": "reusable-project-style-map",
         "content": {
@@ -213,8 +217,8 @@
           }
         }
       },
-      "9d86f7be-c147-4709-98b5-9c06ca54c7f2": {
-        "id": "9d86f7be-c147-4709-98b5-9c06ca54c7f2",
+      "ccdd0d43-ae9a-4665-9ace-f0073d30297c": {
+        "id": "ccdd0d43-ae9a-4665-9ace-f0073d30297c",
         "name": "thqHeading4",
         "type": "reusable-project-style-map",
         "content": {
@@ -224,8 +228,8 @@
           }
         }
       },
-      "4b9e7681-94e4-4134-b111-1493d4b12f37": {
-        "id": "4b9e7681-94e4-4134-b111-1493d4b12f37",
+      "ae30211c-02ff-4105-8956-65836791d5eb": {
+        "id": "ae30211c-02ff-4105-8956-65836791d5eb",
         "name": "thqHeading5",
         "type": "reusable-project-style-map",
         "content": {
@@ -235,8 +239,8 @@
           }
         }
       },
-      "346b5eae-566c-4bc5-a04b-f1662ba78190": {
-        "id": "346b5eae-566c-4bc5-a04b-f1662ba78190",
+      "c0ab341f-1b24-4514-8a4c-252e31dfa8ba": {
+        "id": "c0ab341f-1b24-4514-8a4c-252e31dfa8ba",
         "name": "thqHeading6",
         "type": "reusable-project-style-map",
         "content": {
@@ -712,12 +716,12 @@
                               "attrs": {},
                               "abilities": {},
                               "referencedStyles": {
-                                "a2e8d558-cb1b-4419-a961-9b30cd22f7fb": {
-                                  "id": "a2e8d558-cb1b-4419-a961-9b30cd22f7fb",
+                                "5c63d0e1-6c3e-49e0-983e-6e8850da4434": {
+                                  "id": "5c63d0e1-6c3e-49e0-983e-6e8850da4434",
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "95b3d3d3-390a-4ceb-8a8e-69fff460a87c"
+                                    "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
                                   }
                                 }
                               }
@@ -1142,15 +1146,23 @@
                             "type": "style-map",
                             "content": {
                               "styles": {
-                                "alignItems": {
+                                "padding": {
                                   "type": "static",
-                                  "content": "center"
+                                  "content": "30px"
+                                },
+                                "height": {
+                                  "type": "static",
+                                  "content": "auto"
                                 },
                                 "flexDirection": {
                                   "type": "static",
                                   "content": "column-reverse"
                                 },
                                 "justifyContent": {
+                                  "type": "static",
+                                  "content": "center"
+                                },
+                                "alignItems": {
                                   "type": "static",
                                   "content": "center"
                                 }
@@ -1169,10 +1181,6 @@
                             "type": "style-map",
                             "content": {
                               "styles": {
-                                "padding": {
-                                  "type": "static",
-                                  "content": "30px"
-                                },
                                 "justifyContent": {
                                   "type": "static",
                                   "content": "center"
@@ -1191,12 +1199,7 @@
                             "id": "ff180ab4-d079-40ce-9682-32f16db4436f",
                             "type": "style-map",
                             "content": {
-                              "styles": {
-                                "padding": {
-                                  "type": "static",
-                                  "content": "20px"
-                                }
-                              },
+                              "styles": {},
                               "mapType": "inlined",
                               "conditions": [
                                 {
@@ -1260,12 +1263,12 @@
                               },
                               "abilities": {},
                               "referencedStyles": {
-                                "ffc4e481-5072-424a-a5d2-0890db72ab73": {
-                                  "id": "ffc4e481-5072-424a-a5d2-0890db72ab73",
+                                "ce96b645-c390-4ce4-9d31-9a0313f8757e": {
+                                  "id": "ce96b645-c390-4ce4-9d31-9a0313f8757e",
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "e6bcc3d0-2352-41ed-880d-574a8babb3c4"
+                                    "referenceId": "5cde1b6b-3e51-4c92-9a52-6072967acbe5"
                                   }
                                 },
                                 "8c7290e2-3b05-492e-a44a-6ac2ad892520": {
@@ -1855,12 +1858,12 @@
                         "attrs": {},
                         "abilities": {},
                         "referencedStyles": {
-                          "f2463a7d-4445-4bff-8e7e-4304a16b0e14": {
-                            "id": "f2463a7d-4445-4bff-8e7e-4304a16b0e14",
+                          "5d2d112f-e410-4c0c-a6cb-9aa98cd1effb": {
+                            "id": "5d2d112f-e410-4c0c-a6cb-9aa98cd1effb",
                             "type": "style-map",
                             "content": {
                               "mapType": "project-referenced",
-                              "referenceId": "95b3d3d3-390a-4ceb-8a8e-69fff460a87c"
+                              "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
                             }
                           }
                         }
@@ -2391,12 +2394,12 @@
                               "attrs": {},
                               "abilities": {},
                               "referencedStyles": {
-                                "b22e1774-3f88-4935-9ae3-32cb388443da": {
-                                  "id": "b22e1774-3f88-4935-9ae3-32cb388443da",
+                                "6f1e6ab6-9562-4fca-b5c5-075f7e60b093": {
+                                  "id": "6f1e6ab6-9562-4fca-b5c5-075f7e60b093",
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "95b3d3d3-390a-4ceb-8a8e-69fff460a87c"
+                                    "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
                                   }
                                 }
                               }
@@ -2489,12 +2492,12 @@
                                       }
                                     },
                                     "referencedStyles": {
-                                      "75dbd0db-d0ea-4ac6-875a-05cbc2415fc8": {
-                                        "id": "75dbd0db-d0ea-4ac6-875a-05cbc2415fc8",
+                                      "758f9fdd-8df7-453f-9718-96779271fa12": {
+                                        "id": "758f9fdd-8df7-453f-9718-96779271fa12",
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "4b9b2739-dcbf-456a-8d94-95c5bb047df9"
+                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
                                         }
                                       }
                                     }
@@ -2580,12 +2583,12 @@
                                       }
                                     },
                                     "referencedStyles": {
-                                      "a219e88c-9b23-44e6-ada3-c80a90a85e97": {
-                                        "id": "a219e88c-9b23-44e6-ada3-c80a90a85e97",
+                                      "3fdbe64c-0ab5-42b6-a84f-b0f3a38dba80": {
+                                        "id": "3fdbe64c-0ab5-42b6-a84f-b0f3a38dba80",
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "4b9b2739-dcbf-456a-8d94-95c5bb047df9"
+                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
                                         }
                                       }
                                     }
@@ -2744,12 +2747,12 @@
                         "attrs": {},
                         "abilities": {},
                         "referencedStyles": {
-                          "c3e0ae5a-9e28-4e7b-9c81-3e20a27cd359": {
-                            "id": "c3e0ae5a-9e28-4e7b-9c81-3e20a27cd359",
+                          "57d0af4b-5be3-48b9-a64b-33f31974868f": {
+                            "id": "57d0af4b-5be3-48b9-a64b-33f31974868f",
                             "type": "style-map",
                             "content": {
                               "mapType": "project-referenced",
-                              "referenceId": "95b3d3d3-390a-4ceb-8a8e-69fff460a87c"
+                              "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
                             }
                           }
                         }
@@ -3246,12 +3249,12 @@
                               "attrs": {},
                               "abilities": {},
                               "referencedStyles": {
-                                "a8d6d72b-dd27-4667-9f3d-dd1bf628e535": {
-                                  "id": "a8d6d72b-dd27-4667-9f3d-dd1bf628e535",
+                                "46187ef4-5460-4102-9ffb-5a5d7404147a": {
+                                  "id": "46187ef4-5460-4102-9ffb-5a5d7404147a",
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "95b3d3d3-390a-4ceb-8a8e-69fff460a87c"
+                                    "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
                                   }
                                 }
                               }
@@ -3344,12 +3347,12 @@
                                       }
                                     },
                                     "referencedStyles": {
-                                      "34c8d1c8-67e0-4893-bc41-01f240feaa9b": {
-                                        "id": "34c8d1c8-67e0-4893-bc41-01f240feaa9b",
+                                      "2655047d-1b6b-4298-819e-716e935330e8": {
+                                        "id": "2655047d-1b6b-4298-819e-716e935330e8",
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "4b9b2739-dcbf-456a-8d94-95c5bb047df9"
+                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
                                         }
                                       }
                                     }
@@ -3435,12 +3438,12 @@
                                       }
                                     },
                                     "referencedStyles": {
-                                      "4fee04a5-c1b7-497d-9c98-3e3cd9190739": {
-                                        "id": "4fee04a5-c1b7-497d-9c98-3e3cd9190739",
+                                      "08674dbe-fafb-4ebd-9b2a-c6934aaa34da": {
+                                        "id": "08674dbe-fafb-4ebd-9b2a-c6934aaa34da",
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "4b9b2739-dcbf-456a-8d94-95c5bb047df9"
+                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
                                         }
                                       }
                                     }
@@ -3657,12 +3660,12 @@
                 },
                 "abilities": {},
                 "referencedStyles": {
-                  "cbc26ae6-e75f-440d-93ae-44b8f3725ee1": {
-                    "id": "cbc26ae6-e75f-440d-93ae-44b8f3725ee1",
+                  "da33f6b1-4761-4323-82de-5084de2fad2b": {
+                    "id": "da33f6b1-4761-4323-82de-5084de2fad2b",
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                      "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                     }
                   }
                 }
@@ -3787,12 +3790,12 @@
                 "attrs": {},
                 "abilities": {},
                 "referencedStyles": {
-                  "e8c92e74-4914-4a9b-a8c1-53696b6bf3de": {
-                    "id": "e8c92e74-4914-4a9b-a8c1-53696b6bf3de",
+                  "c8442fd4-edf9-436b-9bf2-df88abf7f7c6": {
+                    "id": "c8442fd4-edf9-436b-9bf2-df88abf7f7c6",
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "95b3d3d3-390a-4ceb-8a8e-69fff460a87c"
+                      "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
                     }
                   }
                 }
@@ -4173,35 +4176,26 @@
       },
       "propDefinitions": {
         "link": {
-          "componentId": "532062f3-ea97-4099-9e23-9c29506cfd78",
           "name": "link",
           "type": "string",
           "defaultValue": "Link"
         },
         "text": {
-          "nodeId": "ea012c8b-2254-4204-9772-1a6c684de90f",
-          "componentId": "532062f3-ea97-4099-9e23-9c29506cfd78",
           "name": "text",
           "type": "string",
           "defaultValue": "text"
         },
         "text1": {
-          "nodeId": "329396f7-8d00-44d7-b036-9dbd0ba2e875",
-          "componentId": "532062f3-ea97-4099-9e23-9c29506cfd78",
           "name": "text1",
           "type": "string",
           "defaultValue": "text1"
         },
         "text2": {
-          "nodeId": "3331567d-5f5e-4493-ad77-7df2f84f7d13",
-          "componentId": "532062f3-ea97-4099-9e23-9c29506cfd78",
           "name": "text2",
           "type": "string",
           "defaultValue": "text2"
         },
         "title": {
-          "nodeId": "e19cd201-a07c-40b7-9ce0-cb1f9810d477",
-          "componentId": "532062f3-ea97-4099-9e23-9c29506cfd78",
           "name": "title",
           "type": "string",
           "defaultValue": "TITLE"
@@ -4710,12 +4704,12 @@
                               }
                             },
                             "referencedStyles": {
-                              "a2dfc202-2fde-4c37-8dae-d465b296d078": {
-                                "id": "a2dfc202-2fde-4c37-8dae-d465b296d078",
+                              "3833f9fb-f950-45d1-a8be-51d23f7b2986": {
+                                "id": "3833f9fb-f950-45d1-a8be-51d23f7b2986",
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "4b9b2739-dcbf-456a-8d94-95c5bb047df9"
+                                  "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
                                 }
                               }
                             }
@@ -4886,12 +4880,12 @@
                               }
                             },
                             "referencedStyles": {
-                              "3a56f158-7521-4cff-a097-9a74ce858167": {
-                                "id": "3a56f158-7521-4cff-a097-9a74ce858167",
+                              "77109a60-9b67-45b4-9962-e33003adebed": {
+                                "id": "77109a60-9b67-45b4-9962-e33003adebed",
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "4b9b2739-dcbf-456a-8d94-95c5bb047df9"
+                                  "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
                                 }
                               }
                             }
@@ -5024,12 +5018,12 @@
                                   },
                                   "abilities": {},
                                   "referencedStyles": {
-                                    "7623d1ed-d31f-47f0-9194-468c133aa9b5": {
-                                      "id": "7623d1ed-d31f-47f0-9194-468c133aa9b5",
+                                    "9486df63-cfe2-400a-bceb-dca5ec105936": {
+                                      "id": "9486df63-cfe2-400a-bceb-dca5ec105936",
                                       "type": "style-map",
                                       "content": {
                                         "mapType": "project-referenced",
-                                        "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                                        "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                                       }
                                     }
                                   }
@@ -5356,12 +5350,12 @@
                             },
                             "abilities": {},
                             "referencedStyles": {
-                              "c0dbf7f3-a644-4c63-b212-c0fdd6319728": {
-                                "id": "c0dbf7f3-a644-4c63-b212-c0fdd6319728",
+                              "07b325ac-fde1-443d-b7ee-91e6dcf925a1": {
+                                "id": "07b325ac-fde1-443d-b7ee-91e6dcf925a1",
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                                  "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                                 }
                               }
                             }
@@ -5413,12 +5407,12 @@
                             },
                             "abilities": {},
                             "referencedStyles": {
-                              "426f6bb7-2da5-40e6-b4d4-318d1d0eb0a5": {
-                                "id": "426f6bb7-2da5-40e6-b4d4-318d1d0eb0a5",
+                              "9b9a25ab-3d0d-40e5-acaf-e2a571177d99": {
+                                "id": "9b9a25ab-3d0d-40e5-acaf-e2a571177d99",
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                                  "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                                 }
                               }
                             }
@@ -5465,12 +5459,12 @@
                             },
                             "abilities": {},
                             "referencedStyles": {
-                              "f1759de7-c3b3-4756-b800-de50a331b552": {
-                                "id": "f1759de7-c3b3-4756-b800-de50a331b552",
+                              "b0cf220a-c17a-45c7-8039-f9102c362cb7": {
+                                "id": "b0cf220a-c17a-45c7-8039-f9102c362cb7",
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                                  "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                                 }
                               }
                             }
@@ -5773,12 +5767,12 @@
                       },
                       "abilities": {},
                       "referencedStyles": {
-                        "37b383c5-d4cb-411d-89dd-f425325e2740": {
-                          "id": "37b383c5-d4cb-411d-89dd-f425325e2740",
+                        "dbf1a68c-5954-4acc-b692-2b71a0941773": {
+                          "id": "dbf1a68c-5954-4acc-b692-2b71a0941773",
                           "type": "style-map",
                           "content": {
                             "mapType": "project-referenced",
-                            "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                            "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                           }
                         }
                       }
@@ -6159,12 +6153,12 @@
                       },
                       "abilities": {},
                       "referencedStyles": {
-                        "33e8b4d6-f0e4-45ec-8aba-bd67ed8a44b3": {
-                          "id": "33e8b4d6-f0e4-45ec-8aba-bd67ed8a44b3",
+                        "e7b54c6c-09d5-44e9-8c03-0edb55a2ab34": {
+                          "id": "e7b54c6c-09d5-44e9-8c03-0edb55a2ab34",
                           "type": "style-map",
                           "content": {
                             "mapType": "project-referenced",
-                            "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                            "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                           }
                         }
                       }
@@ -6211,12 +6205,12 @@
                       },
                       "abilities": {},
                       "referencedStyles": {
-                        "8253cad7-8945-4b08-a9c1-1871f0be2f18": {
-                          "id": "8253cad7-8945-4b08-a9c1-1871f0be2f18",
+                        "82d526dc-c0e4-411f-a455-b076fe256039": {
+                          "id": "82d526dc-c0e4-411f-a455-b076fe256039",
                           "type": "style-map",
                           "content": {
                             "mapType": "project-referenced",
-                            "referenceId": "b24d305b-131a-45bc-8d17-2fccd5a32a5a"
+                            "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
                           }
                         }
                       }
@@ -6381,12 +6375,12 @@
                 },
                 "abilities": {},
                 "referencedStyles": {
-                  "8c31dce4-dc59-4d0e-a91c-8e32db93d22d": {
-                    "id": "8c31dce4-dc59-4d0e-a91c-8e32db93d22d",
+                  "69e5d2e0-11be-4901-9931-5e5d71d5d2e7": {
+                    "id": "69e5d2e0-11be-4901-9931-5e5d71d5d2e7",
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "e6bcc3d0-2352-41ed-880d-574a8babb3c4"
+                      "referenceId": "5cde1b6b-3e51-4c92-9a52-6072967acbe5"
                     }
                   }
                 }
@@ -6584,15 +6578,11 @@
           "defaultValue": "https://play.teleporthq.io/static/svg/placeholders/no-image.svg"
         },
         "title": {
-          "nodeId": "f7d56cf0-f039-4c22-a608-04be0d156776",
-          "componentId": "2f0b61c8-7b11-4fc0-aff3-b116ce2548fb",
           "name": "title",
           "type": "string",
           "defaultValue": "Title\n"
         },
         "description": {
-          "nodeId": "42b3d2b7-a144-45f0-90b7-423be49a78b8",
-          "componentId": "2f0b61c8-7b11-4fc0-aff3-b116ce2548fb",
           "name": "description",
           "type": "string",
           "defaultValue": "Description\n"
@@ -6759,12 +6749,12 @@
                   }
                 },
                 "referencedStyles": {
-                  "0a71fd7a-3afb-4151-87e0-1fa5b6367e09": {
-                    "id": "0a71fd7a-3afb-4151-87e0-1fa5b6367e09",
+                  "91dd214d-2c95-4948-90aa-5a71ef8ae5ac": {
+                    "id": "91dd214d-2c95-4948-90aa-5a71ef8ae5ac",
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "4b9b2739-dcbf-456a-8d94-95c5bb047df9"
+                      "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
                     }
                   }
                 }
@@ -7657,12 +7647,12 @@
                 },
                 "abilities": {},
                 "referencedStyles": {
-                  "08ca79bc-5db7-4cbe-9734-8f130b647a8f": {
-                    "id": "08ca79bc-5db7-4cbe-9734-8f130b647a8f",
+                  "2b0f4d31-c142-4398-9323-3812c31ee81e": {
+                    "id": "2b0f4d31-c142-4398-9323-3812c31ee81e",
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "e6bcc3d0-2352-41ed-880d-574a8babb3c4"
+                      "referenceId": "5cde1b6b-3e51-4c92-9a52-6072967acbe5"
                     }
                   }
                 }

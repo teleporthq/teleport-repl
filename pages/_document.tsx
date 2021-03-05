@@ -29,7 +29,7 @@ export default class MyDocument extends Document {
           />
           <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/react-smooshpack@1.0.0-alpha-30/dist/index.css"
+            href="https://cdn.jsdelivr.net/npm/react-smooshpack@1.0.0-alpha-35/dist/index.css"
           />
           <script
             dangerouslySetInnerHTML={{

@@ -25,9 +25,7 @@ const BrowserPreview: React.FC<{
           classes={{
             'sp-wrapper': 'wrapper',
             'sp-layout': 'wrapper',
-            'sp-stack': 'stack',
-            'sp-preview-container': 'preview-container',
-            'sp-preview-iframe': 'stack',
+            'sp-stack': 'custom-stack',
           }}
         >
           <SandpackLayout theme="monokai-pro">
@@ -40,11 +38,8 @@ const BrowserPreview: React.FC<{
         .wrapper {
           height: 100%;
         }
-        .stack {
+        .custom-stack.custom-stack {
           min-width: ${displayFiles ? '50% !important' : '100% !important'};
-          height: 100% !important;
-        }
-        .preview-container {
           height: 100%;
         }
       `}</style>
