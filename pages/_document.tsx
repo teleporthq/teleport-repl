@@ -21,8 +21,7 @@ export default class MyDocument extends Document {
 
           <meta name="description" content={DEFAULT_DESCRIPTION} />
           <meta name="keywords" content={DEFAULT_KEYWORDS} />
-          <link rel="icon" href="static/favicon.ico" type="image/ico" />
-          <link rel="shortcut icon" href="static/favicon.ico" type="image/x-icon" />
+          <link rel="icon" type="image/png" href="static/favicon.png" sizes="16x16" />
           <link
             href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap"
             rel="stylesheet"
