@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic'
 import projectJSON from '../inputs/project.json'
 import { TopBar } from '../components/TopBar'
 import { createReactProjectGenerator } from '@teleporthq/teleport-project-generator-react'
-import { SandpackFiles } from 'react-smooshpack'
+import { SandpackFiles } from '@codesandbox/sandpack-react'
 import throttle from 'lodash.throttle'
 
 /* Till this get's fixed.

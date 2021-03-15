@@ -5,7 +5,7 @@ import {
   ClasserProvider,
   SandpackFiles,
   SandpackCodeViewer,
-} from 'react-smooshpack'
+} from '@codesandbox/sandpack-react'
 
 const BrowserPreview: React.FC<{
   displayFiles?: boolean
