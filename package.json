@@ -18,6 +18,7 @@
   "license": "ISC",
   "repository": "https://github.com/teleporthq/repl",
   "dependencies": {
+    "@codesandbox/sandpack-react": "^0.0.1",
     "@teleporthq/teleport-component-generator-angular": "^0.16.0",
     "@teleporthq/teleport-component-generator-preact": "^0.16.0",
     "@teleporthq/teleport-component-generator-react": "^0.16.0",
@@ -37,7 +38,6 @@
     "react-ace": "^6.4.0",
     "react-dom": "^16.10.2",
     "react-modal": "^3.8.2",
-    "react-smooshpack": "^1.0.0-alpha-35",
     "react-svg": "^8.0.2"
   },
   "devDependencies": {
