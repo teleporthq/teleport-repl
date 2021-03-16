@@ -14,7 +14,7 @@ const Embed = () => {
       event.data.type === 'teleport-embed' &&
       Object.keys(event.data?.files || {}).length > 0
     ) {
-      setFiles(files)
+      setFiles(event.data.files)
     }
   }
 
