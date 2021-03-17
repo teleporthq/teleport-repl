@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react'
-import {
-  SandpackFiles,
-  SandpackLayout,
-  SandpackPreview,
-  SandpackProvider,
-} from '@codesandbox/sandpack-react'
+import { SandpackFiles } from '@codesandbox/sandpack-react'
+import { generate } from '../utils/helper'
+import BrowserPreview from '../components/BrowserPreview'
 
 const Embed = () => {
   const [files, setFiles] = useState<SandpackFiles>({})
 
-  const listener = (event: MessageEvent) => {
-    if (
-      event.data.type === 'teleport-embed' &&
-      Object.keys(event.data?.files || {}).length > 0
-    ) {
-      setFiles(event.data.files)
+  const listener = async (event: MessageEvent) => {
+    const { data } = event
+    if (data?.type === 'teleport-render' && data?.uidl) {
+      const filesGenerated = await generate(data.uidl)
+      if (!filesGenerated) {
+        return
+      }
+      setFiles(filesGenerated)
     }
   }
 
@@ -28,15 +27,16 @@ const Embed = () => {
   }, [])
 
   return (
-    <SandpackProvider template="react" customSetup={{ files }}>
-      <SandpackLayout theme="codesandbox-light">
-        <SandpackPreview
-          customStyle={{ height: '98vh' }}
-          showOpenInCodeSandbox={false}
-          showNavigator={true}
-        />
-      </SandpackLayout>
-    </SandpackProvider>
+    <div className="preview">
+      <BrowserPreview
+        options={{ files, displayFiles: false, theme: 'codesandbox-light' }}
+      />
+      <style jsx>{`
+        .preview {
+          height: calc(100vh - 15px);
+        }
+      `}</style>
+    </div>
   )
 }
 

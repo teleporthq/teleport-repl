@@ -43,7 +43,7 @@ const ProjectPreview = () => {
           />
         </div>
         <div className="right">
-          <BrowserPreview files={files} displayFiles={true} />
+          <BrowserPreview options={{ files, displayFiles: true }} />
         </div>
       </div>
       <style jsx>

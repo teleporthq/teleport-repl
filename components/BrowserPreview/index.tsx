@@ -5,13 +5,38 @@ import {
   ClasserProvider,
   SandpackFiles,
   SandpackCodeViewer,
+  SandpackThemeProp,
+  useSandpack,
 } from '@codesandbox/sandpack-react'
+import { useEffect } from 'react'
 
-const BrowserPreview: React.FC<{
-  displayFiles?: boolean
-  dependencies?: Record<string, string>
-  files?: SandpackFiles
-}> = ({ dependencies = {}, files, displayFiles = false }) => {
+interface BrowserPreviewProps {
+  options: {
+    displayFiles?: boolean
+    dependencies?: Record<string, string>
+    files?: SandpackFiles
+    theme?: SandpackThemeProp
+  }
+}
+
+const Preview: React.FC<BrowserPreviewProps> = ({ options }) => {
+  const { displayFiles = false, theme = 'monokai-pro' } = options || {}
+  const { sandpack } = useSandpack()
+
+  useEffect(() => {
+    sandpack.openInCSBRegisteredRef.current = true
+  }, [])
+
+  return (
+    <SandpackLayout theme={theme}>
+      {displayFiles && <SandpackCodeViewer />}
+      <SandpackPreview showNavigator={true} showOpenInCodeSandbox={false} />
+    </SandpackLayout>
+  )
+}
+
+const BrowserPreview: React.FC<BrowserPreviewProps> = ({ options }) => {
+  const { dependencies = {}, files, displayFiles } = options || {}
   return (
     <>
       <SandpackProvider
@@ -28,10 +53,7 @@ const BrowserPreview: React.FC<{
             'sp-stack': 'custom-stack',
           }}
         >
-          <SandpackLayout theme="monokai-pro">
-            {displayFiles && <SandpackCodeViewer />}
-            <SandpackPreview showNavigator={true} showOpenInCodeSandbox={false} />
-          </SandpackLayout>
+          <Preview options={options} />
         </ClasserProvider>
       </SandpackProvider>
       <style jsx global>{`

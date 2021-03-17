@@ -483,12 +483,14 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         </div>
         <div className="editor">
           <BrowserPreview
-            files={{ '/App.js': { code: this.state.preview.code } }}
-            dependencies={{
-              ...this.state.preview.dependencies,
-              ...{
-                'prop-types': 'latest',
-                'styled-components': 'latest',
+            options={{
+              files: { '/App.js': { code: this.state.preview.code } },
+              dependencies: {
+                ...this.state.preview.dependencies,
+                ...{
+                  'prop-types': 'latest',
+                  'styled-components': 'latest',
+                },
               },
             }}
           />
