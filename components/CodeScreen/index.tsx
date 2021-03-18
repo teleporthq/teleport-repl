@@ -89,7 +89,7 @@ interface CodeScreenState {
   targetLibrary: ComponentType
   inputJson: string
   sourceJSON: string
-  libraryFlavor: StyleVariation
+  styleFlavor: StyleVariation
   externalLink: boolean
   showErrorPanel: boolean
   showShareableLinkModal: boolean
@@ -129,7 +129,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       sourceJSON: 'simple-component',
       inputJson: jsonPrettify(uidlSamples['simple-component']),
       targetLibrary: ComponentType.REACT,
-      libraryFlavor: ReactStyleVariation.CSSModules,
+      styleFlavor: ReactStyleVariation.CSSModules,
       externalLink: false,
       showErrorPanel: false,
       showShareableLinkModal: false,
@@ -140,6 +140,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public updateParams(flavor: string, style: string) {
+    if (this.props.router.query?.uidlLink) {
+      return
+    }
     this.props.router.push({
       pathname: '/',
       query: {
@@ -159,9 +162,9 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   public componentDidUpdate(_: CodeProps, prevState: CodeScreenState) {
     if (
       this.state.targetLibrary !== prevState.targetLibrary ||
-      this.state.libraryFlavor !== prevState.libraryFlavor
+      this.state.styleFlavor !== prevState.styleFlavor
     ) {
-      this.updateParams(this.state.targetLibrary, this.state.libraryFlavor)
+      this.updateParams(this.state.targetLibrary, this.state.styleFlavor)
     }
   }
 
@@ -188,15 +191,17 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     if (style && !flavor) {
       this.setState({
         ...this.state,
-        libraryFlavor: dashToSpace(style) as StyleVariation,
+        styleFlavor: dashToSpace(style) as StyleVariation,
       })
     }
 
-    if (style && flavor && FLAVORS_WITH_STYLES.includes(flavor?.toLowerCase())) {
+    if (style && flavor) {
       this.setState({
         ...this.state,
         targetLibrary: flavor as ComponentType,
-        libraryFlavor: dashToSpace(style) as StyleVariation,
+        ...(FLAVORS_WITH_STYLES.includes(flavor.toLowerCase()) && {
+          styleFlavor: dashToSpace(style) as StyleVariation,
+        }),
       })
     }
 
@@ -209,7 +214,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
         if (response) {
           this.setState(
             {
-              inputJson: jsonPrettify(response),
+              inputJson: response,
               externalLink: true,
               sourceJSON: 'externalLink',
               showErrorPanel: false,
@@ -241,7 +246,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
 
   public handleInputChange = async () => {
     this.setState({ showErrorPanel: false })
-    const { targetLibrary, inputJson, libraryFlavor } = this.state
+    const { targetLibrary, inputJson, styleFlavor } = this.state
     let jsonValue: any = null
 
     try {
@@ -250,7 +255,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       return
     }
 
-    const generator = chooseGenerator(targetLibrary, libraryFlavor)
+    const generator = chooseGenerator(targetLibrary, styleFlavor)
 
     try {
       const result: CompiledComponent = await generator.generateComponent(jsonValue, {
@@ -322,7 +327,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     this.setState(
       {
         targetLibrary: target,
-        libraryFlavor:
+        styleFlavor:
           (DefaultStyleFlavors[target] as StyleVariation) ||
           ReactStyleVariation.CSSModules,
       },
@@ -335,7 +340,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       target: { value },
     } = flavor
 
-    this.setState({ libraryFlavor: value as StyleVariation }, this.handleInputChange)
+    this.setState({ styleFlavor: value as StyleVariation }, this.handleInputChange)
   }
 
   public renderDropDownFlavour = () => {
@@ -350,7 +355,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
       <DropDown
         list={Object.values(flavors)}
         onChoose={this.handleFlavourChange}
-        value={this.state.libraryFlavor}
+        value={this.state.styleFlavor}
       />
     )
   }
@@ -365,15 +370,32 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     return samples
   }
 
-  public generateSharableLink = (type: 'project' | 'component') => {
+  public generateSharableLink = () => {
     this.setState({ showShareableLinkModal: true, isLoading: true }, async () => {
       try {
-        const response = await uploadUIDLJSON(this.state.inputJson, type)
+        const response = await uploadUIDLJSON(this.state.inputJson, 'component')
         const { fileName } = response
+        let shareableLink = ``
         if (fileName) {
+          if (FLAVORS_WITH_STYLES.includes(this.state.targetLibrary)) {
+            shareableLink =
+              this.state.styleFlavor && this.state.targetLibrary
+                ? `${window.location.origin}/?uidlLink=${fileName}&flavor=${
+                    this.state.targetLibrary
+                  }&style=${dashToSpace(this.state.styleFlavor)}`
+                : `${window.location.origin}/?uidlLink=${fileName}`
+          }
+
+          if (!FLAVORS_WITH_STYLES.includes(this.state.targetLibrary)) {
+            shareableLink =
+              this.state.styleFlavor && this.state.targetLibrary
+                ? `${window.location.origin}/?uidlLink=${fileName}&flavor=${this.state.targetLibrary}`
+                : `${window.location.origin}/?uidlLink=${fileName}`
+          }
+
           this.setState({
             isLoading: false,
-            shareableLink: `https://repl.teleporthq.io/?uidlLink=${fileName}`,
+            shareableLink,
             showShareableLinkModal: true,
           })
         }
@@ -387,7 +409,6 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public render() {
-    const type = 'component'
     const { showShareableLinkModal, isLoading, shareableLink } = this.state
     return (
       <div className="main-content">
@@ -398,10 +419,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
-            <button
-              className="share-button"
-              onClick={() => this.generateSharableLink(type)}
-            >
+            <button className="share-button" onClick={this.generateSharableLink}>
               Share UIDL
             </button>
             <Modal
