@@ -365,10 +365,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
     return samples
   }
 
-  public generateSharableLink = () => {
+  public generateSharableLink = (type: 'project' | 'component') => {
     this.setState({ showShareableLinkModal: true, isLoading: true }, async () => {
       try {
-        const response = await uploadUIDLJSON(this.state.inputJson)
+        const response = await uploadUIDLJSON(this.state.inputJson, type)
         const { fileName } = response
         if (fileName) {
           this.setState({
@@ -387,6 +387,7 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
   }
 
   public render() {
+    const type = 'component'
     const { showShareableLinkModal, isLoading, shareableLink } = this.state
     return (
       <div className="main-content">
@@ -397,7 +398,10 @@ class Code extends React.Component<CodeProps, CodeScreenState> {
               onChoose={this.handleSourceChange}
               value={this.state.sourceJSON}
             />
-            <button className="share-button" onClick={() => this.generateSharableLink()}>
+            <button
+              className="share-button"
+              onClick={() => this.generateSharableLink(type)}
+            >
               Share UIDL
             </button>
             <Modal

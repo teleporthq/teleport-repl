@@ -13,11 +13,11 @@ const TopBar: React.SFC = () => {
       <div className="menu-items">
         {router.pathname?.includes('/project') ? (
           <Link href="/">
-            <span className="menu-item">Component UIDL</span>
+            <a className="menu-item">Component UIDL</a>
           </Link>
         ) : (
           <Link href="/project">
-            <span className="menu-item">Project UIDL</span>
+            <a className="menu-item">Project UIDL</a>
           </Link>
         )}
         <a

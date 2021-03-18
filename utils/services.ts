@@ -10,7 +10,7 @@ export const fetchJSONDataAndLoad = async (uidlLink: string) => {
   return jsonData.uidl
 }
 
-export const uploadUIDLJSON = async (uidl: any) => {
+export const uploadUIDLJSON = async (uidl: any, type: 'project' | 'component') => {
   const response = await fetch(`${BASE_URL}upload-uidl`, {
     method: 'POST',
     headers: {
@@ -18,6 +18,7 @@ export const uploadUIDLJSON = async (uidl: any) => {
     },
     body: JSON.stringify({
       uidl,
+      type,
     }),
   })
   return response.json()
