@@ -45,13 +45,12 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
   const [component, setComponent] = useState<{
     type: ComponentType
     style?: StyleVariation
-    generatedCode: string | null
     dependencies?: Record<string, string>
   }>({
     type: ComponentType.REACT,
-    generatedCode: null,
     style: ReactStyleVariation.CSSModules,
   })
+  const [code, setCode] = useState<string | null>(null)
   const [preview, setPreview] = useState<{
     code: string | null
     dependencies?: Record<string, string>
@@ -68,8 +67,8 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
     if (flavor && !style && Object.values(ComponentType).includes(flavor)) {
       setComponent({
         type: flavor,
-        generatedCode: null,
       })
+      return
     }
 
     if (
@@ -80,7 +79,6 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
     ) {
       setComponent({
         type: flavor,
-        generatedCode: null,
         style,
       })
     }
@@ -88,7 +86,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
 
   useEffect(() => {
     handleGenerateCode()
-  }, [component.type, component.style, uidlSource, componentUIDL])
+  }, [component.type, component.style, componentUIDL])
 
   useEffect(() => {
     handlePreview()
@@ -96,7 +94,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
 
   useEffect(() => {
     Prism.highlightAll()
-  }, [component.generatedCode])
+  }, [code])
 
   useEffect(() => {
     setComponentUIDL(uidlSamples[uidlSource])
@@ -130,13 +128,13 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
 
   const handleGenerateCode = async () => {
     try {
-      const { code, dependencies } = await generateComponent(
+      const { code } = await generateComponent(
         componentUIDL,
         component.type,
         component.style
       )
       setError(null)
-      setComponent({ ...component, generatedCode: code, dependencies })
+      setCode(code)
     } catch (e) {
       console.error(e)
       setError(e)
@@ -152,8 +150,11 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
 
   const handleJSONUpdate = (inputJSON: string) => {
     try {
-      setComponentUIDL(JSON.parse(inputJSON))
-    } catch {
+      if (inputJSON && typeof inputJSON === 'string' && inputJSON.length > 0) {
+        setComponentUIDL(JSON.parse(inputJSON))
+      }
+    } catch (e) {
+      console.error(e)
       throw new Error(`Invalid UIDl`)
     }
   }
@@ -162,7 +163,6 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
     const type = ev.target.value as ComponentType
     setComponent({
       type,
-      generatedCode: null,
       ...(DefaultStyleFlavors[type] && {
         style: DefaultStyleFlavors[type] as StyleVariation,
       }),
@@ -288,9 +288,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
           <div className="preview-scroller-y">
             <div className="preview-scroller-x">
               <pre className="previewer">
-                {component.generatedCode && (
-                  <code className="language-jsx">{component.generatedCode}</code>
-                )}
+                {code && <code className="language-jsx">{code}</code>}
               </pre>
             </div>
           </div>
@@ -307,7 +305,6 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
               ...(preview.dependencies && preview.dependencies),
               ...{
                 'prop-types': 'latest',
-                'styled-components': 'latest',
               },
             },
           }}
