@@ -14,6 +14,7 @@ export const customStyle: ReactModal.Styles = {
     marginRight: '-50%',
     borderRadius: '4px',
     transform: 'translate(-50%, -50%)',
+    maxWidth: '400px',
   },
 }
 
@@ -54,6 +55,7 @@ export const styles = css`.main-content {
       height: calc(100% - 30px);
     }
   }
+  
   .editor-header {
     height: 30px;
     display: flex;

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import queryString from 'query-string'
-import { withRouter } from 'next/router'
 import Prism from 'prismjs'
 import Modal from 'react-modal'
 import { ReactStyleVariation, StyleVariation } from '@teleporthq/teleport-types'
@@ -13,8 +11,10 @@ import {
   uidlSamples,
   getStyleFlavorsForTarget,
   FLAVORS_WITH_STYLES,
+  dashToSpace,
   spaceToDash,
 } from './utils'
+import { withCustomRouter } from '../../utils/with-router'
 import { styles, customStyle } from './styles'
 import { generateComponent } from './generators'
 import { ErrorPanel } from '../ErrorPanel'
@@ -34,10 +34,12 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
     link: string | null
     loading: boolean
     copied?: boolean
+    modal: boolean
   }>({
     link: null,
     loading: false,
     copied: false,
+    modal: false,
   })
   const [componentUIDL, setComponentUIDL] = useState<Record<string, unknown>>(
     uidlSamples[uidlSource]
@@ -79,7 +81,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
     ) {
       setComponent({
         type: flavor,
-        style,
+        style: dashToSpace(style) as StyleVariation,
       })
     }
   }, [])
@@ -177,8 +179,8 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
   }
 
   const generateSharableLink = async () => {
+    setLink({ link: null, loading: true, modal: true })
     try {
-      setLink({ ...share, loading: true })
       const response = await uploadUIDLJSON(
         JSON.stringify(componentUIDL, null, 2),
         'component'
@@ -195,21 +197,24 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
               component.style as string
             )}`,
             loading: false,
+            modal: true,
           })
         } else if (component.type) {
           setLink({
             link: `${shareableLink}&flavor=${component.type}`,
             loading: false,
+            modal: true,
           })
         } else {
           setLink({
             link: shareableLink,
             loading: false,
+            modal: true,
           })
         }
       }
     } catch (e) {
-      setLink({ link: null, loading: false })
+      setLink({ link: null, loading: false, modal: false })
       console.error(e)
     }
   }
@@ -217,13 +222,13 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
   return (
     <div className="main-content">
       <Modal
-        isOpen={share.link ? true : false}
+        isOpen={share.modal}
         style={customStyle}
         ariaHideApp={false}
-        onRequestClose={() => setLink({ link: null, loading: false })}
+        onRequestClose={() => setLink({ link: null, loading: false, modal: false })}
       >
         <div>
-          {share.loading && <Loader />}
+          {share?.loading && <Loader />}
           {!share.loading && (
             <>
               {share?.copied && <div className="copied-text fade-in">Copied</div>}
@@ -232,7 +237,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
               <div className="modal-buttons">
                 <button
                   className="modal-button close-button"
-                  onClick={() => setLink({ link: null, loading: false })}
+                  onClick={() => setLink({ link: null, loading: false, modal: false })}
                 >
                   Close
                 </button>
@@ -313,24 +318,6 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
       <style jsx>{styles}</style>
     </div>
   )
-}
-
-const withCustomRouter = (ReplCode: any) => {
-  return withRouter(({ router, ...props }: any): any => {
-    if (router && router.asPath) {
-      const query = router.asPath
-        .split('/?')
-        .reduce((acc: Record<string, string>, param: string) => {
-          if (param) {
-            const parsed = queryString.parse(param) as Record<string, string>
-            acc = { ...acc, ...parsed }
-          }
-          return acc
-        }, {})
-      router = { ...router, query }
-      return <ReplCode router={router} {...props} />
-    }
-  })
 }
 
 const CodeScreen = withCustomRouter(Code)
