@@ -274,7 +274,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
         </div>
       </div>
       <div className="editor">
-        <div className="editor-header previewer-header">
+        <div className="editor-header">
           <DropDown
             list={Object.values(ComponentType)}
             onChoose={handleChangeComponentType}
@@ -287,7 +287,6 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
               value={component.style || ''}
             />
           )}
-          <button className="share-button">Render</button>
         </div>
         <div className="code-wrapper">
           <div className="preview-scroller-y">

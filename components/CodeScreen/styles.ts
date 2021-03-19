@@ -62,6 +62,8 @@ export const styles = css`.main-content {
     flex-direction: row;
     border-bottom: solid 1px #cccccc20;
     padding: 10px 10px;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .code-wrapper {
@@ -108,11 +110,6 @@ export const styles = css`.main-content {
   .code-wrapper .previewer {
     margin: 0;
     padding: 5px 0 0 10px;
-  }
-  
-  .previewer-header {
-    justify-content: space-between;
-    align-items: center;
   }
   
   .previewer-header .code-wrapper {
