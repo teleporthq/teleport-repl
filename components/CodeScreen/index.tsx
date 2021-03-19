@@ -184,12 +184,21 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
         'component'
       )
       if (response && response?.fileName) {
-        let shareableLink = `${window.location}/?uidlLink=${response.fileName}`
-        if (component?.type && FLAVORS_WITH_STYLES.includes(component.type)) {
+        let shareableLink = `${window.location}?uidlLink=${response.fileName}`
+        if (
+          component?.type &&
+          component.style &&
+          FLAVORS_WITH_STYLES.includes(component.type)
+        ) {
           setLink({
             link: `${shareableLink}&flavor=${component.type}&style=${spaceToDash(
               component.style as string
             )}`,
+            loading: false,
+          })
+        } else if (component.type) {
+          setLink({
+            link: `${shareableLink}&flavor=${component.type}`,
             loading: false,
           })
         } else {
