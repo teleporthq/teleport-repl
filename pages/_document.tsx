@@ -14,10 +14,6 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <meta httpEquiv="Content-type" content="text/html;charset=UTF-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-          <meta
-            name="viewport"
-            content="width=device-width,initial-scale=1,maximum-scale=1"
-          />
 
           <meta name="description" content={DEFAULT_DESCRIPTION} />
           <meta name="keywords" content={DEFAULT_KEYWORDS} />

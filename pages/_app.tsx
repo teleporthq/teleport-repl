@@ -11,6 +11,10 @@ class MyApp extends App {
       <>
         <Head>
           <title>{DEFAULT_TITLE}</title>
+          <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,maximum-scale=1"
+          />
         </Head>
         <Component {...pageProps} />
       </>
