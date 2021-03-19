@@ -27,9 +27,17 @@ const ErrorPanel: React.SFC<ErrorPanelProps> = (props) => {
           <div className="error-list">
             {errorList.map((errorItem, index) => {
               if (index === 0) {
-                return <div className="first-error-item">{errorItem}</div>
+                return (
+                  <div className="first-error-item" key={`index-${error}`}>
+                    {errorItem}
+                  </div>
+                )
               }
-              return <div className="error-item">{errorItem}</div>
+              return (
+                <div key={`index-${index}`} className="error-item">
+                  {errorItem}
+                </div>
+              )
             })}
           </div>
         </div>
