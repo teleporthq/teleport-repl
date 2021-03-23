@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SandpackFiles } from '@codesandbox/sandpack-react'
-import { generate } from '../utils/helper'
+import { generateProject } from '../utils/helper'
 import BrowserPreview from '../components/BrowserPreview'
 import { AppPage } from '../components/AppPage'
 
@@ -10,7 +10,7 @@ const Embed = () => {
   const listener = async (event: MessageEvent) => {
     const { data } = event
     if (data?.type === 'teleport-render' && data?.uidl) {
-      const filesGenerated = await generate(data.uidl)
+      const filesGenerated = await generateProject(data.uidl)
       if (!filesGenerated) {
         return
       }
