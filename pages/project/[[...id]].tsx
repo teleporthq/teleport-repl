@@ -8,7 +8,7 @@ import { copyToClipboard } from 'copy-lite'
 import { AppPage } from '../../components/AppPage'
 import projectJSON from '../../inputs/project.json'
 import { TopBar } from '../../components/TopBar'
-import { generate } from '../../utils/helper'
+import { generateProject } from '../../utils/helper'
 import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 import { customStyle } from '../../components/CodeScreen/styles'
 import Loader from '../../components/Loader'
@@ -55,7 +55,7 @@ const ProjectPreview: React.FC<ProjectProps> = () => {
 
   useEffect(() => {
     const compile = throttle(async () => {
-      const generatedFiles = await generate(uidl)
+      const generatedFiles = await generateProject(uidl)
       if (!generatedFiles) {
         return
       }
