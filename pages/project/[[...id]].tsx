@@ -55,6 +55,7 @@ const ProjectPreview: React.FC<ProjectProps> = () => {
 
   useEffect(() => {
     const compile = throttle(async () => {
+      setFiles({})
       const generatedFiles = await generateProject(uidl)
       if (!generatedFiles) {
         return
@@ -150,11 +151,36 @@ const ProjectPreview: React.FC<ProjectProps> = () => {
           </div>
         </div>
         <div className="right">
-          <BrowserPreview options={{ files, displayFiles: true }} />
+          {Object.keys(files || {}).length > 0 && (
+            <BrowserPreview options={{ files, displayFiles: true }} />
+          )}
+          {Object.keys(files || {}).length === 0 && (
+            <div className="empty_state">
+              <img className="logo" src="/static/svg/logo_white.svg" alt="Teleport HQ" />
+              Listening for updates
+            </div>
+          )}
         </div>
       </div>
       <style jsx>
         {`
+          .empty_state {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            background-size: cover;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--main-text-color);
+            font-family: var(--main-font-family);
+            font-size: var(--main-text-font-size);
+            background-image: url('/static/svg/hero.svg');
+          }
+
+          .logo {
+            width: 200px;
+            padding-bottom: 10px;
+          }
           .share-button {
             color: var(--color-purple);
             padding: 6px;

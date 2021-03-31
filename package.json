@@ -18,7 +18,7 @@
   "license": "ISC",
   "repository": "https://github.com/teleporthq/repl",
   "dependencies": {
-    "@codesandbox/sandpack-react": "^0.0.1",
+    "@codesandbox/sandpack-react": "^0.0.3",
     "@teleporthq/teleport-component-generator-angular": "^0.16.0",
     "@teleporthq/teleport-component-generator-preact": "^0.16.0",
     "@teleporthq/teleport-component-generator-react": "^0.16.0",
