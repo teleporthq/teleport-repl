@@ -22,7 +22,6 @@ import complexComponentUIDL from '../../inputs/complex-component.json'
 import contactForm from '../../inputs/contact-form.json'
 import expandableArealUIDL from '../../inputs/expandable-area.json'
 import navbar from '../../inputs/navbar.json'
-import personList from '../../inputs/person-list.json'
 import personSpotlight from '../../inputs/person-spotlight.json'
 import simpleComponentUIDL from '../../inputs/simple-component.json'
 import externalComponentUIDL from '../../inputs/external-components.json'
@@ -120,7 +119,6 @@ export const uidlSamples: Record<string, Record<string, unknown>> = {
   navbar: navbar,
   'contact-form': contactForm,
   'person-spotlight': personSpotlight,
-  'person-list': personList,
   'complex-component': complexComponentUIDL,
   'expandable-area': expandableArealUIDL,
   'tab-selector': tabSelector,
