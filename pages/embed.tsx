@@ -6,15 +6,22 @@ import { AppPage } from '../components/AppPage'
 
 const Embed = () => {
   const [files, setFiles] = useState<SandpackFiles>({})
-
+  const [error, setError] = useState<boolean>(false)
   const listener = async (event: MessageEvent) => {
     const { data } = event
     if (data?.type === 'teleport-render' && data?.uidl) {
-      const filesGenerated = await generateProject(data.uidl)
-      if (!filesGenerated) {
-        return
+      try {
+        const filesGenerated = await generateProject(data.uidl)
+        if (!filesGenerated) {
+          setError(true)
+          return
+        }
+        setError(true)
+        setFiles(filesGenerated)
+      } catch (e) {
+        setError(true)
+        console.error(e)
       }
-      setFiles(filesGenerated)
     }
   }
 
@@ -41,7 +48,25 @@ const Embed = () => {
             Listening for updates
           </div>
         )}
+        {error && (
+          <div className="error_state">
+            Failed in rendering project. Please check your console for error
+          </div>
+        )}
         <style jsx>{`
+          .error_state {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            background-size: cover;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--main-text-color);
+            font-family: var(--main-font-family);
+            font-size: var(--main-text-font-size);
+            background-color: var(--main-bg-dark);
+          }
+
           .empty_state {
             height: 100%;
             display: flex;
