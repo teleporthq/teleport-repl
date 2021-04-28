@@ -264,18 +264,18 @@
     style-mod "^4.0.0"
     w3c-keyname "^2.2.4"
 
-"@codesandbox/sandpack-client@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-client/-/sandpack-client-0.0.3.tgz#e70adb954e8417f13264071028a209defe85053a"
-  integrity sha512-6+GNK+YFyqXPeMF/1+fxSxHY20xo6ULiLRRqlPfb6nkPP96W6k1RC2qAOULOKtyO57pxYTmq11yKwD/RSNuQwg==
+"@codesandbox/sandpack-client@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-client/-/sandpack-client-0.0.5.tgz#90632d401e87df156cbc6797b4cf1f5b8114b5d0"
+  integrity sha512-k/tsQn3hyaSnZPDx/ii2VpElSYQCie6mraT1v1wLclV5n+20akME+nxvPE8oAre4f/SDVDWhyK6BJJNK7UlZBw==
   dependencies:
     codesandbox-import-utils "^1.2.3"
     lodash.isequal "^4.5.0"
 
-"@codesandbox/sandpack-react@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-react/-/sandpack-react-0.0.3.tgz#792167122325c24c7a4eb5be327ed92482419b0e"
-  integrity sha512-Z6tbNq2IwCmXACkLpVR9IjOqhBRAg6Jw4ffHQLkrLWX0boIq8wvKP52WvVrBk8j8BDJf/ktaf+nArWfyV648sg==
+"@codesandbox/sandpack-react@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@codesandbox/sandpack-react/-/sandpack-react-0.0.5.tgz#1e1b76ee75091cecc16b9d5366142cc9488f8a8d"
+  integrity sha512-FyZTeazMsMTLyPshRKY3vVDDWkSNMiSaxy9i8xeGFCVE0uplHU0rd7iB5QX/v86X2sdLdkZhtw4hfYcpGynmtA==
   dependencies:
     "@code-hike/classer" "^0.0.0-aa6efee"
     "@codemirror/closebrackets" "^0.18.0"
@@ -291,7 +291,7 @@
     "@codemirror/matchbrackets" "^0.18.0"
     "@codemirror/state" "^0.18.0"
     "@codemirror/view" "^0.18.0"
-    "@codesandbox/sandpack-client" "^0.0.3"
+    "@codesandbox/sandpack-client" "^0.0.5"
     codesandbox-import-utils "^1.2.3"
     prism-react-renderer "^1.1.1"
 
@@ -1859,10 +1859,10 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
-husky@5.1.3:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-5.1.3.tgz#1a0645a4fe3ffc006c4d0d8bd0bcb4c98787cc9d"
-  integrity sha512-fbNJ+Gz5wx2LIBtMweJNY1D7Uc8p1XERi5KNRMccwfQA+rXlxWNSdUxswo0gT8XqxywTIw7Ywm/F4v/O35RdMg==
+husky@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/husky/-/husky-6.0.0.tgz#810f11869adf51604c32ea577edbc377d7f9319e"
+  integrity sha512-SQS2gDTB7tBN486QSoKPKQItZw97BMOd+Kdb6ghfpBc0yXyzrddI0oDV5MkDAbuB4X2mO3/nj60TRMcYxwzZeQ==
 
 hyphenate-style-name@^1.0.3:
   version "1.0.4"

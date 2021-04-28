@@ -18,7 +18,7 @@
   "license": "ISC",
   "repository": "https://github.com/teleporthq/repl",
   "dependencies": {
-    "@codesandbox/sandpack-react": "^0.0.3",
+    "@codesandbox/sandpack-react": "^0.0.5",
     "@teleporthq/teleport-component-generator-angular": "^0.16.2",
     "@teleporthq/teleport-component-generator-preact": "^0.16.2",
     "@teleporthq/teleport-component-generator-react": "^0.16.2",
@@ -47,7 +47,7 @@
     "@types/react-modal": "^3.12.0",
     "@types/styled-jsx": "^2.2.8",
     "babel-plugin-prismjs": "^2.0.1",
-    "husky": "5.1.3",
+    "husky": "^6.0.0",
     "prettier": "^2.2.1",
     "pretty-quick": "3.1.0",
     "tslint": "6.0.0",
