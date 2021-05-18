@@ -40,6 +40,7 @@ const BrowserPreview: React.FC<BrowserPreviewProps> = ({ options }) => {
   return (
     <>
       <SandpackProvider
+        bundlerURL="https://sandpack-self-hosted.vercel.app/"
         template="react"
         customSetup={{
           dependencies,
