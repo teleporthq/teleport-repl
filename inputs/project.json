@@ -47,9 +47,7 @@
   "root": {
     "name": "App",
     "styleSetDefinitions": {
-      "16678ebe-2e77-4c14-bf2f-65d30edaa1c9": {
-        "id": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9",
-        "name": "thqLink",
+      "thqLink": {
         "type": "reusable-project-style-map",
         "content": {
           "color": {
@@ -66,9 +64,7 @@
           }
         }
       },
-      "0e1d4340-2d42-4cbb-8d7a-99341ecbcd0d": {
-        "id": "0e1d4340-2d42-4cbb-8d7a-99341ecbcd0d",
-        "name": "thqButton",
+      "thqButton": {
         "type": "reusable-project-style-map",
         "content": {
           "border": {
@@ -93,9 +89,7 @@
           }
         }
       },
-      "171ed1aa-2918-4878-8b05-eba426bcc4e9": {
-        "id": "171ed1aa-2918-4878-8b05-eba426bcc4e9",
-        "name": "thqTextInput",
+      "thqTextInput": {
         "type": "reusable-project-style-map",
         "content": {
           "borderRadius": {
@@ -116,9 +110,7 @@
           }
         }
       },
-      "348b27d7-01cd-4578-a71a-ce8b24da2a86": {
-        "id": "348b27d7-01cd-4578-a71a-ce8b24da2a86",
-        "name": "thqNumberInput",
+      "thqNumberInput": {
         "type": "reusable-project-style-map",
         "content": {
           "borderRadius": {
@@ -139,9 +131,7 @@
           }
         }
       },
-      "2b8129d8-6d74-46e0-8c44-6b4d7ee86bfa": {
-        "id": "2b8129d8-6d74-46e0-8c44-6b4d7ee86bfa",
-        "name": "thqTextArea",
+      "thqTextArea": {
         "type": "reusable-project-style-map",
         "content": {
           "backgroundColor": {
@@ -158,8 +148,8 @@
           }
         }
       },
-      "5cde1b6b-3e51-4c92-9a52-6072967acbe5": {
-        "id": "5cde1b6b-3e51-4c92-9a52-6072967acbe5",
+      "thqImage": {
+        "id": "thqImage",
         "name": "thqImage",
         "type": "reusable-project-style-map",
         "content": {
@@ -173,8 +163,8 @@
           }
         }
       },
-      "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc": {
-        "id": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc",
+      "thqIcon": {
+        "id": "thqIcon",
         "name": "thqIcon",
         "type": "reusable-project-style-map",
         "content": {
@@ -184,8 +174,8 @@
           }
         }
       },
-      "c0257c32-9c21-4541-ac16-d634aad5f0f7": {
-        "id": "c0257c32-9c21-4541-ac16-d634aad5f0f7",
+      "thqHeading1": {
+        "id": "thqHeading1",
         "name": "thqHeading1",
         "type": "reusable-project-style-map",
         "content": {
@@ -195,8 +185,7 @@
           }
         }
       },
-      "06ba3286-a754-42ce-9f2f-029282d02842": {
-        "id": "06ba3286-a754-42ce-9f2f-029282d02842",
+      "thqHeading2": {
         "name": "thqHeading2",
         "type": "reusable-project-style-map",
         "content": {
@@ -206,8 +195,7 @@
           }
         }
       },
-      "4289aad7-0eb5-4cc7-9dec-011c47a85062": {
-        "id": "4289aad7-0eb5-4cc7-9dec-011c47a85062",
+      "thqHeading3": {
         "name": "thqHeading3",
         "type": "reusable-project-style-map",
         "content": {
@@ -217,9 +205,7 @@
           }
         }
       },
-      "ccdd0d43-ae9a-4665-9ace-f0073d30297c": {
-        "id": "ccdd0d43-ae9a-4665-9ace-f0073d30297c",
-        "name": "thqHeading4",
+      "thqHeading4": {
         "type": "reusable-project-style-map",
         "content": {
           "fontWeight": {
@@ -228,9 +214,7 @@
           }
         }
       },
-      "ae30211c-02ff-4105-8956-65836791d5eb": {
-        "id": "ae30211c-02ff-4105-8956-65836791d5eb",
-        "name": "thqHeading5",
+      "thqHeading5": {
         "type": "reusable-project-style-map",
         "content": {
           "fontWeight": {
@@ -239,9 +223,7 @@
           }
         }
       },
-      "c0ab341f-1b24-4514-8a4c-252e31dfa8ba": {
-        "id": "c0ab341f-1b24-4514-8a4c-252e31dfa8ba",
-        "name": "thqHeading6",
+      "thqHeading6": {
         "type": "reusable-project-style-map",
         "content": {
           "fontWeight": {
@@ -721,7 +703,7 @@
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
+                                    "referenceId": "thqHeading1"
                                   }
                                 }
                               }
@@ -1268,7 +1250,7 @@
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "5cde1b6b-3e51-4c92-9a52-6072967acbe5"
+                                    "referenceId": "thqImage"
                                   }
                                 },
                                 "8c7290e2-3b05-492e-a44a-6ac2ad892520": {
@@ -1863,7 +1845,7 @@
                             "type": "style-map",
                             "content": {
                               "mapType": "project-referenced",
-                              "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
+                              "referenceId": "thqHeading1"
                             }
                           }
                         }
@@ -2399,7 +2381,7 @@
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
+                                    "referenceId": "thqHeading1"
                                   }
                                 }
                               }
@@ -2497,7 +2479,7 @@
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
+                                          "referenceId": "thqLink"
                                         }
                                       }
                                     }
@@ -2588,7 +2570,7 @@
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
+                                          "referenceId": "thqLink"
                                         }
                                       }
                                     }
@@ -2752,7 +2734,7 @@
                             "type": "style-map",
                             "content": {
                               "mapType": "project-referenced",
-                              "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
+                              "referenceId": "thqHeading1"
                             }
                           }
                         }
@@ -3254,7 +3236,7 @@
                                   "type": "style-map",
                                   "content": {
                                     "mapType": "project-referenced",
-                                    "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
+                                    "referenceId": "thqHeading1"
                                   }
                                 }
                               }
@@ -3352,7 +3334,7 @@
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
+                                          "referenceId": "thqLink"
                                         }
                                       }
                                     }
@@ -3443,7 +3425,7 @@
                                         "type": "style-map",
                                         "content": {
                                           "mapType": "project-referenced",
-                                          "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
+                                          "referenceId": "thqLink"
                                         }
                                       }
                                     }
@@ -3665,7 +3647,7 @@
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                      "referenceId": "thqIcon"
                     }
                   }
                 }
@@ -3795,7 +3777,7 @@
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "c0257c32-9c21-4541-ac16-d634aad5f0f7"
+                      "referenceId": "thqHeading1"
                     }
                   }
                 }
@@ -4709,7 +4691,7 @@
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
+                                  "referenceId": "thqLink"
                                 }
                               }
                             }
@@ -4885,7 +4867,7 @@
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
+                                  "referenceId": "thqLink"
                                 }
                               }
                             }
@@ -5023,7 +5005,7 @@
                                       "type": "style-map",
                                       "content": {
                                         "mapType": "project-referenced",
-                                        "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                                        "referenceId": "thqIcon"
                                       }
                                     }
                                   }
@@ -5355,7 +5337,7 @@
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                                  "referenceId": "thqIcon"
                                 }
                               }
                             }
@@ -5412,7 +5394,7 @@
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                                  "referenceId": "thqIcon"
                                 }
                               }
                             }
@@ -5464,7 +5446,7 @@
                                 "type": "style-map",
                                 "content": {
                                   "mapType": "project-referenced",
-                                  "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                                  "referenceId": "thqIcon"
                                 }
                               }
                             }
@@ -5772,7 +5754,7 @@
                           "type": "style-map",
                           "content": {
                             "mapType": "project-referenced",
-                            "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                            "referenceId": "thqIcon"
                           }
                         }
                       }
@@ -6158,7 +6140,7 @@
                           "type": "style-map",
                           "content": {
                             "mapType": "project-referenced",
-                            "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                            "referenceId": "thqIcon"
                           }
                         }
                       }
@@ -6210,7 +6192,7 @@
                           "type": "style-map",
                           "content": {
                             "mapType": "project-referenced",
-                            "referenceId": "9144e135-fab8-4ce9-9d8a-ffa263ab5ccc"
+                            "referenceId": "thqIcon"
                           }
                         }
                       }
@@ -6380,7 +6362,7 @@
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "5cde1b6b-3e51-4c92-9a52-6072967acbe5"
+                      "referenceId": "thqImage"
                     }
                   }
                 }
@@ -6754,7 +6736,7 @@
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "16678ebe-2e77-4c14-bf2f-65d30edaa1c9"
+                      "referenceId": "thqLink"
                     }
                   }
                 }
@@ -7652,7 +7634,7 @@
                     "type": "style-map",
                     "content": {
                       "mapType": "project-referenced",
-                      "referenceId": "5cde1b6b-3e51-4c92-9a52-6072967acbe5"
+                      "referenceId": "thqImage"
                     }
                   }
                 }

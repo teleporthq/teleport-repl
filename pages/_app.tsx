@@ -1,6 +1,7 @@
 import React from 'react'
 import App from 'next/app'
 import Head from 'next/head'
+import '@codesandbox/sandpack-react/dist/index.css'
 
 const DEFAULT_TITLE = 'teleportHQ REPL'
 

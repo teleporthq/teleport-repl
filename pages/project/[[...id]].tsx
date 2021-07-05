@@ -1,6 +1,5 @@
 import { SandpackFiles } from '@codesandbox/sandpack-react'
 import React, { useEffect, useState } from 'react'
-import throttle from 'lodash.throttle'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import Modal from 'react-modal'
@@ -12,6 +11,7 @@ import { generateProject } from '../../utils/helper'
 import { fetchJSONDataAndLoad, uploadUIDLJSON } from '../../utils/services'
 import { customStyle } from '../../components/CodeScreen/styles'
 import Loader from '../../components/Loader'
+import { VProjectUIDL } from '@teleporthq/teleport-types'
 
 const CodeEditor = dynamic(import('../../components/CodeEditor'), {
   ssr: false,
@@ -41,9 +41,6 @@ const ProjectPreview: React.FC<ProjectProps> = () => {
     loading: false,
     copied: false,
   })
-  const hadleUIDLChange = (value: string) => {
-    setUIDL(JSON.parse(value))
-  }
 
   useEffect(() => {
     const { query } = router
@@ -54,16 +51,21 @@ const ProjectPreview: React.FC<ProjectProps> = () => {
   }, [router.query])
 
   useEffect(() => {
-    const compile = throttle(async () => {
+    compileProject((uidl as unknown) as VProjectUIDL)
+  }, [])
+
+  const compileProject = async (projectUIDL: VProjectUIDL) => {
+    try {
       setFiles({})
-      const generatedFiles = await generateProject(uidl)
+      const generatedFiles = await generateProject(projectUIDL)
       if (!generatedFiles) {
         return
       }
       setFiles(generatedFiles)
-    }, 5000)
-    compile()
-  }, [uidl])
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   const handleFetchUIDL = async (id: string) => {
     try {
@@ -72,6 +74,7 @@ const ProjectPreview: React.FC<ProjectProps> = () => {
         return
       }
       setUIDL(JSON.parse(response))
+      compileProject(JSON.parse(response))
     } catch (e) {
       console.error(e)
       throw new Error(`Failed in fetching UIDL`)
@@ -146,7 +149,6 @@ const ProjectPreview: React.FC<ProjectProps> = () => {
               editorDomId={'project-json-editor'}
               mode={'json'}
               value={JSON.stringify(uidl, null, 2)}
-              onChange={hadleUIDLChange}
             />
           </div>
         </div>

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Prism from 'prismjs'
 import Modal from 'react-modal'
-import { ReactStyleVariation, StyleVariation } from '@teleporthq/teleport-types'
+import {
+  ReactStyleVariation,
+  StyleVariation,
+  VComponentUIDL,
+} from '@teleporthq/teleport-types'
 import { copyToClipboard } from 'copy-lite'
 import { DropDown } from '../DropDown'
 import { ComponentType, CodeScreenProps } from './types'
@@ -21,9 +25,7 @@ import { ErrorPanel } from '../ErrorPanel'
 import { uploadUIDLJSON, fetchJSONDataAndLoad } from '../../utils/services'
 import Loader from '../Loader'
 
-const CodeEditor = dynamic(import('../CodeEditor'), {
-  ssr: false,
-})
+const CodeEditor = dynamic(import('../CodeEditor'), { ssr: false })
 const BrowserPreview = dynamic(import('../BrowserPreview'))
 
 const Code: React.FC<CodeScreenProps> = ({ router }) => {
@@ -100,6 +102,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
 
   useEffect(() => {
     setComponentUIDL(uidlSamples[uidlSource])
+    setError(null)
   }, [uidlSource])
 
   const handleExternalLink = async (fileName: string) => {
@@ -117,28 +120,27 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
 
   const handlePreview = async () => {
     try {
-      const { code, dependencies } = await generateComponent(
+      const generatedComponent = await generateComponent(
         componentUIDL,
         ComponentType.REACT,
         ReactStyleVariation.StyledComponents
       )
-      setPreview({ code, dependencies })
+      setPreview({
+        code: generatedComponent.code,
+        dependencies: generatedComponent.dependencies,
+      })
     } catch (e) {
-      console.error(e)
+      // console.error(e)
     }
   }
 
-  const handleGenerateCode = async () => {
+  const handleGenerateCode = async (uidl?: VComponentUIDL) => {
+    const UIDL = uidl || componentUIDL
     try {
-      const { code } = await generateComponent(
-        componentUIDL,
-        component.type,
-        component.style
-      )
+      const result = await generateComponent(UIDL, component.type, component.style)
+      setCode(result.code)
       setError(null)
-      setCode(code)
     } catch (e) {
-      console.error(e)
       setError(e)
     }
   }
@@ -152,12 +154,21 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
 
   const handleJSONUpdate = (inputJSON: string) => {
     try {
-      if (inputJSON && typeof inputJSON === 'string' && inputJSON.length > 0) {
-        setComponentUIDL(JSON.parse(inputJSON))
+      if (
+        inputJSON &&
+        typeof inputJSON === 'string' &&
+        inputJSON.length > 0 &&
+        JSON.parse(inputJSON)
+      ) {
+        try {
+          const uidl = JSON.parse(inputJSON)
+          handleGenerateCode(uidl)
+        } catch (e) {
+          console.error(e)
+        }
       }
     } catch (e) {
-      console.error(e)
-      throw new Error(`Invalid UIDl`)
+      // throw new Error(`Invalid UIDl`)
     }
   }
 
@@ -186,7 +197,7 @@ const Code: React.FC<CodeScreenProps> = ({ router }) => {
         'component'
       )
       if (response && response?.fileName) {
-        let shareableLink = `${window.location}?uidlLink=${response.fileName}`
+        const shareableLink = `${window.location}?uidlLink=${response.fileName}`
         if (
           component?.type &&
           component.style &&

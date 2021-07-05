@@ -116,7 +116,7 @@ export const getStyleFlavorsForTarget = (target: ComponentType) => {
 export const uidlSamples: Record<string, Record<string, unknown>> = {
   'simple-component': simpleComponentUIDL,
   'external-component': externalComponentUIDL,
-  navbar: navbar,
+  navbar,
   'contact-form': contactForm,
   'person-spotlight': personSpotlight,
   'complex-component': complexComponentUIDL,
